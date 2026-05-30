@@ -1,0 +1,433 @@
+{
+  "footer": {
+    "faqTitle": "Frequently Asked Questions",
+    "support": "SUPPORT",
+    "company": "Company",
+    "legal": "Legal",
+    "connect": "Connect",
+    "careers": "Careers",
+    "press": "Press",
+    "helpCenter": "Help Center",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "newsletter": "Enter your email",
+    "subscribe": "Subscribe",
+    "copyright": "All rights reserved.",
+    "built": "Designed & built with precision."
+  },
+  
+  "navbar": {
+    "home": "Home",
+    "programs": "Programs",
+    "courses": "Courses",
+    "signin": "Sign In",
+    "signup": "Sign Up",
+    "search": "Search courses..."
+  },
+  
+  "hero": {
+    "aiExperience": "AI Learning Experience",
+    "welcomeBack": "Welcome back,",
+    "title1": "The future of learning",
+    "title2": "starts here.",
+    "subtitle": "Learn English, programming, and real-world skills with a new generation of AI-powered education.",
+    "getStarted": "Get Started",
+    "ready": "Ready",
+    "watchDemo": "Watch Demo",
+    "aiFeedback": "AI Feedback",
+    "progress": "Progress +87%",
+    "smartCourses": "Smart Courses",
+    "aiTutor": "AI Tutor",
+    "dailyStreak": "Daily Streak"
+  },
+  "profile": {
+    "title": "My Profile",
+    "bio": "Bio",
+    "noBio": "No bio yet...",
+    "name": "Name",
+    "email": "Email",
+    "university": "University",
+    "program": "Program",
+    "bioPlaceholder": "Write something about yourself...",
+    "save": "Save Changes",
+    "footer": "Built clean & modern"
+  },
+  "modal": {
+    "current": "Currently in",
+    "blog": "H-blog",
+    "accounts": "Your accounts",
+    "profile": "Profile",
+    "logout": "Log out"
+  },
+  "auth": {
+    "welcomeBack": "Welcome back",
+    "createAccount": "Create account",
+    "fullName": "Full name",
+    "email": "Email address",
+    "password": "Password",
+    "remember": "Remember me",
+    "loading": "Loading...",
+    "continue": "Continue",
+    "create": "Create account",
+    "noAccount": "Don't have an account?",
+    "alreadyAccount": "Already have an account?",
+    "signup": "Sign up",
+    "signin": "Sign in",
+    "fillFields": "Fill all fields",
+    "loginFailed": "Login failed",
+    "registerFailed": "Registration failed",
+    "otpInvalid": "OTP invalid",
+    "googleFailed": "Google login failed"
+  },
+
+  "otp": {
+    "title": "Verify OTP",
+    "subtitle": "Enter the 6 digit code sent to your email",
+    "verify": "Verify",
+    "verifying": "Verifying...",
+    "cancel": "Cancel"
+  },
+  "chatbot": {
+
+  "welcome": "👋 Welcome to Avila AI.\nYour intelligent learning assistant.",
+  "subtitle": "Smart Assistant",
+  "placeholder": "Ask Avila AI..."
+  
+ },
+  "courses": {
+    "title": "More From H-Learning",
+    "viewDetail": "View Details",
+
+    "tabs": {
+      "software": "Software / IT",
+      "business": "Business",
+      "law": "Law",
+      "management": "Management",
+      "entrepreneurship": "Entrepreneurship"
+    },
+
+    "software": [
+      { "title": "Introduction to IoT", "program": "Software Engineering" },
+      { "title": "ICT Fundamentals", "program": "Software Engineering" },
+      { "title": "Web Development Basics", "program": "Software Engineering" },
+      { "title": "Database Systems", "program": "Software Engineering" }
+    ],
+
+    "business": [
+      { "title": "Principles of Accounting", "program": "Business" },
+      { "title": "Business Mathematics", "program": "Business" },
+      { "title": "Academic Writing", "program": "Business" },
+      { "title": "Financial Management", "program": "Business" }
+    ],
+
+    "law": [
+      { "title": "Introduction to Law", "program": "Law" },
+      { "title": "Constitutional Law", "program": "Law" },
+      { "title": "Criminal Law", "program": "Law" },
+      { "title": "Contract Law", "program": "Law" }
+    ],
+
+    "management": [
+      { "title": "Principles of Management", "program": "Management" },
+      { "title": "Human Resource Management", "program": "Management" },
+      { "title": "Project Management Basics", "program": "Management" },
+      { "title": "Operations Management", "program": "Management" }
+    ],
+
+    "entrepreneurship": [
+      { "title": "Entrepreneurship 101", "program": "Entrepreneurship" },
+      { "title": "Small Business Management", "program": "Entrepreneurship" },
+      { "title": "Startup Strategy", "program": "Entrepreneurship" },
+      { "title": "Marketing for Entrepreneurs", "program": "Entrepreneurship" }
+    ]
+  },
+  "how": {
+  "title": "Learn smarter, not harder",
+  "features": {
+    "video": {
+      "title": "High-quality videos",
+      "desc": "Clear explanations with real-world implementations."
+    },
+    "written": {
+      "title": "Written courses",
+      "desc": "Structured lessons for deep understanding."
+    },
+    "quiz": {
+      "title": "Quizzes & projects",
+      "desc": "Apply knowledge through practice and evaluation."
+    }
+  }
+ },
+"tuition": {
+  "header": {
+    "tag": "English & French Tuition",
+    "title": "Learn English Through Real Conversations",
+    "subtitle": "PDFs, videos and notes — all at your own pace."
+  },
+
+  "steps": {
+    "Beginner": {
+      "label": "Beginner",
+      "title": "Beginner Conversations",
+      "leftBubble": "Hey John, how are you? Long time no see!",
+      "rightBubble": "I’m doing well! Want to catch up this Saturday afternoon?"
+    },
+
+    "Intermediate": {
+      "label": "Intermediate",
+      "title": "Intermediate Conversations",
+      "leftBubble": "It’s nice to see you! Are you ready for the lesson?",
+      "rightBubble": "Yes! Let’s improve our English this week."
+    },
+
+    "Advanced": {
+      "label": "Advanced",
+      "title": "Advanced Conversations",
+      "leftBubble": "Could we reschedule the meeting for next week?",
+      "rightBubble": "Absolutely. I’ll update the calendar."
+    }
+  },
+
+  "example": "Example situation",
+  "cta": "START WITH UP TO 50% OFF →",
+  "continue": "Continue & Enroll →",
+
+  "cards": {
+    "pdf": {
+      "title": "Conversation PDF",
+      "desc": "Grammar, vocabulary & examples"
+    },
+    "video": {
+      "title": "Video Lesson",
+      "desc": "Watch & listen to real situations"
+    },
+    "notes": {
+      "title": "Smart Notes",
+      "desc": "Key expressions & tips"
+    }
+  }
+},
+  "why": {
+    "title": "Why Choose h-Learning?",
+    "items": {
+      "free": {
+        "title": "Free Online Courses",
+        "desc": "All courses are 100% free and accessible worldwide."
+      },
+      "flexible": {
+        "title": "Flexible Learning",
+        "desc": "Study at your own pace with no deadlines or restrictions."
+      },
+      "certificate": {
+        "title": "Recognized Certificates",
+        "desc": "Get a certificate after completion to boost your CV."
+      }
+    }
+  },
+  "technologies": {
+  "header": {
+    "title": "Career skills that work",
+    "subtitle": "World-class academic programs aligned with real industry needs.",
+    "cta": "Create Workspace"
+  },
+  "viewCurriculum": "View curriculum",
+  "showMore": "Show {{count}} more",
+  "showLess": "Show less",
+
+  "programs": {
+    "software": {
+      "title": "Software Engineering",
+      "desc": "Programming, systems, databases and real-world projects."
+    },
+    "cs": {
+      "title": "Computer Science",
+      "desc": "Algorithms, data structures, logic and problem solving."
+    },
+    "network": {
+      "title": "Networking",
+      "desc": "Data communication, networks, protocols and security."
+    },
+    "finance": {
+      "title": "Finance & Economics",
+      "desc": "Micro & macroeconomics, finance fundamentals by level."
+    },
+    "accounting": {
+      "title": "Accounting",
+      "desc": "Accounting principles from level 1 to level 4."
+    },
+    "it": {
+      "title": "Information Technology",
+      "desc": "IT fundamentals, systems and infrastructure."
+    }
+  }
+},
+"technology": {
+  "header": {
+    "title": "Career skills that work",
+    "subtitle": "World-class academic programs aligned with real industry needs.",
+    "cta": "Create Workspace"
+  },
+  "viewCurriculum": "View curriculum",
+  "showMore": "Show {{count}} more",
+  "showLess": "Show less",
+
+  "programs": {
+    "software": {
+      "title": "Software Engineering",
+      "desc": "Programming, systems, databases and real-world projects."
+    },
+    "cs": {
+      "title": "Computer Science",
+      "desc": "Algorithms, data structures, logic and problem solving."
+    },
+    "network": {
+      "title": "Networking",
+      "desc": "Data communication, networks, protocols and security."
+    },
+    "finance": {
+      "title": "Finance & Economics",
+      "desc": "Micro & macroeconomics, finance fundamentals by level."
+    },
+    "accounting": {
+      "title": "Accounting",
+      "desc": "Accounting principles from level 1 to level 4."
+    },
+    "it": {
+      "title": "Information Technology",
+      "desc": "IT fundamentals, systems and infrastructure."
+    }
+  }
+},
+"faq": {
+    "q1": {
+      "question": "Can I try h-learning Plus before subscribing?",
+      "answer": "Yes. h-learning Plus offers a 7-day free trial with no commitment."
+    },
+    "q2": {
+      "question": "What is included in h-learning Plus?",
+      "answer": "You get access to premium courses, hands-on projects, and professional certificates."
+    },
+    "q3": {
+      "question": "Does h-learning Plus save money?",
+      "answer": "Yes. It is much cheaper than paying for each course individually."
+    },
+    "q4": {
+      "question": "Can I cancel anytime?",
+      "answer": "Yes. You can cancel anytime from your dashboard."
+    }
+  },
+
+  "tuitionDash": {
+    "title": "H-Tuition AI",
+    "hero": {
+      "title": "Learn English with AI + Real Teachers",
+      "subtitle": "YouTube lessons, WhatsApp coaching & real classes"
+    },
+    "plans": {
+      "free": "free",
+      "online": "online",
+      "presentiel": "in-person",
+
+      "freeTitle": "Free Plan",
+      "freeDesc": "YouTube videos access",
+
+      "onlineTitle": "Online Premium",
+      "onlineDesc": "WhatsApp + AI tutor",
+
+      "presentielTitle": "In Person",
+      "presentielDesc": "Physical classes"
+    },
+    "tools": {
+      "youtube": "YouTube Lessons",
+      "chat": "Live English Talk",
+      "ai": "Grammar AI Coach",
+      "french": "French Practice"
+    },
+    "video": {
+      "title": "Lesson Video"
+    }
+  },
+  "onboarding": {
+    "stepOne": {
+      "title": "What do you want to do?"
+    },
+
+    "stepTwo": {
+      "title": "What brings you here?"
+    },
+
+    "stepProgram": {
+      "title": "Choose your ZCAS program"
+    },
+
+    "stepThree": {
+      "title": "What are you interested in?"
+    },
+
+    "stepPrivacy": {
+      "title": "Privacy & Policies"
+    },
+
+    "options": {
+      "Search": "Search",
+      "Learn & study": "Learn & study",
+      "Code or debug": "Code or debug",
+      "Analyze data": "Analyze data",
+      "Create something": "Create something",
+      "Brainstorm": "Brainstorm",
+
+      "School": "School",
+      "Work": "Work",
+      "Personal tasks": "Personal tasks",
+      "Fun and entertainment": "Fun and entertainment",
+      "Other": "Other",
+
+      "math": "Math",
+      "programming": "Programming",
+      "design": "Design",
+      "business": "Business",
+      "science": "Science",
+      "writing": "Writing"
+    },
+
+    "programs": {
+      "software": "Software Engineering",
+      "cs": "Computer Science",
+      "network": "Networking",
+      "accounting": "Accounting & Finance",
+      "languages": "Languages"
+    },
+
+    "privacy": {
+      "collect": {
+        "title": "What we collect",
+        "desc": "Personal information, academic preferences and usage data to improve your experience."
+      },
+
+      "use": {
+        "title": "How we use your data",
+        "desc": "We personalize recommendations, improve platform services and send important updates."
+      },
+
+      "rights": {
+        "title": "Your rights",
+        "desc": "You can access, edit or delete your data anytime and unsubscribe from communications."
+      },
+
+      "terms": {
+        "title": "Terms of Service",
+        "desc": "You agree to use the platform responsibly and comply with local laws."
+      }
+    },
+
+    "accept": "I have read and accept the",
+    "privacyPolicy": "Privacy Policy",
+    "and": "and",
+    "terms": "Terms of Service",
+
+    "continue": "Continue",
+    "finish": "Finish",
+    "completeAll": "Please complete all steps."
+  }
+
+}
