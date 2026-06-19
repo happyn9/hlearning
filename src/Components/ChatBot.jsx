@@ -324,7 +324,7 @@ export default function ChatBot({ onClose }) {
     },
     card: {
       position: "relative", width: "100%", maxWidth: 440,
-      height: "86vh", maxHeight: 760,
+      height: "86vh", maxHeight: 480,
       display: "flex", flexDirection: "column",
       borderRadius: 28, overflow: "hidden",
       background: tk.bg,
