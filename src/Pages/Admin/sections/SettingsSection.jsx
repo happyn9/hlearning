@@ -53,8 +53,11 @@ export default function SettingsSection() {
       });
 
     } catch (err) {
+      // ✅ FIX: l'intercepteur axios rejette déjà avec un Error
+      // standard { message }. err.response.data.detail n'existe
+      // plus à ce stade — err.message contient déjà le detail.
       alert(
-        err?.response?.data?.detail ||
+        err?.message ||
         "Failed to update PIN"
       );
     } finally {

@@ -43,35 +43,28 @@ export default function AdminDashboard() {
   }, []);
 
   async function loadData() {
-
     try {
+      const programsRes = await adminService.getPrograms();
+      const coursesRes = await adminService.getCourses();
+      const chaptersRes = await adminService.getChapters();
 
-      const programsRes =
-        await adminService.getPrograms();
-
-      const coursesRes =
-        await adminService.getCourses();
-
-      const chaptersRes =
-        await adminService.getChapters();
-
-      setPrograms(programsRes.data);
-      setCourses(coursesRes.data);
-      setChapters(chaptersRes.data);
-
+      setPrograms(Array.isArray(programsRes) ? programsRes : []);
+      setCourses(Array.isArray(coursesRes) ? coursesRes : []);
+      setChapters(Array.isArray(chaptersRes) ? chaptersRes : []);
     } catch (e) {
       console.log(e);
+      toast.error(e?.message || "Erreur de chargement des données");
     }
   }
 
   async function createProgram() {
-
     try {
       await adminService.createProgram(programData);
       await loadData();
+      toast.success("Programme créé avec succès");
     } catch (e) {
       console.log(e);
-      toast.error(e)
+      toast.error(e?.message || "Échec de la création du programme");
     }
   }
 
@@ -81,62 +74,57 @@ export default function AdminDashboard() {
   }
 
   async function confirmPinAction() {
-
     setLoading(true);
-
     try {
-
       if (pendingAction === "course") {
-        await adminService.createCourse(
-          courseData,
-          pin
-        );
+        await adminService.createCourse(courseData, pin);
       }
-
       await loadData();
-
       closePin();
-
     } catch (e) {
       console.log(e);
-      toast.error(e  || 'failed to create a course')
-
+      toast.error(e?.message || "Échec de la création du cours");
     }
-
     setLoading(false);
   }
 
   async function createChapter() {
+    // ✅ Validation minimale avant submit pour éviter un 422 muet
+    if (!chapterData.course_id || !chapterData.title) {
+      return toast.error("Sélectionnez un cours et donnez un titre au chapitre");
+    }
 
     try {
-
-      await adminService.createChapter(
-        chapterData.course_id,
-        chapterData
-      );
-
+      await adminService.createChapter(chapterData.course_id, chapterData);
       await loadData();
-
+      toast.success("Chapitre ajouté avec succès");
     } catch (e) {
       console.log(e);
-      toast.error(e)
+      toast.error(e?.message || "Échec de la création du chapitre");
     }
   }
 
   async function createLesson() {
+    // ✅ FIX: LessonCreate exige title + type (chapter_id vient de l'URL).
+    // video_url est désormais optionnel côté backend (voir lesson.py),
+    // donc seuls title/type/chapter_id sont bloquants ici.
+    if (!lessonData.chapter_id) {
+      return toast.error("Sélectionnez un chapitre");
+    }
+    if (!lessonData.title) {
+      return toast.error("Donnez un titre à la leçon");
+    }
+    if (!lessonData.type) {
+      return toast.error("Choisissez un type de leçon (Vidéo ou PDF)");
+    }
 
     try {
-
-      await adminService.createLesson(
-        lessonData.chapter_id,
-        lessonData
-      );
-
+      await adminService.createLesson(lessonData.chapter_id, lessonData);
       await loadData();
-
+      toast.success("Leçon ajoutée avec succès");
     } catch (e) {
-      console.log(e);
-      toast.error(e || 'Failed')
+      console.log("ERROR =", e);
+      toast.error(e?.message || "Échec de la création de la leçon");
     }
   }
 

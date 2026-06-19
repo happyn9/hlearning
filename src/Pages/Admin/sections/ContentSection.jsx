@@ -29,8 +29,9 @@ export default function ContentSection({
   };
 
   useEffect(() => {
+    // ✅ api.get retourne déjà la donnée brute (response.data via interceptor)
     api.get("/admin/courses")
-     .then(setCourses)
+     .then((data) => setCourses(Array.isArray(data) ? data : []))
      .catch(console.log);
   }, []);
 
@@ -140,7 +141,7 @@ export default function ContentSection({
           </div>
 
           {/* PREVIEW CARD */}
-          <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-2xl p-5">
+          <div className="bg-linear-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/20 rounded-2xl p-5">
 
             <div className="flex items-center gap-3 mb-3">
 

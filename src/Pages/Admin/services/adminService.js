@@ -6,6 +6,9 @@ export const adminService = {
   getPrograms: () =>
     api.get("/admin/programs"),
 
+  getChapters: () =>
+    api.get("/admin/chapters"),
+
   createProgram: (data) =>
     api.post("/admin/programs", data),
 
@@ -29,6 +32,8 @@ export const adminService = {
   /* ================= LESSON ================= */
   createLesson: (chapterId, data) =>
     api.post(`/admin/chapters/${chapterId}/lessons`, data),
+
+
 
   /* ================= PIN ================= */
   updatePin: (data) =>

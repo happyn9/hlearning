@@ -13,6 +13,7 @@ import {
 import SectionCard from "../components/SectionCard";
 import api from "../../../services/api";
 
+
 export default function CourseSection({
   setCourseData,
   onSubmit
@@ -23,11 +24,12 @@ export default function CourseSection({
   const [programs, setPrograms] = useState([]);
 
   useEffect(() => {
+    // ✅ api.get retourne déjà la donnée brute via l'interceptor (response.data)
     api.get("/admin/programs")
-     .then(setPrograms)
+     .then((data) => setPrograms(Array.isArray(data) ? data : []))
      .catch(console.log);
   }, []);
-  
+
   /* ================= UPDATE FIELD ================= */
   const updateField = (key, value) => {
     setCourseData(prev => ({

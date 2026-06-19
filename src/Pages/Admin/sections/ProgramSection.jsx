@@ -53,6 +53,9 @@ export default function ProgramsSection({
 
       setLoading(true);
 
+      // ✅ FIX: adminService.createProgram retourne déjà la donnée
+      // brute (interceptor axios fait response.data en interne).
+      // res.data était donc toujours undefined.
       const res =
         await adminService.createProgram(
           programData
@@ -61,7 +64,7 @@ export default function ProgramsSection({
       /* UPDATE LOCAL PROGRAMS */
       setPrograms((prev) => [
         ...prev,
-        res.data
+        res
       ]);
 
       /* SUCCESS */
@@ -80,9 +83,11 @@ export default function ProgramsSection({
 
         console.log(err);
 
+        // ✅ FIX: l'intercepteur de api.js rejette déjà avec
+        // un objet Error standard contenant .message — pas de
+        // err.response ici puisqu'il a déjà été transformé.
         toast.error(
-         err?.response?.data?.detail ||
-         err.message ||
+         err?.message ||
          "Failed to create program"
         );
 

@@ -79,7 +79,7 @@ export default function Auth() {
       return;
     }
 
-    triggerPageLoading(2000);
+    triggerPageLoading(500);
     setLoading(true);
 
     try {
