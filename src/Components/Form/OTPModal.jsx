@@ -56,7 +56,7 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
         initial={{ scale: 0.92, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.92, opacity: 0 }}
-        className="w-full max-w-sm mx-4 rounded-3xl p-10 flex flex-col gap-7"
+        className="w-full max-w-sm mx-4 rounded-3xl p-3 flex flex-col gap-7"
         style={{ background: "#141416", border: "0.5px solid rgba(255,255,255,0.08)" }}
       >
         {/* Icon */}
