@@ -63,7 +63,8 @@ export default function Auth() {
 
       setShowOTP(true);
     } catch (err) {
-      setError(err.response?.data?.detail || t("auth.loginFailed"));
+      console.error("LOGIN ERR:", err);
+      setError(err.message || t("auth.loginFailed"));
     } finally {
       setLoading(false);
     }
@@ -91,8 +92,9 @@ export default function Auth() {
 
       setShowOTP(true);
     } catch (err) {
-      setError(err.response?.data?.detail || t("auth.registerFailed"));
-    } finally {
+     console.error("REGISTER ERR:", err);
+     setError(err.message || t("auth.registerFailed"));
+    }finally {
       setLoading(false);
     }
   };

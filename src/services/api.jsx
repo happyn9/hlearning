@@ -14,13 +14,14 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ✅ RESPONSE CLEAN
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
+    console.error("API ERROR:", error.response?.status, error.response?.data);
     const message =
       error.response?.data?.detail ||
       error.response?.data?.message ||
+      error.message ||
       "Request failed";
     return Promise.reject(new Error(message));
   }
