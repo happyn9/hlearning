@@ -43,33 +43,38 @@ export default function Auth() {
 
   /* ================= LOGIN ================= */
   const handleLogin = async (e) => {
-    e.preventDefault();
-    setError("");
+  e.preventDefault();
+  setError("");
 
-    if (!email || !password) {
-      setError(t("auth.fillFields"));
-      return;
-    }
+  if (!email || !password) {
+    setError(t("auth.fillFields"));
+    return;
+  }
 
-    triggerPageLoading(2000); // 🔥 loading UX pendant action
-    setLoading(true);
+  triggerPageLoading(2000);
+  setLoading(true);
 
-    try {
-      await api.post("/auth/login", {
-        email,
-        password,
-        remember,
-      });
+  try {
+    await api.post("/auth/login", {
+      email,
+      password,
+      remember_me: remember,  // ← note: remember_me pas remember
+    });
 
-      setShowOTP(true);
-    } catch (err) {
-      console.error("LOGIN ERR:", err);
-      setError(err.message || t("auth.loginFailed"));
-    } finally {
-      setLoading(false);
-    }
-  };
+    const user = await refreshUser();
+    let redirect = "/";
+    if (!user.onboarding_completed) redirect = "/onboarding";
+    else if (user.role === "admin") redirect = "/admin/dashboard";
+    else if (user.role === "teacher") redirect = "/teacher/dashboard";
+    navigate(redirect, { replace: true });
 
+  } catch (err) {
+    console.error("LOGIN ERR:", err);
+    setError(err.message || t("auth.loginFailed"));
+  } finally {
+    setLoading(false);
+  }
+};
   /* ================= REGISTER ================= */
   const handleRegister = async (e) => {
     e.preventDefault();
