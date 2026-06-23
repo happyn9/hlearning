@@ -1,31 +1,27 @@
-import axios from "axios";
+import api from "./api";
 
 
-export const subscribeToCourse = async ({ courseId, billing }) => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/subscribe`,
-      { course_ids: [courseId], billing }, // <- payload correct
-      { withCredentials: true }
-    );
-    return response.data;
-  } catch (err) {
-    console.error(err.response?.data || err.message);
-    throw err;
-  }
+export const getPremiumCourses = async (program = null) => {
+  const url = program ? `/premium/courses?program=${program}` : "/premium/courses";
+  return await api.get(url);
 };
 
-export const subscribeToMultiplePlans = async (courseIds) => {
-  try {
-    const response = await axios.post(
-      `http://localhost:8000/subscribe/multiple`,
-      { subscription_ids: courseIds }, // <- backend multiple subscriptions
-      { withCredentials: true }
-    );
-    return response.data;
-  } catch (err) {
-    console.error(err.response?.data || err.message);
-    throw err;
-  }
+export const getPremiumCourse = async (courseId) => {
+  return await api.get(`/premium/${courseId}`);
 };
 
+
+export const initiatePayment = async ({ courseId, billing, phone, operator }) => {
+  const response = await api.post("/pay/initiate", {
+    course_id: courseId,
+    billing,
+    phone,
+    operator,
+  });
+  return response; 
+};
+
+export const checkSubscription = async (courseId) => {
+  const response = await api.get(`/pay/check/${courseId}`);
+  return response?.subscribed ?? false;
+};

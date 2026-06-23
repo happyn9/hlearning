@@ -9,7 +9,8 @@ const savedLang =
   navigator.language.split("-")[0] ||
   "en";
 
-i18n.use(initReactI18next).init({
+// ✅ On capture la Promise retournée par init()
+const i18nReady = i18n.use(initReactI18next).init({
   resources: {
     en: { translation: en },
     fr: { translation: fr },
@@ -17,6 +18,11 @@ i18n.use(initReactI18next).init({
 
   lng: savedLang,
   fallbackLng: "en",
+
+  // ✅ Évite le flash de clés brutes pendant l'init
+  react: {
+    useSuspense: false,
+  },
 
   interpolation: {
     escapeValue: false,
@@ -32,5 +38,8 @@ i18n.on("languageChanged", (lng) => {
 export const changeLanguage = async (lang) => {
   await i18n.changeLanguage(lang);
 };
+
+// ✅ Exporté pour que main.jsx puisse attendre l'init avant de render
+export { i18nReady };
 
 export default i18n;
