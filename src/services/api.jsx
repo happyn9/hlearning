@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://hback-ziq4.onrender.com",
+  baseURL: "https://hback-3.onrender.com",
   withCredentials: true,
 });
 
