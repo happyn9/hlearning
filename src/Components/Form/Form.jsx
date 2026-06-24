@@ -101,37 +101,36 @@ export default function Auth() {
 
   /* ================= OTP ================= */
   const handleVerifyOTP = async () => {
-    setError("");
-    setLoading(true);
+  setError("");
+  setLoading(true);
 
-    try {
-      await api.post("/auth/verify-otp", {
-        email,
-        otp,
-        remember_me:remember
-      });
+  try {
+    await api.post("/auth/verify-otp", { email, otp, remember_me: remember });
 
-      const user = await refreshUser();
+    const user = await refreshUser();
 
-      let redirect = "/";
-
-      if (!user.onboarding_completed) {
-        redirect = "/onboarding";
-      } else if (user.role === "admin") {
-        redirect = "/admin/dashboard";
-      } else if (user.role === "teacher") {
-        redirect = "/teacher/dashboard";
-      }
-
-      navigate(redirect, { replace: true });
-    } catch (err) {
-  console.error("OTP VERIFY ERR RAW:", err);
-  setError(err?.detail || err?.message || t("auth.otpInvalid"));
-}finally {
-      setLoading(false);
+    // ✅ Guard
+    if (!user) {
+      setError(t("auth.otpInvalid"));
+      return;
     }
-  };
 
+    let redirect = "/";
+    if (!user.onboarding_completed) {
+      redirect = "/onboarding";
+    } else if (user.role === "admin") {
+      redirect = "/admin/dashboard";
+    } else if (user.role === "teacher") {
+      redirect = "/teacher/dashboard";
+    }
+
+    navigate(redirect, { replace: true });
+  } catch (err) {
+    setError(err?.detail || err?.message || t("auth.otpInvalid"));
+  } finally {
+    setLoading(false);
+  }
+};
   return (
     <div className="min-h-screen w-full bg-[#0f0f0f]/95 text-white flex flex-col">
 
@@ -231,26 +230,33 @@ export default function Auth() {
           <div className="flex p-1 rounded-full justify-center w-full bg-white/5 backdrop-blur-md border border-white/10">
             <GoogleLogin
               onClick={() => triggerPageLoading(2000)}   // 🔥 IMPORTANT
-              onSuccess={async (credentialResponse) => {
-                try {
-                  triggerPageLoading(2000); // 🔥 loading UX Google
+              
+onSuccess={async (credentialResponse) => {
+  try {
+    triggerPageLoading(2000);
 
-                  await api.post("/auth/google", {
-                    token: credentialResponse.credential,
-                  });
+    await api.post("/auth/google", {
+      token: credentialResponse.credential,
+    });
 
-                  const user = await refreshUser();
+    const user = await refreshUser();
 
-                  let redirect = "/";
-                  if (!user.onboarding_completed) redirect = "/onboarding";
+    // ✅ Guard : si user est null (cookie non reçu, etc.)
+    if (!user) {
+      setError(t("auth.googleFailed"));
+      return;
+    }
 
-                  navigate(redirect, { replace: true });
-                } catch {
-                  setError(t("auth.googleFailed"));
-                } finally {
-                  setLoading(false);
-                }
-              }}
+    let redirect = "/";
+    if (!user.onboarding_completed) redirect = "/onboarding";
+
+    navigate(redirect, { replace: true });
+  } catch {
+    setError(t("auth.googleFailed"));
+  } finally {
+    setLoading(false);
+  }
+}}
               onError={() => setError(t("auth.googleFailed"))}
             />
           </div>
@@ -280,7 +286,7 @@ export default function Auth() {
 function SkeletonInput() {
   return (
     <div className="h-12 w-full rounded-full bg-white/5 relative overflow-hidden border border-white/10">
-      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      <div className="absolute inset-0 animate-pulse bg-linear-to-r from-transparent via-white/10 to-transparent" />
     </div>
   );
 }
@@ -288,7 +294,7 @@ function SkeletonInput() {
 function SkeletonButton() {
   return (
     <div className="h-12 w-full rounded-full bg-white/10 relative overflow-hidden border border-white/10">
-      <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+      <div className="absolute inset-0 animate-pulse bg-linear-to-r from-transparent via-white/20 to-transparent" />
     </div>
   );
 }
