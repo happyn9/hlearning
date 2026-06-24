@@ -58,7 +58,7 @@ export default function Auth() {
       await api.post("/auth/login", {
         email,
         password,
-        remember,
+        remember_me:remember,
       });
 
       setShowOTP(true);
