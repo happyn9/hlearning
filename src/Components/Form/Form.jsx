@@ -108,6 +108,7 @@ export default function Auth() {
       await api.post("/auth/verify-otp", {
         email,
         otp,
+        remember_me:remember
       });
 
       const user = await refreshUser();
