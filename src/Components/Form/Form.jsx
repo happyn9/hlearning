@@ -266,6 +266,7 @@ export default function Auth() {
             close={() => setShowOTP(false)}
             loading={loading}
             error={error}
+            email={email}
           />
         )}
       </AnimatePresence>
