@@ -124,7 +124,8 @@ export default function Auth() {
 
       navigate(redirect, { replace: true });
     } catch (err) {
-      setError(t("auth.otpInvalid"));
+       console.error("OTP VERIFY ERR:", err.response?.status, err.response?.data);
+       setError(err.response?.data?.detail || t("auth.otpInvalid"));
     } finally {
       setLoading(false);
     }
