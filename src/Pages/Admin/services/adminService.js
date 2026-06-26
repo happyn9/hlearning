@@ -13,14 +13,11 @@ export const adminService = {
     api.post("/admin/programs", data),
 
   /* ================= COURSE ================= */
-  createCourse: async (courseData, pin) => {
-    console.log("PIN SENT:", pin);
-
-    return await api.post("/admin/courses", {
-    course: courseData,
-    pin: pin
-    });
-  },
+  createCourse: (courseData, pin) =>
+  api.post("/admin/courses", {
+    pin: pin,
+    course: courseData
+  }),
 
   getCourses: () =>
     api.get("/admin/courses"),

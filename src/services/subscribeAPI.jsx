@@ -11,9 +11,9 @@ export const getPremiumCourse = async (courseId) => {
 };
 
 
-export const initiatePayment = async ({ courseId, billing, phone, operator }) => {
+export const initiatePayment = async ({ course_id, billing, phone, operator }) => {
   const response = await api.post("/pay/initiate", {
-    course_id: courseId,
+    course_id: course_id,
     billing,
     phone,
     operator,

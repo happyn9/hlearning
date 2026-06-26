@@ -7,163 +7,435 @@ import api from "../../services/api";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 
-export default function ProfilePage() {
-  const { user, setUser } = useUser();
+import {
+  User,
+  WholeWord,
+  Building2,
+  Palette,
+  BookOpen,
+  Bell,
+  Users,
+  ChevronRight,
+  Pen,
+  ArrowLeft
+  
+} from "lucide-react";
+
+export default function ProfileModal() {
+  const [emailNotif, setEmailNotif] = useState(true);
+  const [messageNotif, setMessageNotif] = useState(false);
   const navigate = useNavigate();
+  const {user}=useUser();
   const { t } = useTranslation();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    program: "",
-    university: "",
-    bio: "",
-  });
-
-  useEffect(() => {
-    if (user) {
-      setFormData({
-        name: user.name || "",
-        email: user.email || "",
-        program: user?.onboarding?.program || "",
-        university: user?.onboarding?.university || "",
-        bio: user?.bio || "",
-      });
-    }
-  }, [user]);
-
-  const saveProfile = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await api.put("/user/profile", formData);
-      setUser(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   return (
-    <AnimatePresence>
-      <motion.div
-        className="min-h-screen bg-linear-to-br from-black via-neutral-900 to-black text-white p-6 md:p-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      >
-
-        {/* HEADER */}
-        <div className="flex justify-between items-center mb-10">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">
-            {t("profile.title")}
-          </h2>
-
-          <button
+    <div className="min-h-screen bg-[#f5f5f7]">
+      <button
             onClick={() => navigate("/")}
-            className="bg-neutral-800 hover:bg-neutral-700 px-4 py-2 rounded-xl transition"
-          >
-            ✕
-          </button>
+            className="bg-slate-600 fixed right-15 top-4 lg:top-5 hover:bg-neutral-300 cursor-pointer px-4 py-3 rounded-xl transition"
+      >
+        <ArrowLeft color="white" size={18} />
+      </button>
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        
+        {/* HEADER */}
+        <div className="mb-14">
+
+          <h1 className="text-4xl font-semibold tracking-tight text-slate-900">
+            {t("profile.title")}
+          </h1>
+
+
+
+          <p className="mt-3 text-slate-500 text-lg">
+            Manage your H-learning account and preferences.
+          </p>
         </div>
 
-        {/* MAIN */}
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8">
-
-          {/* LEFT */}
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="bg-neutral-900/70 p-6 rounded-2xl border border-neutral-800"
-          >
-            <div className="flex flex-col items-center text-center">
-              <div className="w-28 h-28 rounded-full bg-linear-to-tr from-amber-400 to-yellow-600 flex items-center justify-center text-4xl font-bold mb-4">
-                {user?.name?.charAt(0)?.toUpperCase()}
+        {/* PROFILE */}
+        <Section title="Profile">
+          <Row>
+            <div className="flex items-center gap-5">
+              <div
+                className="
+                w-15 h-15
+                rounded-full
+                bg-slate-600
+                flex items-center justify-center
+                text-white
+                text-2xl
+                font-semibold
+              "
+              >
+                {user?.name[0] || 'H'}
               </div>
 
-              <h3 className="text-xl font-semibold">{user?.name}</h3>
-              <p className="text-gray-400 text-sm mt-1">{user?.email}</p>
+              <div>
+                <h2 className="text-xl font-semibold text-slate-900">
+                  {user?.name}
+                </h2>
 
-              <div className="mt-6 w-full">
-                <p className="text-gray-400 text-sm mb-2">{t("profile.bio")}</p>
-                <p className="text-gray-300 text-sm leading-relaxed">
-                  {formData.bio || t("profile.noBio")}
+                <p className="text-slate-500">
+                  Student Account
                 </p>
               </div>
             </div>
-          </motion.div>
+          </Row>
 
-          {/* RIGHT */}
-          <motion.div
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="md:col-span-2 bg-neutral-900/70 p-8 rounded-2xl border border-neutral-800"
+          <InputRow
+            label="Full Name"
+            placeholder={user?.name || 'Full Name'}
+          />
+
+          <InputRow
+            label="Email"
+            placeholder={user?.email || 'happy@gmail.com'}
+          />
+        </Section>
+
+        {/* APPEARANCE */}
+        <Section title="Appearance">
+          <SelectRow
+            icon={<Palette size={18} />}
+            label="Theme"
+            options={["Light", "Dark", "System"]}
+          />
+
+          <SelectRow
+            icon={<WholeWord size={18} />}
+            label="Language"
+            options={["English", "French"]}
+          />
+        </Section>
+
+        {/* LEARNING */}
+        <Section title="Learning">
+          <InputRow
+            icon={<BookOpen size={18} />}
+            label="Learning Goal"
+            placeholder="Become a Fullstack Developer"
+          />
+
+          <InputRow
+            icon={<Pen size={18} />}
+            label="Study Time"
+            placeholder="2 Hours Per Day"
+          />
+
+          <SelectRow
+            label="Level"
+            options={[
+              "Beginner",
+              "Intermediate",
+              "Advanced",
+            ]}
+          />
+        </Section>
+
+        {/* NOTIFICATIONS */}
+        <Section title="Notifications">
+          <ToggleRow
+            icon={<Bell size={18} />}
+            label="Email Notifications"
+            value={emailNotif}
+            onChange={() =>
+              setEmailNotif(!emailNotif)
+            }
+          />
+
+          <ToggleRow
+            label="Message Notifications"
+            value={messageNotif}
+            disabled={true}
+            onChange={() =>
+              setMessageNotif(!messageNotif)
+            }
+          />
+        </Section>
+
+        {/* COMMUNITY */}
+        <Section title="Community">
+          <ActionRow
+            icon={<Users size={18} />}
+            title="Study Groups"
+          />
+
+          <ActionRow
+            title="Community Discussions"
+          />
+        </Section>
+
+        {/* SAVE */}
+        <div className="flex justify-center mt-12">
+          <button
+            className="
+            px-8
+            py-4
+            rounded-full
+            bg-black
+            text-white
+            font-medium
+            hover:scale-[1.02]
+            active:scale-[0.98]
+            transition
+          "
           >
-            <form onSubmit={saveProfile} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-              <FloatingInput
-                label={t("profile.name")}
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-              />
-
-              <FloatingInput
-                label={t("profile.email")}
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-              />
-
-              <textarea
-                className="col-span-1 md:col-span-2 w-full py-3 px-4 bg-neutral-800 border border-neutral-700 rounded-xl"
-                placeholder={t("profile.bioPlaceholder")}
-                value={formData.bio}
-                onChange={(e) =>
-                  setFormData({ ...formData, bio: e.target.value })
-                }
-              />
-
-              <FloatingSelect
-                isuniv
-                label={t("profile.university")}
-                value={formData.university}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    university: e.target.value,
-                    program: "",
-                  })
-                }
-              />
-
-              <FloatingSelect
-                label={t("profile.program")}
-                isuniv={false}
-                nameUniv={formData.university}
-                value={formData.program}
-                disabled={!formData.university}
-                onChange={(e) =>
-                  setFormData({ ...formData, program: e.target.value })
-                }
-              />
-
-              <button
-                type="submit"
-                className="col-span-1 md:col-span-2 bg-linear-to-r from-amber-400 to-yellow-600 text-black font-semibold py-3 rounded-xl"
-              >
-                {t("profile.save")}
-              </button>
-            </form>
-          </motion.div>
+            {t("profile.save")}
+          </button>
         </div>
-
-        {/* FOOTER */}
-        <footer className="mt-16 text-center text-gray-500 text-sm">
+      </div>
+      {/* FOOTER */}
+      <footer className="mt-16 text-center text-gray-500 text-sm">
           © {new Date().getFullYear()} h-learning — {t("profile.footer")}
-        </footer>
-      </motion.div>
-    </AnimatePresence>
+      </footer>
+    </div>
+  );
+}
+
+/* ---------- SECTION ---------- */
+
+function Section({ title, children }) {
+  return (
+    <div className="mb-8">
+      <h3
+        className="
+        text-xs
+        uppercase
+        tracking-[0.2em]
+        text-slate-500
+        mb-3
+      "
+      >
+        {title}
+      </h3>
+
+      <div
+        className="
+        bg-white
+        rounded-[28px]
+        shadow-[0_2px_10px_rgba(0,0,0,0.04)]
+        overflow-hidden
+      "
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+/* ---------- ROW ---------- */
+
+function Row({ children }) {
+  return (
+    <div className="px-6 py-5">
+      {children}
+    </div>
+  );
+}
+
+/* ---------- INPUT ROW ---------- */
+
+function InputRow({
+  icon,
+  label,
+  placeholder,
+}) {
+  return (
+    <div
+      className="
+      flex items-center
+      gap-4
+      px-6
+      py-5
+      border-b
+      border-slate-100
+      last:border-none
+    "
+    >
+      {icon && (
+        <div className="text-slate-500">
+          {icon}
+        </div>
+      )}
+
+      <div className="w-40 text-slate-700 font-medium">
+        {label}
+      </div>
+
+      <input
+        placeholder={placeholder}
+        className="
+        flex-1
+        bg-transparent
+        outline-none
+        text-slate-900
+        placeholder:text-slate-400
+      "
+      />
+    </div>
+  );
+}
+
+/* ---------- SELECT ROW ---------- */
+
+function SelectRow({
+  icon,
+  label,
+  options,
+}) {
+  return (
+    <div
+      className="
+      flex items-center
+      gap-4
+      px-6
+      py-5
+      border-b
+      border-slate-100
+      last:border-none
+    "
+    >
+      {icon && (
+        <div className="text-slate-500">
+          {icon}
+        </div>
+      )}
+
+      <div className="w-40 text-slate-700 font-medium">
+        {label}
+      </div>
+
+      <select
+        className="
+        flex-1
+        bg-transparent
+        outline-none
+        text-slate-900
+      "
+      >
+        {options.map((option) => (
+          <option
+            key={option}
+            value={option}
+          >
+            {option}
+          </option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
+/* ---------- TOGGLE ---------- */
+
+function ToggleRow({
+  icon,
+  label,
+  value,
+  onChange,
+  disabled
+}) {
+  return (
+    <div
+      className="
+      flex items-center
+      justify-between
+      px-6
+      py-5
+      border-b
+      border-slate-100
+      last:border-none
+    "
+    >
+      <div className="flex items-center gap-4">
+        {icon && (
+          <div className="text-slate-500">
+            {icon}
+          </div>
+        )}
+
+        <span className="text-slate-700 font-medium">
+          {label}
+        </span>
+      </div>
+
+      <button
+        onClick={onChange}
+        disabled={disabled || false}
+        title={`${disabled && 'Not available yet'}`}
+        className={`
+          relative
+          w-12
+          h-7
+          rounded-full
+          transition-all
+          
+          ${disabled && "cursor-wait"}
+
+          ${
+            value
+              ? "bg-[#34C759]"
+              : "bg-slate-300"
+          }
+        `}
+      >
+        <div
+          className={`
+            absolute
+            top-0.5
+            w-6
+            h-6
+            bg-white
+            rounded-full
+            shadow-sm
+            transition-all
+            ${
+              value
+                ? "translate-x-5"
+                : "translate-x-0.5"
+            }
+          `}
+        />
+      </button>
+    </div>
+  );
+}
+
+/* ---------- ACTION ---------- */
+
+function ActionRow({ icon, title }) {
+  return (
+    <button
+      className="
+      w-full
+      flex
+      items-center
+      justify-between
+      px-6
+      py-5
+      border-b
+      border-slate-100
+      last:border-none
+      hover:bg-slate-50
+      transition
+    "
+    >
+      <div className="flex items-center gap-4">
+        {icon && (
+          <div className="text-slate-500">
+            {icon}
+          </div>
+        )}
+
+        <span className="text-slate-700 font-medium">
+          {title}
+        </span>
+      </div>
+
+      <ChevronRight
+        size={18}
+        className="text-slate-400"
+      />
+    </button>
   );
 }

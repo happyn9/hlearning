@@ -118,7 +118,7 @@ export default function Navbar({ OnNav, onModal }) {
             className="lg:hidden text-3xl text-gray-700"
             onClick={() => setMenuHamb(!menuHamb)}
           >
-            <ion-icon name={menuHamb ? "close-outline" : "menu-outline"} />
+            <ion-icon name={menuHamb ? "close-outline" : "filter-outline"} />
           </button>
         )}
       </div>

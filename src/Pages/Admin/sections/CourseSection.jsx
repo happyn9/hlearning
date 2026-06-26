@@ -236,32 +236,23 @@ export default function CourseSection({
               <h3 className="font-semibold">Subscription Pricing</h3>
             </div>
 
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-2 gap-3">
 
               <input
                 type="number"
-                placeholder="Daily"
-                className="input"
+                placeholder="Standard price"
+                className="input py-2 px-1"
                 onChange={(e) =>
-                  updateField("daily_price", Number(e.target.value))
+                  updateField("standard_price", Number(e.target.value))
                 }
               />
 
               <input
                 type="number"
-                placeholder="Weekly"
-                className="input"
+                placeholder="Premium price"
+                className="input py-2 px-1"
                 onChange={(e) =>
-                  updateField("weekly_price", Number(e.target.value))
-                }
-              />
-
-              <input
-                type="number"
-                placeholder="Monthly"
-                className="input"
-                onChange={(e) =>
-                  updateField("monthly_price", Number(e.target.value))
+                  updateField("premium_price", Number(e.target.value))
                 }
               />
 
