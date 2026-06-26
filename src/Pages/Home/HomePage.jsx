@@ -15,6 +15,7 @@ import HomeSkeleton from '../../Components/HomeSkeleton';
 import ChatBot from '../../Components/ChatBot';
 import { motion, AnimatePresence } from "framer-motion";
 import Usermodal from '../../Components/Home/Usermodal';
+import Certificationpage from '../../Components/Certificationpage';
 
 
 export default function HomePage() {
@@ -102,6 +103,7 @@ export default function HomePage() {
       <CoursesSection />
       <WhyChooseSection />
       <Technologies />
+      <Certificationpage />
       <Footer />
     </main>
   );
