@@ -226,8 +226,12 @@ function Dashboardtuition() {
 
   /* ── ROOT ── */
   return (
-    <div className="min-h-screen flex bg-[var(--td-bg,#11152a)] text-[var(--td-text,#f3efe2)] font-[var(--font-body,'Inter',sans-serif)] overflow-x-hidden relative"
-      style={{ backgroundImage: "radial-gradient(circle at 8% 4%, rgba(255,107,74,0.06), transparent 38%), radial-gradient(circle at 95% 2%, rgba(232,179,57,0.05), transparent 42%)" }}
+    <div
+      className="min-h-screen flex bg-[var(--td-bg,#11152a)] text-[var(--td-text,#f3efe2)] font-[var(--font-body,'Inter',sans-serif)] overflow-x-hidden relative"
+      style={{
+        backgroundImage:
+          "radial-gradient(circle at 8% 4%, rgba(255,107,74,0.06), transparent 38%), radial-gradient(circle at 95% 2%, rgba(232,179,57,0.05), transparent 42%)",
+      }}
     >
       {/* Progress bar */}
       {loadingAction && (
@@ -256,15 +260,20 @@ function Dashboardtuition() {
           </div>
         </div>
         <div className="flex flex-col gap-4 pt-4 border-t border-[var(--td-border)]">
-          <NavIcon icon={<Settings size={18} />} active={activeMenu === "sett"} onClick={() => handleNavClick("sett")} label={t.settings} />
+          <NavIcon
+            icon={<Settings size={18} />}
+            active={activeMenu === "sett"}
+            onClick={() => handleNavClick("sett")}
+            label={t.settings}
+          />
         </div>
       </aside>
 
       {/* ══ BODY ══ */}
-      <div className="flex flex-col flex-1 md:min-w-0 w-full">
+      <div className="flex flex-col flex-1 md:min-w-0 w-full min-w-0">
 
         {/* Mobile header */}
-        <header className="md:hidden flex items-center justify-between px-4 py-3 bg-[rgba(17,21,42,0.86)] backdrop-blur-xl border-b border-[var(--td-border,rgba(245,241,230,0.12))] z-10">
+        <header className="md:hidden flex items-center justify-between px-4 py-3 bg-[rgba(17,21,42,0.86)] backdrop-blur-xl border-b border-[var(--td-border,rgba(245,241,230,0.12))] z-10 sticky top-0">
           <div className="flex items-center gap-2">
             <Stamp size={16} color="var(--td-coral,#ff6b4a)" />
             <h2 className="font-[var(--font-display,serif)] font-bold text-[17px] tracking-[-0.02em]">{t.brand}</h2>
@@ -279,34 +288,35 @@ function Dashboardtuition() {
         </header>
 
         {/* Main + schedule row */}
-        <div className="flex flex-1 gap-6 p-6 overflow-auto">
+        <div className="flex flex-1 gap-4 md:gap-6 p-3 sm:p-4 md:p-6 overflow-auto pb-24 md:pb-6">
 
           {/* ══ MAIN ══ */}
-          <main className="flex flex-col gap-6 flex-1 min-w-0 relative z-10">
+          <main className="flex flex-col gap-4 md:gap-6 flex-1 min-w-0 relative z-10">
 
             {/* ── DASHBOARD ── */}
             {activeMenu === "dash" && (
-              <div className="flex flex-col gap-6 max-w-[680px] w-full mx-auto">
+              <div className="flex flex-col gap-4 md:gap-6 w-full max-w-[680px] mx-auto">
+
                 {/* Hero card */}
-                <div className="relative overflow-hidden rounded-3xl border border-[var(--td-border,rgba(245,241,230,0.12))] bg-[var(--td-surface,rgba(245,241,230,0.05))] backdrop-blur-xl p-7">
-                  <div className="flex flex-wrap items-center justify-between gap-6">
-                    <div className="flex-1 min-w-[220px]">
-                      <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-[var(--td-coral,#ff6b4a)] mb-2.5">
+                <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-[var(--td-border,rgba(245,241,230,0.12))] bg-[var(--td-surface,rgba(245,241,230,0.05))] backdrop-blur-xl p-4 sm:p-5 md:p-7">
+                  <div className="flex flex-wrap items-center justify-between gap-4 md:gap-6">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-mono text-[10px] md:text-[10.5px] uppercase tracking-[0.2em] text-[var(--td-coral,#ff6b4a)] mb-2">
                         {t.welcome}
                       </p>
-                      <h1 className="font-[var(--font-display,serif)] text-[28px] font-bold tracking-[-0.02em] mb-3">
+                      <h1 className="font-[var(--font-display,serif)] text-[22px] sm:text-[26px] md:text-[28px] font-bold tracking-[-0.02em] mb-2 truncate">
                         {user?.name || "Learner"}
                       </h1>
-                      <h2 className="text-[var(--td-coral,#ff6b4a)] text-base font-bold mb-2">
+                      <h2 className="text-[var(--td-coral,#ff6b4a)] text-sm md:text-base font-bold mb-2 line-clamp-1">
                         {course?.title ? course.title.substring(0, 48) : ""}
                       </h2>
-                      <p className="text-[var(--td-sub,#aeb1c9)] text-[13.5px] leading-relaxed max-w-[380px]">
+                      <p className="text-[var(--td-sub,#aeb1c9)] text-[12.5px] md:text-[13.5px] leading-relaxed line-clamp-3">
                         {course?.description}
                       </p>
                     </div>
-                    <div className="flex flex-col items-center gap-2.5">
-                      <ProgressOrbit value={totalProgress} size={100} />
-                      <span className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[var(--td-muted,#707599)]">
+                    <div className="flex flex-col items-center gap-2 shrink-0">
+                      <ProgressOrbit value={totalProgress} size={80} />
+                      <span className="font-mono text-[9px] md:text-[9.5px] uppercase tracking-[0.16em] text-[var(--td-muted,#707599)]">
                         {t.progress}
                       </span>
                     </div>
@@ -314,43 +324,83 @@ function Dashboardtuition() {
                 </div>
 
                 {/* Continue / Start card */}
-                <div className="relative overflow-hidden rounded-3xl border border-[var(--td-border-med,rgba(245,241,230,0.22))] bg-[var(--td-surface,rgba(245,241,230,0.05))] backdrop-blur-xl p-6 flex flex-wrap items-center justify-between gap-5">
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-[var(--td-coral-soft,rgba(255,107,74,0.12))] flex items-center justify-center text-[var(--td-coral,#ff6b4a)] shrink-0">
-                      {isFirstTime ? <Sparkles size={22} /> : <Play size={20} />}
+                <div className="relative overflow-hidden rounded-2xl md:rounded-3xl border border-[var(--td-border-med,rgba(245,241,230,0.22))] bg-[var(--td-surface,rgba(245,241,230,0.05))] backdrop-blur-xl p-4 sm:p-5 md:p-6 flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-[var(--td-coral-soft,rgba(255,107,74,0.12))] flex items-center justify-center text-[var(--td-coral,#ff6b4a)] shrink-0">
+                      {isFirstTime ? <Sparkles size={20} /> : <Play size={18} />}
                     </div>
-                    <div>
-                      <h3 className="font-bold text-[15.5px]">
+                    <div className="min-w-0">
+                      <h3 className="font-bold text-[14px] md:text-[15.5px]">
                         {isFirstTime ? t.readyTitle : t.continueTitle}
                       </h3>
-                      <p className="text-[var(--td-sub,#aeb1c9)] text-[13px] mt-0.5">
+                      <p className="text-[var(--td-sub,#aeb1c9)] text-[12px] md:text-[13px] mt-0.5 line-clamp-2">
                         {isFirstTime ? t.readyDesc : t.continueDesc(totalProgress)}
                       </p>
                     </div>
                   </div>
                   <button
-                    onClick={() => trigger(() => { setCurrentLesson(allLessons[0]); setActiveTab("video"); setLessonModal(true); })}
-                    className="shrink-0 bg-[var(--td-coral,#ff6b4a)] px-[22px] py-[11px] rounded-[13px] font-bold text-[#11152a] border-none cursor-pointer shadow-[var(--td-shadow-coral,0_8px_28px_rgba(255,107,74,0.3))] transition-opacity hover:opacity-90"
+                    onClick={() =>
+                      trigger(() => {
+                        setCurrentLesson(allLessons[0]);
+                        setActiveTab("video");
+                        setLessonModal(true);
+                      })
+                    }
+                    className="shrink-0 w-full sm:w-auto bg-[var(--td-coral,#ff6b4a)] px-5 py-2.5 md:px-[22px] md:py-[11px] rounded-[13px] font-bold text-[13px] md:text-sm text-[#11152a] border-none cursor-pointer shadow-[var(--td-shadow-coral,0_8px_28px_rgba(255,107,74,0.3))] transition-opacity hover:opacity-90"
                   >
                     {isFirstTime ? t.startBtn : t.continueBtn}
                   </button>
+                </div>
+
+                {/* Mobile Schedule — inline on dashboard */}
+                <div className="lg:hidden rounded-2xl bg-[var(--td-surface)] backdrop-blur-xl border border-[var(--td-border)] p-4">
+                  <h3 className="font-bold text-[14px] mb-3">{t.schedule}</h3>
+                  <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1 scrollbar-none">
+                    {Object.keys(mySchedule).map((day) => (
+                      <button
+                        key={day}
+                        onClick={() => setSelectedDay(day)}
+                        className={`px-2.5 py-1.5 rounded-[9px] font-mono text-[11px] border-none cursor-pointer transition-colors shrink-0 ${
+                          day === selectedDay
+                            ? "bg-[var(--td-coral)] text-[#11152a] font-bold"
+                            : "bg-transparent text-[var(--td-muted)] font-medium"
+                        }`}
+                      >
+                        {day}
+                      </button>
+                    ))}
+                  </div>
+                  <div className="flex flex-col gap-2 min-h-[60px]">
+                    {(mySchedule[selectedDay] || []).length > 0 ? (
+                      mySchedule[selectedDay].map(({ time, class: className }, i) => (
+                        <div key={i} className="flex flex-col gap-1">
+                          <span className="font-mono text-[9.5px] text-[var(--td-muted)] uppercase tracking-[0.1em]">{time}</span>
+                          <div className="bg-[var(--td-coral-soft)] border border-[rgba(255,107,74,0.25)] rounded-[11px] p-2.5 text-[13px]">
+                            {className}
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-[var(--td-muted)] text-[13px]">{t.noClasses}</p>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
 
             {/* ── CONTENT ── */}
             {activeMenu === "cont" && (
-              <div className="flex flex-col gap-7">
-                <div className="flex items-center justify-between">
-                  <h2 className="font-[var(--font-display,serif)] text-[28px] font-bold tracking-[-0.02em]">
+              <div className="flex flex-col gap-5 md:gap-7">
+                <div className="flex items-center justify-between gap-3">
+                  <h2 className="font-[var(--font-display,serif)] text-[22px] md:text-[28px] font-bold tracking-[-0.02em]">
                     {t.courseContent}
                   </h2>
-                  <div className="font-mono text-[11px] text-[var(--td-muted,#707599)] bg-[var(--td-surface)] px-3 py-1.5 rounded-[10px] border border-[var(--td-border)]">
+                  <div className="font-mono text-[11px] text-[var(--td-muted,#707599)] bg-[var(--td-surface)] px-3 py-1.5 rounded-[10px] border border-[var(--td-border)] shrink-0">
                     {chapters.length} {t.chapters}
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-3.5">
+                <div className="flex flex-col gap-3">
                   {chapters.map((chapter, chIdx) => {
                     const isOpen = openChapterId === chapter.chapter_id;
                     const chapterLessons = chapter.lessons || [];
@@ -359,25 +409,25 @@ function Dashboardtuition() {
                     return (
                       <div
                         key={chapter.chapter_id}
-                        className="relative overflow-hidden rounded-[20px] border border-[var(--td-border)] bg-[var(--td-surface)] backdrop-blur-xl"
+                        className="relative overflow-hidden rounded-[18px] md:rounded-[20px] border border-[var(--td-border)] bg-[var(--td-surface)] backdrop-blur-xl"
                       >
                         <button
                           onClick={() => setOpenChapterId(isOpen ? null : chapter.chapter_id)}
-                          className="w-full flex items-center justify-between gap-4 p-5 text-left bg-transparent border-none text-inherit cursor-pointer"
+                          className="w-full flex items-center justify-between gap-3 md:gap-4 p-4 md:p-5 text-left bg-transparent border-none text-inherit cursor-pointer"
                         >
-                          <div className="flex items-center gap-3.5">
-                            <span className="font-mono text-[11px] text-[var(--td-coral,#ff6b4a)] bg-[var(--td-coral-soft)] w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0">
+                          <div className="flex items-center gap-3 min-w-0">
+                            <span className="font-mono text-[10px] md:text-[11px] text-[var(--td-coral,#ff6b4a)] bg-[var(--td-coral-soft)] w-7 h-7 md:w-8 md:h-8 rounded-[9px] md:rounded-[10px] flex items-center justify-center shrink-0">
                               {String(chIdx + 1).padStart(2, "0")}
                             </span>
-                            <div>
-                              <h3 className="text-[15px] font-bold">{chapter.chapter_title}</h3>
-                              <p className="text-[11.5px] text-[var(--td-muted,#707599)] mt-0.5">
+                            <div className="min-w-0">
+                              <h3 className="text-[13.5px] md:text-[15px] font-bold truncate">{chapter.chapter_title}</h3>
+                              <p className="text-[11px] md:text-[11.5px] text-[var(--td-muted,#707599)] mt-0.5">
                                 {chapterDone}/{chapterLessons.length} {t.lessonsCompleted}
                               </p>
                             </div>
                           </div>
                           <ChevronRight
-                            size={17}
+                            size={16}
                             className="text-[var(--td-muted)] shrink-0 transition-transform duration-300"
                             style={{ transform: isOpen ? "rotate(90deg)" : "none" }}
                           />
@@ -392,24 +442,24 @@ function Dashboardtuition() {
                               transition={{ duration: 0.3 }}
                               className="overflow-hidden"
                             >
-                              <div className="flex flex-col gap-2 px-5 pb-5">
+                              <div className="flex flex-col gap-2 px-3 md:px-5 pb-4 md:pb-5">
                                 {chapterLessons.map((lesson) => (
                                   <div
                                     key={lesson.id}
                                     onClick={() => handleLessonClick(lesson)}
-                                    className="flex items-center gap-3.5 p-3.5 rounded-2xl border border-[var(--td-border)] cursor-pointer transition-all duration-300 bg-[rgba(245,241,230,0.02)] hover:border-[var(--td-coral)] hover:bg-[var(--td-coral-soft)]"
+                                    className="flex items-center gap-3 p-3 md:p-3.5 rounded-xl md:rounded-2xl border border-[var(--td-border)] cursor-pointer transition-all duration-300 bg-[rgba(245,241,230,0.02)] hover:border-[var(--td-coral)] hover:bg-[var(--td-coral-soft)] active:scale-[0.98]"
                                   >
                                     <div className="shrink-0">
                                       {lesson.completed
-                                        ? <CheckCircle2 size={19} color="var(--td-teal,#45c2a6)" />
-                                        : <Circle size={19} color="var(--td-muted,#707599)" />
+                                        ? <CheckCircle2 size={18} color="var(--td-teal,#45c2a6)" />
+                                        : <Circle size={18} color="var(--td-muted,#707599)" />
                                       }
                                     </div>
-                                    <p className="flex-1 min-w-0 text-[13.5px] font-semibold truncate">
+                                    <p className="flex-1 min-w-0 text-[12.5px] md:text-[13.5px] font-semibold truncate">
                                       {lesson.title}
                                     </p>
-                                    <div className="w-[30px] h-[30px] rounded-[10px] bg-[var(--td-surface-solid)] flex items-center justify-center text-[var(--td-coral)] shrink-0">
-                                      <Play size={12} fill="currentColor" />
+                                    <div className="w-[28px] h-[28px] md:w-[30px] md:h-[30px] rounded-[9px] md:rounded-[10px] bg-[var(--td-surface-solid)] flex items-center justify-center text-[var(--td-coral)] shrink-0">
+                                      <Play size={11} fill="currentColor" />
                                     </div>
                                   </div>
                                 ))}
@@ -426,11 +476,11 @@ function Dashboardtuition() {
 
             {/* ── RESOURCES ── */}
             {activeMenu === "res" && (
-              <div className="flex flex-col gap-7">
-                <h2 className="font-[var(--font-display,serif)] text-[28px] font-bold tracking-[-0.02em]">
+              <div className="flex flex-col gap-5 md:gap-7">
+                <h2 className="font-[var(--font-display,serif)] text-[22px] md:text-[28px] font-bold tracking-[-0.02em]">
                   {t.resources}
                 </h2>
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                   {[
                     { name: "VS Code", url: "https://code.visualstudio.com/", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2sWIwNrqZXnmkybebuof7BX841YTGYh_5jg&s" },
                     { name: "Android Studio", url: "https://developer.android.com/studio", logo: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuJu7V-_10eRWGv3tuFzBZpgY-xqx-Au9ANA&s" },
@@ -443,11 +493,11 @@ function Dashboardtuition() {
                       href={res.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="relative overflow-hidden rounded-[20px] border border-[var(--td-border)] bg-[var(--td-surface)] backdrop-blur-xl p-[22px] flex flex-col items-center justify-center no-underline text-inherit transition-all duration-300 hover:border-[var(--td-coral)] hover:-translate-y-1"
+                      className="relative overflow-hidden rounded-[18px] md:rounded-[20px] border border-[var(--td-border)] bg-[var(--td-surface)] backdrop-blur-xl p-4 md:p-[22px] flex flex-col items-center justify-center no-underline text-inherit transition-all duration-300 hover:border-[var(--td-coral)] hover:-translate-y-1 active:scale-[0.97]"
                     >
-                      <img src={res.logo} alt={res.name} className="w-14 h-14 rounded-2xl object-cover mb-3" />
-                      <p className="font-bold text-[13px]">{res.name}</p>
-                      <span className="mt-1.5 text-[var(--td-coral)] text-[11.5px] font-bold">
+                      <img src={res.logo} alt={res.name} className="w-10 h-10 md:w-14 md:h-14 rounded-xl md:rounded-2xl object-cover mb-2 md:mb-3" />
+                      <p className="font-bold text-[12px] md:text-[13px] text-center">{res.name}</p>
+                      <span className="mt-1 md:mt-1.5 text-[var(--td-coral)] text-[10.5px] md:text-[11.5px] font-bold">
                         {lang === "french" ? "Télécharger →" : "Download →"}
                       </span>
                     </a>
@@ -458,32 +508,32 @@ function Dashboardtuition() {
 
             {/* ── SETTINGS ── */}
             {activeMenu === "sett" && (
-              <div className="flex flex-col gap-7 max-w-[640px] mx-auto py-6 w-full">
-                <h2 className="font-[var(--font-display,serif)] text-[28px] font-bold tracking-[-0.02em]">
+              <div className="flex flex-col gap-5 md:gap-7 max-w-[640px] mx-auto py-4 md:py-6 w-full">
+                <h2 className="font-[var(--font-display,serif)] text-[22px] md:text-[28px] font-bold tracking-[-0.02em]">
                   {t.settings}
                 </h2>
-                <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {settingsData.map((setting, idx) => (
                     <div
                       key={idx}
-                      className="flex items-center justify-between gap-3 p-[18px] rounded-2xl bg-[var(--td-surface)] backdrop-blur-xl border border-[var(--td-border)]"
+                      className="flex items-center justify-between gap-3 p-4 md:p-[18px] rounded-xl md:rounded-2xl bg-[var(--td-surface)] backdrop-blur-xl border border-[var(--td-border)]"
                     >
-                      <div className="flex items-center gap-3.5">
-                        <div className="w-[42px] h-[42px] rounded-[13px] bg-[var(--td-coral-soft)] flex items-center justify-center text-[var(--td-coral)] shrink-0">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <div className="w-9 h-9 md:w-[42px] md:h-[42px] rounded-[11px] md:rounded-[13px] bg-[var(--td-coral-soft)] flex items-center justify-center text-[var(--td-coral)] shrink-0">
                           {setting.icon}
                         </div>
-                        <div>
-                          <p className="text-[11px] text-[var(--td-muted)]">{setting.label}</p>
-                          <p className="text-[13.5px] font-bold">{setting.value}</p>
+                        <div className="min-w-0">
+                          <p className="text-[10.5px] md:text-[11px] text-[var(--td-muted)]">{setting.label}</p>
+                          <p className="text-[13px] md:text-[13.5px] font-bold truncate">{setting.value}</p>
                         </div>
                       </div>
-                      <button className="px-3.5 py-2 text-[11.5px] font-bold rounded-[10px] bg-[var(--td-surface-solid)] border border-[var(--td-border)] text-[var(--td-text)] cursor-pointer">
+                      <button className="px-3 py-1.5 md:px-3.5 md:py-2 text-[11px] md:text-[11.5px] font-bold rounded-[9px] md:rounded-[10px] bg-[var(--td-surface-solid)] border border-[var(--td-border)] text-[var(--td-text)] cursor-pointer shrink-0">
                         {t.edit}
                       </button>
                     </div>
                   ))}
                 </div>
-                <p className="text-center text-[11.5px] text-[var(--td-muted)] font-[var(--font-stamp)]">
+                <p className="text-center text-[11px] md:text-[11.5px] text-[var(--td-muted)] font-[var(--font-stamp)]">
                   {t.autosave}
                 </p>
               </div>
@@ -491,16 +541,16 @@ function Dashboardtuition() {
 
             {/* ── CHAT ── */}
             {activeMenu === "chat" && (
-              <div className="rounded-3xl border border-[var(--td-border)] bg-[var(--td-surface)] backdrop-blur-xl overflow-hidden">
+              <div className="rounded-2xl md:rounded-3xl border border-[var(--td-border)] bg-[var(--td-surface)] backdrop-blur-xl overflow-hidden h-[calc(100vh-160px)] md:h-auto">
                 <ChatCourseAi topic={course?.title} onClick={() => setActiveMenu("dash")} />
               </div>
             )}
           </main>
 
-          {/* ══ RIGHT PANEL: SCHEDULE ══ */}
+          {/* ══ RIGHT PANEL: SCHEDULE (desktop only) ══ */}
           {activeMenu === "dash" && (
-            <aside className="hidden lg:flex flex-col gap-5 w-[280px] shrink-0">
-              <div className="rounded-[22px] bg-[var(--td-surface)] backdrop-blur-xl border border-[var(--td-border)] p-[22px]">
+            <aside className="hidden lg:flex flex-col gap-5 w-[260px] xl:w-[280px] shrink-0">
+              <div className="rounded-[22px] bg-[var(--td-surface)] backdrop-blur-xl border border-[var(--td-border)] p-5 md:p-[22px]">
                 <h3 className="font-bold text-[14.5px] mb-3.5">{t.schedule}</h3>
 
                 <div className="flex gap-1.5 mb-[18px] flex-wrap">
@@ -540,7 +590,7 @@ function Dashboardtuition() {
       </div>
 
       {/* Mobile bottom nav */}
-      <aside className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2.5 bg-[var(--td-surface-solid,#1a2040)] backdrop-blur-2xl border border-[var(--td-border,rgba(245,241,230,0.12))] px-3.5 py-2.5 rounded-[22px] shadow-[var(--td-shadow-lg,0_16px_48px_rgba(0,0,0,0.45))] z-50">
+      <aside className="md:hidden fixed bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-[var(--td-surface-solid,#1a2040)] backdrop-blur-2xl border border-[var(--td-border,rgba(245,241,230,0.12))] px-3 py-2.5 rounded-[20px] shadow-[var(--td-shadow-lg,0_16px_48px_rgba(0,0,0,0.45))] z-50">
         {navItems.map((item) => (
           <NavIcon key={item.id} icon={item.icon} active={activeMenu === item.id} onClick={() => handleNavClick(item.id)} label={item.label} />
         ))}
@@ -551,30 +601,37 @@ function Dashboardtuition() {
       <AnimatePresence>
         {lessonModal && (
           <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[500] flex items-center justify-center bg-[rgba(7,9,20,0.82)] backdrop-blur-xl p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[500] flex items-end sm:items-center justify-center bg-[rgba(7,9,20,0.82)] backdrop-blur-xl p-0 sm:p-4"
           >
             <motion.div
-              initial={{ y: 30, opacity: 0, scale: 0.98 }}
+              initial={{ y: 60, opacity: 0, scale: 0.98 }}
               animate={{ y: 0, opacity: 1, scale: 1 }}
-              exit={{ y: 30, opacity: 0, scale: 0.98 }}
+              exit={{ y: 60, opacity: 0, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative w-full max-w-[860px] bg-[var(--td-surface-solid)] rounded-[22px] overflow-hidden border border-[var(--td-border-med)] shadow-[var(--td-shadow-lg)]"
+              className="relative w-full max-w-[860px] bg-[var(--td-surface-solid)] sm:rounded-[22px] rounded-t-[22px] overflow-hidden border border-[var(--td-border-med)] shadow-[var(--td-shadow-lg)] max-h-[95dvh] flex flex-col"
             >
+              {/* Drag handle on mobile */}
+              <div className="sm:hidden flex justify-center pt-3 pb-1">
+                <div className="w-10 h-1 rounded-full bg-[var(--td-border-med)]" />
+              </div>
+
               <button
                 onClick={closeVideo}
-                className="absolute top-4 right-4 z-50 text-[var(--td-text)] bg-[var(--td-surface)] p-2 rounded-full border border-[var(--td-border)] cursor-pointer"
+                className="absolute top-3 right-3 sm:top-4 sm:right-4 z-50 text-[var(--td-text)] bg-[var(--td-surface)] p-1.5 sm:p-2 rounded-full border border-[var(--td-border)] cursor-pointer"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
 
               {/* Tabs */}
-              <div className="flex border-b border-[var(--td-border)]">
+              <div className="flex border-b border-[var(--td-border)] shrink-0">
                 {["video", "notes"].map((tab) => (
                   <button
                     key={tab}
                     onClick={() => setActiveTab(tab)}
-                    className={`flex-1 py-3.5 text-center font-bold text-[13.5px] relative bg-transparent border-none cursor-pointer transition-colors ${
+                    className={`flex-1 py-3 text-center font-bold text-[13px] md:text-[13.5px] relative bg-transparent border-none cursor-pointer transition-colors ${
                       activeTab === tab ? "text-[var(--td-text)]" : "text-[var(--td-muted)]"
                     }`}
                   >
@@ -586,32 +643,37 @@ function Dashboardtuition() {
                 ))}
               </div>
 
-              <div className="p-4.5 flex flex-col gap-5">
+              <div className="p-3 sm:p-4 flex flex-col gap-4 overflow-y-auto">
                 {activeTab === "video" && (
                   currentLesson?.video_url ? (
-                    <VideoPlayer key={currentLesson.id} url={currentLesson.video_url} nextLesson={nextLesson} prevLesson={prevLesson} />
+                    <VideoPlayer
+                      key={currentLesson.id}
+                      url={currentLesson.video_url}
+                      nextLesson={nextLesson}
+                      prevLesson={prevLesson}
+                    />
                   ) : (
-                    <div className="flex items-center justify-center h-55 text-(--td-muted)">
+                    <div className="flex items-center justify-center h-40 text-[var(--td-muted)]">
                       {t.noVideo}
                     </div>
                   )
                 )}
 
                 {activeTab === "notes" && (
-                  <div className="flex flex-col gap-3.5">
+                  <div className="flex flex-col gap-3">
                     <textarea
                       placeholder={t.notesPlaceholder}
                       value={noteContent}
                       onChange={(e) => setNoteContent(e.target.value)}
-                      className="w-full h-50 bg-(--td-surface) border border-(--td-border) rounded-2xl p-4 text-(--td-text) outline-none resize-none text-[14px]"
+                      className="w-full h-40 sm:h-48 bg-[var(--td-surface)] border border-[var(--td-border)] rounded-2xl p-3.5 text-[var(--td-text)] outline-none resize-none text-[13.5px]"
                     />
                     <div className="flex justify-end items-center gap-2.5">
-                      <button className="bg-(--td-teal) text-[#11152a] px-4.5 py-2.5 rounded-xl font-bold text-[13px] border-none cursor-pointer">
+                      <button className="bg-[var(--td-teal)] text-[#11152a] px-4 py-2.5 rounded-xl font-bold text-[13px] border-none cursor-pointer">
                         {t.saveNote}
                       </button>
                       <button
                         onClick={() => { closeVideo(); setActiveMenu("chat"); }}
-                        className="bg-(--td-coral) text-[#11152a] px-4.5 py-2.5 rounded-xl font-bold text-[13px] border-none cursor-pointer"
+                        className="bg-[var(--td-coral)] text-[#11152a] px-4 py-2.5 rounded-xl font-bold text-[13px] border-none cursor-pointer"
                       >
                         {t.askAi}
                       </button>
@@ -650,7 +712,7 @@ const VideoPlayer = React.memo(function VideoPlayer({ url, nextLesson, prevLesso
   return (
     <div
       ref={containerRef}
-      className="relative rounded-[18px] overflow-hidden bg-black w-full aspect-video border border-[var(--td-border-med)]"
+      className="relative rounded-[16px] md:rounded-[18px] overflow-hidden bg-black w-full aspect-video border border-[var(--td-border-med)]"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
@@ -663,25 +725,25 @@ const VideoPlayer = React.memo(function VideoPlayer({ url, nextLesson, prevLesso
       />
 
       <div
-        className="absolute inset-0 flex justify-between items-center px-4 transition-opacity duration-300"
+        className="absolute inset-0 flex justify-between items-center px-3 md:px-4 transition-opacity duration-300"
         style={{ opacity: hovered ? 1 : 0, pointerEvents: hovered ? "auto" : "none" }}
       >
         <button
           onClick={prevLesson}
-          className="bg-[rgba(0,0,0,0.6)] text-white px-4 py-2.5 rounded-xl border border-[rgba(255,255,255,0.1)] cursor-pointer"
+          className="bg-[rgba(0,0,0,0.6)] text-white px-3 py-2 md:px-4 md:py-2.5 rounded-xl border border-[rgba(255,255,255,0.1)] cursor-pointer text-sm"
         >←</button>
         <button
           onClick={nextLesson}
-          className="bg-(--td-coral) text-[#11152a] px-4 py-2.5 rounded-xl border-none cursor-pointer font-bold"
+          className="bg-[var(--td-coral)] text-[#11152a] px-3 py-2 md:px-4 md:py-2.5 rounded-xl border-none cursor-pointer font-bold text-sm"
         >→</button>
       </div>
 
       <button
         onClick={handleFullScreen}
-        className="absolute top-3.5 right-3.5 bg-[rgba(0,0,0,0.6)] text-white p-2 rounded-full border border-[rgba(255,255,255,0.1)] cursor-pointer transition-opacity duration-300"
+        className="absolute top-3 right-3 bg-[rgba(0,0,0,0.6)] text-white p-1.5 md:p-2 rounded-full border border-[rgba(255,255,255,0.1)] cursor-pointer transition-opacity duration-300"
         style={{ opacity: hovered ? 1 : 0, pointerEvents: hovered ? "auto" : "none" }}
       >
-        <Maximize2 size={15} />
+        <Maximize2 size={14} />
       </button>
     </div>
   );

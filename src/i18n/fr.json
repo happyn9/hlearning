@@ -7,30 +7,28 @@
     "connect": "Connexion",
     "careers": "Carrières",
     "press": "Presse",
-    "helpCenter": "Centre d’aide",
+    "helpCenter": "Centre d'aide",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions générales",
     "newsletter": "Entrez votre email",
-    "subscribe": "S’abonner",
+    "subscribe": "S'abonner",
     "copyright": "Tous droits réservés.",
     "built": "Conçu avec précision."
-  }
-  ,
+  },
   "navbar": {
     "home": "Accueil",
     "programs": "Programmes",
     "courses": "Cours",
     "signin": "Connexion",
-    "signup": "S’inscrire",
+    "signup": "S'inscrire",
     "search": "Rechercher des cours..."
   },
-  
   "hero": {
-    "aiExperience": "Expérience d’apprentissage IA",
+    "aiExperience": "Expérience d'apprentissage IA",
     "welcomeBack": "Bon retour,",
-    "title1": "Le futur de l’apprentissage",
+    "title1": "Le futur de l'apprentissage",
     "title2": "commence ici.",
-    "subtitle": "Apprenez l’anglais, la programmation et des compétences réelles avec une nouvelle génération d’éducation basée sur l’IA.",
+    "subtitle": "Apprenez l'anglais, la programmation et des compétences réelles avec une nouvelle génération d'éducation basée sur l'IA.",
     "getStarted": "Commencer",
     "ready": "Prêt",
     "watchDemo": "Voir la démo",
@@ -71,11 +69,11 @@
     "create": "Créer un compte",
     "noAccount": "Pas de compte ?",
     "alreadyAccount": "Déjà un compte ?",
-    "signup": "S’inscrire",
+    "signup": "S'inscrire",
     "signin": "Se connecter",
     "fillFields": "Remplissez tous les champs",
     "loginFailed": "Échec de connexion",
-    "registerFailed": "Échec d’inscription",
+    "registerFailed": "Échec d'inscription",
     "otpInvalid": "Code OTP invalide",
     "googleFailed": "Échec Google login"
   },
@@ -87,15 +85,18 @@
     "cancel": "Annuler"
   },
   "chatbot": {
-  "welcome": "👋 Bienvenue sur Avila AI.\nTon assistant intelligent d’apprentissage.",
-  "subtitle": "Assistant intelligent",
-  "placeholder": "Demande à Avila AI..."
- },
-
+    "welcome": "👋 Bienvenue sur Avila AI.\nTon assistant intelligent d'apprentissage.",
+    "subtitle": "Assistant intelligent",
+    "placeholder": "Demande à Avila AI..."
+  },
   "courses": {
     "title": "Plus de H-Learning",
     "viewDetail": "Voir les détails",
-
+    "catalogue": "Catalogue",
+    "headingPrefix": "Nos",
+    "headingHighlight": "formations",
+    "subtitle": "Des programmes reconnus, accessibles en ligne, pour faire avancer votre carrière.",
+    "courseCount": "{{count}} cours",
     "tabs": {
       "software": "Logiciel / IT",
       "business": "Business",
@@ -103,109 +104,134 @@
       "management": "Management",
       "entrepreneurship": "Entrepreneuriat"
     },
-
     "software": [
-      { "title": "Introduction à l’IoT", "program": "Ingénierie Logicielle" },
+      { "title": "Introduction à l'IoT", "program": "Ingénierie Logicielle" },
       { "title": "Fondamentaux ICT", "program": "Ingénierie Logicielle" },
       { "title": "Bases du Web", "program": "Ingénierie Logicielle" },
       { "title": "Systèmes de base de données", "program": "Ingénierie Logicielle" }
     ],
-
     "business": [
       { "title": "Principes de comptabilité", "program": "Business" },
       { "title": "Mathématiques commerciales", "program": "Business" },
       { "title": "Rédaction académique", "program": "Business" },
       { "title": "Gestion financière", "program": "Business" }
     ],
-
     "law": [
       { "title": "Introduction au droit", "program": "Droit" },
       { "title": "Droit constitutionnel", "program": "Droit" },
       { "title": "Droit pénal", "program": "Droit" },
       { "title": "Droit des contrats", "program": "Droit" }
     ],
-
     "management": [
       { "title": "Principes de management", "program": "Management" },
       { "title": "Gestion RH", "program": "Management" },
       { "title": "Gestion de projet", "program": "Management" },
       { "title": "Gestion des opérations", "program": "Management" }
     ],
-
     "entrepreneurship": [
       { "title": "Entrepreneuriat 101", "program": "Entrepreneuriat" },
       { "title": "Gestion de PME", "program": "Entrepreneuriat" },
       { "title": "Stratégie startup", "program": "Entrepreneuriat" },
       { "title": "Marketing entrepreneurial", "program": "Entrepreneuriat" }
-    ]
+    ],
+    "modal": {
+      "close": "Fermer",
+      "online": "En ligne",
+      "about": "À propos",
+      "description": "Ce programme en {{program}} proposé par {{school}} vous donnera les outils théoriques et pratiques pour exceller dans votre domaine, avec un accès 100 % en ligne.",
+      "institution": "Établissement",
+      "level": "Niveau",
+      "levelValue": "Licence / Master",
+      "duration": "Durée",
+      "durationValue": "12 – 24 mois",
+      "format": "Format",
+      "formatValue": "100 % en ligne",
+      "language": "Langue",
+      "languageValue": "Français / Anglais",
+      "exploreWithAI": "Explorer avec l'IA",
+      "learnWithAI": "Apprendre avec l'IA",
+      "aiSubtitle": "Avila AI · Répond instantanément",
+      "aiIntro": "Je peux vous aider à explorer ce cours, répondre à vos questions sur les débouchés, les prérequis, l'inscription, et bien plus encore.",
+      "startWithAI": "Commencer avec l'IA",
+      "popularQuestions": "Questions populaires",
+      "suggestedTopics": "Sujets suggérés",
+      "welcomeMessage": "Bonjour ! Je suis prêt à vous accompagner dans **{{title}}**.\n\nChoisissez un sujet ci-dessous ou posez-moi directement votre question.",
+      "aiReply": "Pour \"{{title}}\" à {{school}} : c'est une excellente question ! Ce programme {{program}} est conçu pour vous donner des bases solides et des compétences pratiques. Je vous recommande de contacter directement l'établissement pour des informations officielles et actualisées.",
+      "thinking": "En train de réfléchir…",
+      "newTopic": "Nouveau sujet",
+      "copied": "Copié !",
+      "copy": "Copier",
+      "inputPlaceholder": "Posez votre question…",
+      "send": "Envoyer",
+      "topic1": "Quels sont les prérequis pour \"{{title}}\" ?",
+      "topic2": "Quel est le débouché professionnel de cette formation ?",
+      "topic3": "Combien de temps dure le programme à {{school}} ?",
+      "topic4": "Ce cours est-il reconnu à l'international ?",
+      "topic5": "Comment s'inscrire à {{school}} pour ce programme ?",
+      "topic6": "Quelles compétences vais-je acquérir ?"
+    }
   },
   "how": {
-  "title": "Apprenez plus intelligemment",
-  "features": {
-    "video": {
-      "title": "Vidéos de haute qualité",
-      "desc": "Des explications claires avec des applications concrètes."
-    },
-    "written": {
-      "title": "Cours écrits",
-      "desc": "Des leçons structurées pour une compréhension approfondie."
-    },
-    "quiz": {
-      "title": "Quiz et projets",
-      "desc": "Appliquez vos connaissances à travers la pratique et l’évaluation."
-    }
-  }
-}, 
-"tuition": {
-  "header": {
-    "tag": "Formation en anglais et français",
-    "title": "Apprenez l'anglais à travers de vraies conversations",
-    "subtitle": "PDF, vidéos et notes — à votre propre rythme."
-  },
-
-  "steps": {
-    "Beginner": {
-      "label": "Débutant",
-      "title": "Conversations débutantes",
-      "leftBubble": "Hey John, comment tu vas ? Ça fait longtemps !",
-      "rightBubble": "Je vais bien ! Tu veux qu’on se retrouve ce samedi après-midi ?"
-    },
-
-    "Intermediate": {
-      "label": "Intermédiaire",
-      "title": "Conversations intermédiaires",
-      "leftBubble": "Ça fait plaisir de te voir ! Tu es prêt pour le cours ?",
-      "rightBubble": "Oui ! Améliorons notre anglais cette semaine."
-    },
-
-    "Advanced": {
-      "label": "Avancé",
-      "title": "Conversations avancées",
-      "leftBubble": "Pourrions-nous reporter la réunion à la semaine prochaine ?",
-      "rightBubble": "Bien sûr. Je vais mettre à jour le calendrier."
+    "title": "Apprenez plus intelligemment",
+    "features": {
+      "video": {
+        "title": "Vidéos de haute qualité",
+        "desc": "Des explications claires avec des applications concrètes."
+      },
+      "written": {
+        "title": "Cours écrits",
+        "desc": "Des leçons structurées pour une compréhension approfondie."
+      },
+      "quiz": {
+        "title": "Quiz et projets",
+        "desc": "Appliquez vos connaissances à travers la pratique et l'évaluation."
+      }
     }
   },
-
-  "example": "Exemple de situation",
-  "cta": "50% DE RÉDUCTION →",
-  "continue": "Continuer & S’inscrire →",
-
-  "cards": {
-    "pdf": {
-      "title": "PDF de conversation",
-      "desc": "Grammaire, vocabulaire & exemples"
+  "tuition": {
+    "header": {
+      "tag": "Formation en anglais et français",
+      "title": "Apprenez l'anglais à travers de vraies conversations",
+      "subtitle": "PDF, vidéos et notes — à votre propre rythme."
     },
-    "video": {
-      "title": "Leçon vidéo",
-      "desc": "Regardez et écoutez des situations réelles"
+    "steps": {
+      "Beginner": {
+        "label": "Débutant",
+        "title": "Conversations débutantes",
+        "leftBubble": "Hey John, comment tu vas ? Ça fait longtemps !",
+        "rightBubble": "Je vais bien ! Tu veux qu'on se retrouve ce samedi après-midi ?"
+      },
+      "Intermediate": {
+        "label": "Intermédiaire",
+        "title": "Conversations intermédiaires",
+        "leftBubble": "Ça fait plaisir de te voir ! Tu es prêt pour le cours ?",
+        "rightBubble": "Oui ! Améliorons notre anglais cette semaine."
+      },
+      "Advanced": {
+        "label": "Avancé",
+        "title": "Conversations avancées",
+        "leftBubble": "Pourrions-nous reporter la réunion à la semaine prochaine ?",
+        "rightBubble": "Bien sûr. Je vais mettre à jour le calendrier."
+      }
     },
-    "notes": {
-      "title": "Notes intelligentes",
-      "desc": "Expressions clés & astuces"
+    "example": "Exemple de situation",
+    "cta": "50% DE RÉDUCTION →",
+    "continue": "Continuer & S'inscrire →",
+    "cards": {
+      "pdf": {
+        "title": "PDF de conversation",
+        "desc": "Grammaire, vocabulaire & exemples"
+      },
+      "video": {
+        "title": "Leçon vidéo",
+        "desc": "Regardez et écoutez des situations réelles"
+      },
+      "notes": {
+        "title": "Notes intelligentes",
+        "desc": "Expressions clés & astuces"
+      }
     }
-  }
-},
-
+  },
   "why": {
     "title": "Pourquoi choisir h-Learning ?",
     "items": {
@@ -224,78 +250,43 @@
     }
   },
   "technology": {
-  "header": {
-    "title": "Des compétences qui comptent pour votre carrière",
-    "subtitle": "Des programmes académiques de niveau international alignés sur les besoins réels de l'industrie.",
-    "cta": "Créer un Workspace"
+    "header": {
+      "title": "Des compétences qui comptent pour votre carrière",
+      "subtitle": "Des programmes académiques de niveau international alignés sur les besoins réels de l'industrie.",
+      "cta": "Créer un Workspace"
+    },
+    "viewCurriculum": "Voir le programme",
+    "showMore": "Afficher {{count}} de plus",
+    "showLess": "Afficher moins",
+    "programs": {
+      "software": { "title": "Génie logiciel", "desc": "Programmation, systèmes, bases de données et projets réels." },
+      "cs": { "title": "Informatique", "desc": "Algorithmes, structures de données, logique et résolution de problèmes." },
+      "network": { "title": "Réseaux informatiques", "desc": "Communication des données, réseaux, protocoles et sécurité." },
+      "finance": { "title": "Finance & Économie", "desc": "Micro et macroéconomie, bases de la finance par niveau." },
+      "accounting": { "title": "Comptabilité", "desc": "Principes comptables du niveau 1 au niveau 4." },
+      "it": { "title": "Technologies de l'information", "desc": "Fondamentaux IT, systèmes et infrastructures." }
+    }
   },
-
-  "viewCurriculum": "Voir le programme",
-  "showMore": "Afficher {{count}} de plus",
-  "showLess": "Afficher moins",
-
-  "programs": {
-    "software": {
-      "title": "Génie logiciel",
-      "desc": "Programmation, systèmes, bases de données et projets réels."
-    },
-    "cs": {
-      "title": "Informatique",
-      "desc": "Algorithmes, structures de données, logique et résolution de problèmes."
-    },
-    "network": {
-      "title": "Réseaux informatiques",
-      "desc": "Communication des données, réseaux, protocoles et sécurité."
-    },
-    "finance": {
-      "title": "Finance & Économie",
-      "desc": "Micro et macroéconomie, bases de la finance par niveau."
-    },
-    "accounting": {
-      "title": "Comptabilité",
-      "desc": "Principes comptables du niveau 1 au niveau 4."
-    },
-    "it": {
-      "title": "Technologies de l'information",
-      "desc": "Fondamentaux IT, systèmes et infrastructures."
-    }
-  }
-},
- "faq": {
-    "q1": {
-      "question": "Puis-je essayer h-learning Plus avant de m’abonner ?",
-      "answer": "Oui. h-learning Plus propose un essai gratuit de 7 jours sans engagement."
-    },
-    "q2": {
-      "question": "Que comprend h-learning Plus ?",
-      "answer": "Vous avez accès à des cours premium, projets pratiques et certificats professionnels."
-    },
-    "q3": {
-      "question": "Est-ce que h-learning Plus permet d’économiser ?",
-      "answer": "Oui. C’est beaucoup plus rentable que de payer chaque cours séparément."
-    },
-    "q4": {
-      "question": "Puis-je annuler à tout moment ?",
-      "answer": "Oui. Vous pouvez annuler à tout moment depuis votre tableau de bord."
-    }
+  "faq": {
+    "q1": { "question": "Puis-je essayer h-learning Plus avant de m'abonner ?", "answer": "Oui. h-learning Plus propose un essai gratuit de 7 jours sans engagement." },
+    "q2": { "question": "Que comprend h-learning Plus ?", "answer": "Vous avez accès à des cours premium, projets pratiques et certificats professionnels." },
+    "q3": { "question": "Est-ce que h-learning Plus permet d'économiser ?", "answer": "Oui. C'est beaucoup plus rentable que de payer chaque cours séparément." },
+    "q4": { "question": "Puis-je annuler à tout moment ?", "answer": "Oui. Vous pouvez annuler à tout moment depuis votre tableau de bord." }
   },
   "tuitionDash": {
     "title": "H-Tuition IA",
     "hero": {
-      "title": "Apprenez l’anglais avec l’IA + de vrais professeurs",
+      "title": "Apprenez l'anglais avec l'IA + de vrais professeurs",
       "subtitle": "Cours YouTube, coaching WhatsApp & cours en présentiel"
     },
     "plans": {
       "free": "gratuit",
       "online": "en ligne",
       "presentiel": "présentiel",
-
       "freeTitle": "Plan gratuit",
       "freeDesc": "Accès aux vidéos YouTube",
-
       "onlineTitle": "Premium en ligne",
       "onlineDesc": "WhatsApp + professeur IA",
-
       "presentielTitle": "Présentiel",
       "presentielDesc": "Cours physiques"
     },
@@ -305,31 +296,14 @@
       "ai": "Coach IA grammaire",
       "french": "Pratique du français"
     },
-    "video": {
-      "title": "Vidéo de cours"
-    }
+    "video": { "title": "Vidéo de cours" }
   },
   "onboarding": {
-    "stepOne": {
-      "title": "Que souhaitez-vous faire ?"
-    },
-
-    "stepTwo": {
-      "title": "Qu’est-ce qui vous amène ici ?"
-    },
-
-    "stepProgram": {
-      "title": "Choisissez votre programme ZCAS"
-    },
-
-    "stepThree": {
-      "title": "Quels sont vos centres d’intérêt ?"
-    },
-
-    "stepPrivacy": {
-      "title": "Confidentialité et politiques"
-    },
-
+    "stepOne": { "title": "Que souhaitez-vous faire ?" },
+    "stepTwo": { "title": "Qu'est-ce qui vous amène ici ?" },
+    "stepProgram": { "title": "Choisissez votre programme ZCAS" },
+    "stepThree": { "title": "Quels sont vos centres d'intérêt ?" },
+    "stepPrivacy": { "title": "Confidentialité et politiques" },
     "options": {
       "Search": "Rechercher",
       "Learn & study": "Apprendre et étudier",
@@ -337,13 +311,11 @@
       "Analyze data": "Analyser des données",
       "Create something": "Créer quelque chose",
       "Brainstorm": "Brainstorming",
-
       "School": "École",
       "Work": "Travail",
       "Personal tasks": "Tâches personnelles",
       "Fun and entertainment": "Divertissement",
       "Other": "Autre",
-
       "math": "Mathématiques",
       "programming": "Programmation",
       "design": "Design",
@@ -351,7 +323,6 @@
       "science": "Science",
       "writing": "Écriture"
     },
-
     "programs": {
       "software": "Génie logiciel",
       "cs": "Informatique",
@@ -359,38 +330,18 @@
       "accounting": "Comptabilité et finance",
       "languages": "Langues"
     },
-
     "privacy": {
-      "collect": {
-        "title": "Ce que nous collectons",
-        "desc": "Des informations personnelles, préférences académiques et données d’utilisation afin d’améliorer votre expérience."
-      },
-
-      "use": {
-        "title": "Comment nous utilisons vos données",
-        "desc": "Nous personnalisons les recommandations, améliorons les services de la plateforme et envoyons des mises à jour importantes."
-      },
-
-      "rights": {
-        "title": "Vos droits",
-        "desc": "Vous pouvez accéder, modifier ou supprimer vos données à tout moment et vous désabonner des communications."
-      },
-
-      "terms": {
-        "title": "Conditions d’utilisation",
-        "desc": "Vous acceptez d’utiliser la plateforme de manière responsable et de respecter les lois locales."
-      }
+      "collect": { "title": "Ce que nous collectons", "desc": "Des informations personnelles, préférences académiques et données d'utilisation afin d'améliorer votre expérience." },
+      "use": { "title": "Comment nous utilisons vos données", "desc": "Nous personnalisons les recommandations, améliorons les services de la plateforme et envoyons des mises à jour importantes." },
+      "rights": { "title": "Vos droits", "desc": "Vous pouvez accéder, modifier ou supprimer vos données à tout moment et vous désabonner des communications." },
+      "terms": { "title": "Conditions d'utilisation", "desc": "Vous acceptez d'utiliser la plateforme de manière responsable et de respecter les lois locales." }
     },
-
-    "accept": "J’ai lu et j’accepte la",
+    "accept": "J'ai lu et j'accepte la",
     "privacyPolicy": "Politique de confidentialité",
     "and": "et les",
-    "terms": "Conditions d’utilisation",
-
+    "terms": "Conditions d'utilisation",
     "continue": "Continuer",
     "finish": "Terminer",
     "completeAll": "Veuillez compléter toutes les étapes."
   }
-
-
 }
