@@ -1,8 +1,8 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import intro from "../assets/intro.mp4";
 
-// ── Icons ──────────────────────────────────────────────────────────────────
 const IconVideo = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
@@ -45,37 +45,8 @@ const IconMaximize = () => (
   </svg>
 );
 
-// ── Feature data ───────────────────────────────────────────────────────────
-const FEATURES = [
-  {
-    Icon: IconVideo,
-    number: "01",
-    label: "Video lessons",
-    desc: "Bite-sized sessions from practitioners. Watch at your own pace, skip what you know, rewind what matters.",
-    accent: "#E0534A",
-    accentMuted: "rgba(224,83,74,0.08)",
-  },
-  {
-    Icon: IconPen,
-    number: "02",
-    label: "Written guides",
-    desc: "Searchable, linkable references built for skimming or deep dives — right there when you need them.",
-    accent: "#2563EB",
-    accentMuted: "rgba(37,99,235,0.08)",
-  },
-  {
-    Icon: IconBrain,
-    number: "03",
-    label: "Adaptive quizzes",
-    desc: "Reinforcement that adjusts to what you know. The more you do, the smarter the questions get.",
-    accent: "#7C3AED",
-    accentMuted: "rgba(124,58,237,0.08)",
-  },
-];
-
 const fmt = (s) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
-// ── Feature row ────────────────────────────────────────────────────────────
 function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isActive, onHover, onLeave }) {
   return (
     <motion.div
@@ -98,11 +69,9 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
         marginRight: -16,
       }}
     >
-      {/* Left: number + icon */}
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, paddingTop: 2 }}>
         <span style={{
-          fontFamily: "monospace",
-          fontSize: 10, fontWeight: 700,
+          fontFamily: "monospace", fontSize: 10, fontWeight: 700,
           letterSpacing: "0.08em",
           color: isActive ? accent : "#D1D5DB",
           transition: "color 0.2s",
@@ -119,8 +88,6 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
           <Icon />
         </div>
       </div>
-
-      {/* Right: text */}
       <div>
         <p style={{
           fontSize: 14, fontWeight: 600,
@@ -135,10 +102,7 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
           initial={false}
           animate={{ opacity: isActive ? 1 : 0.55 }}
           transition={{ duration: 0.18 }}
-          style={{
-            fontSize: 13, color: "#6B7280",
-            lineHeight: 1.65, margin: 0,
-          }}
+          style={{ fontSize: 13, color: "#6B7280", lineHeight: 1.65, margin: 0 }}
         >
           {desc}
         </motion.p>
@@ -147,9 +111,9 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
   );
 }
 
-// ── Video thumbnail ────────────────────────────────────────────────────────
 function VideoThumb({ onClick }) {
   const [hovered, setHovered] = useState(false);
+  const { t } = useTranslation();
 
   return (
     <motion.div
@@ -160,12 +124,8 @@ function VideoThumb({ onClick }) {
       onMouseLeave={() => setHovered(false)}
       onClick={onClick}
       style={{
-        position: "relative",
-        borderRadius: 20,
-        overflow: "hidden",
-        aspectRatio: "4/3",
-        background: "#111827",
-        cursor: "pointer",
+        position: "relative", borderRadius: 20, overflow: "hidden",
+        aspectRatio: "4/3", background: "#111827", cursor: "pointer",
         userSelect: "none",
         transform: hovered ? "translateY(-3px)" : "translateY(0)",
         boxShadow: hovered
@@ -174,18 +134,11 @@ function VideoThumb({ onClick }) {
         transition: "transform 0.28s ease, box-shadow 0.28s ease",
       }}
     >
-      {/* Subtle gradient layer */}
       <div style={{
         position: "absolute", inset: 0,
         background: "linear-gradient(135deg, rgba(79,70,229,0.3) 0%, rgba(124,58,237,0.15) 50%, rgba(17,24,39,0) 100%)",
       }} />
-
-      {/* Faux UI mockup */}
-      <div style={{
-        position: "absolute", inset: 0,
-        padding: 28, display: "flex", gap: 16,
-      }}>
-        {/* Sidebar */}
+      <div style={{ position: "absolute", inset: 0, padding: 28, display: "flex", gap: 16 }}>
         <div style={{ width: "28%", display: "flex", flexDirection: "column", gap: 10, paddingTop: 4 }}>
           <div style={{ height: 7, borderRadius: 100, background: "rgba(165,180,252,0.6)", width: "80%" }} />
           {[65, 85, 55, 72].map((w, i) => (
@@ -195,7 +148,6 @@ function VideoThumb({ onClick }) {
             }} />
           ))}
         </div>
-        {/* Main */}
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
           <div style={{ height: 6, borderRadius: 100, width: "45%", background: "rgba(255,255,255,0.12)" }} />
           <div style={{
@@ -228,8 +180,6 @@ function VideoThumb({ onClick }) {
           </div>
         </div>
       </div>
-
-      {/* Overlay + play */}
       <div style={{
         position: "absolute", inset: 0,
         background: hovered ? "rgba(0,0,0,0.38)" : "rgba(0,0,0,0.18)",
@@ -240,8 +190,7 @@ function VideoThumb({ onClick }) {
           animate={{ scale: hovered ? 1.08 : 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 22 }}
           style={{
-            width: 56, height: 56, borderRadius: "50%",
-            background: "#fff",
+            width: 56, height: 56, borderRadius: "50%", background: "#fff",
             display: "flex", alignItems: "center", justifyContent: "center",
             color: "#111827",
             boxShadow: hovered ? "0 0 0 14px rgba(255,255,255,0.12)" : "0 0 0 0px rgba(255,255,255,0)",
@@ -251,34 +200,25 @@ function VideoThumb({ onClick }) {
           <IconPlay size={22} />
         </motion.div>
       </div>
-
-      {/* Bottom badge */}
       <div style={{
         position: "absolute", bottom: 14, left: 14,
         display: "flex", alignItems: "center", gap: 7,
         padding: "6px 12px", borderRadius: 100,
-        background: "rgba(0,0,0,0.55)",
-        backdropFilter: "blur(8px)",
+        background: "rgba(0,0,0,0.55)", backdropFilter: "blur(8px)",
         border: "1px solid rgba(255,255,255,0.1)",
         fontSize: 11, fontWeight: 500, color: "rgba(255,255,255,0.7)",
       }}>
         <span style={{
-          width: 6, height: 6, borderRadius: "50%",
-          background: "#F87171",
+          width: 6, height: 6, borderRadius: "50%", background: "#F87171",
           animation: "hiwPulse 1.8s infinite",
         }} />
-        Voir la démo en 2 min
+        {t("how.watchDemo", "Watch 2 min demo")}
       </div>
-
-      {/* Duration */}
       <div style={{
         position: "absolute", top: 14, right: 14,
         padding: "4px 10px", borderRadius: 6,
-        background: "rgba(0,0,0,0.5)",
-        backdropFilter: "blur(6px)",
-        fontSize: 11, fontWeight: 700,
-        color: "rgba(255,255,255,0.7)",
-        fontFamily: "monospace",
+        background: "rgba(0,0,0,0.5)", backdropFilter: "blur(6px)",
+        fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)", fontFamily: "monospace",
       }}>
         2:14
       </div>
@@ -286,7 +226,6 @@ function VideoThumb({ onClick }) {
   );
 }
 
-// ── Video modal ────────────────────────────────────────────────────────────
 function VideoModal({ onClose }) {
   const videoRef = useRef(null);
   const [playing, setPlaying] = useState(false);
@@ -319,17 +258,13 @@ function VideoModal({ onClose }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
       onClick={onClose}
       style={{
         position: "fixed", inset: 0, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "center",
-        padding: 24,
-        background: "rgba(15,15,30,0.55)",
-        backdropFilter: "blur(12px)",
+        padding: 24, background: "rgba(15,15,30,0.55)", backdropFilter: "blur(12px)",
       }}
     >
       <motion.div
@@ -339,24 +274,19 @@ function VideoModal({ onClose }) {
         transition={{ type: "spring", stiffness: 280, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: "100%", maxWidth: 820,
-          background: "#FFFFFF",
-          border: "1px solid #E5E7EB",
-          borderRadius: 18,
-          overflow: "hidden",
+          width: "100%", maxWidth: 820, background: "#FFFFFF",
+          border: "1px solid #E5E7EB", borderRadius: 18, overflow: "hidden",
           boxShadow: "0 28px 70px rgba(0,0,0,0.14), 0 4px 14px rgba(0,0,0,0.06)",
         }}
       >
-        {/* Header */}
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "14px 20px",
-          borderBottom: "1px solid #F3F4F6",
+          padding: "14px 20px", borderBottom: "1px solid #F3F4F6",
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
             <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#111827" }} />
             <span style={{ fontSize: 13, fontWeight: 600, color: "#374151", letterSpacing: "-0.01em" }}>
-              Présentation du produit
+              Product walkthrough
             </span>
           </div>
           <button
@@ -365,24 +295,19 @@ function VideoModal({ onClose }) {
               width: 28, height: 28, borderRadius: 7,
               background: "#F3F4F6", border: "1px solid #E5E7EB",
               color: "#9CA3AF", display: "flex", alignItems: "center",
-              justifyContent: "center", cursor: "pointer", transition: "background 0.15s",
+              justifyContent: "center", cursor: "pointer",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "#E5E7EB")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = "#F3F4F6")}
           >
             <IconX />
           </button>
         </div>
-
-        {/* Video */}
         <div
           style={{ position: "relative", background: "#0F172A", aspectRatio: "16/9", cursor: "pointer" }}
           onClick={togglePlay}
         >
           {intro ? (
             <video
-              ref={videoRef}
-              src={intro}
+              ref={videoRef} src={intro}
               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               onTimeUpdate={() => setProgress(videoRef.current?.currentTime || 0)}
               onLoadedMetadata={() => setDuration(videoRef.current?.duration || 0)}
@@ -394,17 +319,14 @@ function VideoModal({ onClose }) {
               display: "flex", flexDirection: "column",
               alignItems: "center", justifyContent: "center", gap: 10,
             }}>
-              <p style={{ color: "#475569", fontSize: 13 }}>Connectez votre source vidéo</p>
+              <p style={{ color: "#475569", fontSize: 13 }}>Connect your video source</p>
               <code style={{ color: "#818CF8", fontSize: 11, opacity: 0.7 }}>{"import intro from \"../assets/intro.mp4\""}</code>
             </div>
           )}
-
           <AnimatePresence>
             {!playing && (
               <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 transition={{ duration: 0.12 }}
                 style={{
                   position: "absolute", inset: 0,
@@ -413,11 +335,9 @@ function VideoModal({ onClose }) {
                 }}
               >
                 <div style={{
-                  width: 52, height: 52, borderRadius: "50%",
-                  background: "#fff",
+                  width: 52, height: 52, borderRadius: "50%", background: "#fff",
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "#111827",
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                  color: "#111827", boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
                 }}>
                   <IconPlay size={20} />
                 </div>
@@ -425,58 +345,42 @@ function VideoModal({ onClose }) {
             )}
           </AnimatePresence>
         </div>
-
-        {/* Controls */}
         <div style={{
-          display: "flex", alignItems: "center", gap: 12,
-          padding: "12px 20px",
-          background: "#FAFAFA",
-          borderTop: "1px solid #F3F4F6",
+          display: "flex", alignItems: "center", gap: 12, padding: "12px 20px",
+          background: "#FAFAFA", borderTop: "1px solid #F3F4F6",
         }}>
           <button
             onClick={togglePlay}
             style={{
               width: 32, height: 32, borderRadius: 8, flexShrink: 0,
               display: "flex", alignItems: "center", justifyContent: "center",
-              background: "#fff", border: "1px solid #E5E7EB",
-              color: "#374151", cursor: "pointer",
+              background: "#fff", border: "1px solid #E5E7EB", color: "#374151", cursor: "pointer",
             }}
           >
             {playing ? <IconPause size={16} /> : <IconPlay size={16} />}
           </button>
-
           <span style={{ fontSize: 11, fontFamily: "monospace", color: "#9CA3AF", width: 36, textAlign: "right", flexShrink: 0 }}>
             {fmt(progress)}
           </span>
-
-          <div
-            onClick={seek}
-            style={{
-              flex: 1, height: 4, borderRadius: 100,
-              background: "#E5E7EB", cursor: "pointer", position: "relative",
-            }}
-          >
+          <div onClick={seek} style={{
+            flex: 1, height: 4, borderRadius: 100,
+            background: "#E5E7EB", cursor: "pointer", position: "relative",
+          }}>
             <div style={{
-              height: "100%", borderRadius: 100,
-              background: "#111827",
-              width: `${pct}%`,
-              position: "relative",
-              transition: "width 0.1s linear",
+              height: "100%", borderRadius: 100, background: "#111827",
+              width: `${pct}%`, position: "relative", transition: "width 0.1s linear",
             }}>
               <div style={{
-                position: "absolute", right: 0, top: "50%",
-                transform: "translateY(-50%)",
+                position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)",
                 width: 12, height: 12, borderRadius: "50%",
                 background: "#fff", border: "2px solid #111827",
                 boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
               }} />
             </div>
           </div>
-
           <span style={{ fontSize: 11, fontFamily: "monospace", color: "#9CA3AF", width: 36, flexShrink: 0 }}>
             {fmt(duration)}
           </span>
-
           <button style={{
             width: 28, height: 28, borderRadius: 7,
             display: "flex", alignItems: "center", justifyContent: "center",
@@ -491,12 +395,39 @@ function VideoModal({ onClose }) {
   );
 }
 
-// ── Main ───────────────────────────────────────────────────────────────────
 export default function HowItWorks() {
+  const { t } = useTranslation();
   const [modalOpen, setModalOpen] = useState(false);
   const [activeId, setActiveId] = useState(null);
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
+
+  const FEATURES = [
+    {
+      Icon: IconVideo,
+      number: "01",
+      label: t("how.features.video.title"),
+      desc: t("how.features.video.desc"),
+      accent: "#E0534A",
+      accentMuted: "rgba(224,83,74,0.08)",
+    },
+    {
+      Icon: IconPen,
+      number: "02",
+      label: t("how.features.written.title"),
+      desc: t("how.features.written.desc"),
+      accent: "#2563EB",
+      accentMuted: "rgba(37,99,235,0.08)",
+    },
+    {
+      Icon: IconBrain,
+      number: "03",
+      label: t("how.features.quiz.title"),
+      desc: t("how.features.quiz.desc"),
+      accent: "#7C3AED",
+      accentMuted: "rgba(124,58,237,0.08)",
+    },
+  ];
 
   const activeFeature = FEATURES.find((f) => f.number === activeId);
 
@@ -510,18 +441,37 @@ export default function HowItWorks() {
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
         }
+        .hiw-grid {
+          display: grid;
+          grid-template-columns: 1fr 340px;
+          gap: 80px;
+          align-items: start;
+        }
+        @media (max-width: 768px) {
+          .hiw-grid {
+            grid-template-columns: 1fr;
+            gap: 40px;
+          }
+          .hiw-sticky {
+            position: static !important;
+          }
+          .hiw-section {
+            padding: 48px 20px !important;
+          }
+        }
       `}</style>
 
       <section
         ref={ref}
+        className="hiw-section"
         style={{
           background: "#FFFFFF",
           fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
           position: "relative",
           overflow: "hidden",
+          padding: "80px 40px",
         }}
       >
-        {/* Ambient top-left */}
         <div style={{
           position: "absolute", top: 0, left: 0,
           width: 480, height: 480, pointerEvents: "none",
@@ -531,19 +481,10 @@ export default function HowItWorks() {
           transition: "background 0.6s ease",
         }} />
 
-        <div style={{
-          maxWidth: 1080,
-          margin: "0 auto",
-          padding: "80px 40px",
-          display: "grid",
-          gridTemplateColumns: "1fr 340px",
-          gap: 80,
-          alignItems: "start",
-        }}>
+        <div style={{ maxWidth: 1080, margin: "0 auto" }} className="hiw-grid">
 
-          {/* ── Left ── */}
+          {/* Left */}
           <div>
-            {/* Header */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
@@ -553,44 +494,31 @@ export default function HowItWorks() {
               <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
                 <div style={{ width: 24, height: 1, background: "#D1D5DB" }} />
                 <span style={{
-                  fontSize: 10, fontWeight: 700,
-                  letterSpacing: "0.18em", textTransform: "uppercase",
-                  color: "#9CA3AF",
+                  fontSize: 10, fontWeight: 700, letterSpacing: "0.18em",
+                  textTransform: "uppercase", color: "#9CA3AF",
                 }}>
-                  Comment ça marche
+                  {t("how.sectionLabel", "How it works")}
                 </span>
               </div>
-
               <h2 style={{
-                fontSize: "clamp(28px,3.5vw,44px)",
-                fontWeight: 700,
-                letterSpacing: "-0.03em",
-                lineHeight: 1.1,
-                color: "#111827",
-                margin: "0 0 16px",
+                fontSize: "clamp(24px,3.5vw,44px)", fontWeight: 700,
+                letterSpacing: "-0.03em", lineHeight: 1.1,
+                color: "#111827", margin: "0 0 16px",
               }}>
-                Trois façons d'apprendre,<br />
-                <span style={{ color: "#6B7280", fontWeight: 400 }}>un seul endroit.</span>
+                {t("how.title")}
               </h2>
-
               <p style={{
-                fontSize: 14,
-                lineHeight: 1.7,
-                color: "#6B7280",
-                maxWidth: 360,
-                margin: 0,
+                fontSize: 14, lineHeight: 1.7, color: "#6B7280",
+                maxWidth: 360, margin: 0,
               }}>
-                Choisissez le format qui correspond à votre moment — session profonde ou cinq minutes libres, tout compte.
+                {t("how.subtitle", "Pick the format that fits your moment — deep session or five free minutes, it all counts.")}
               </p>
             </motion.div>
 
-            {/* Feature rows */}
             <div style={{ marginLeft: 16, marginRight: 16 }}>
               {FEATURES.map((f, i) => (
                 <FeatureRow
-                  key={f.number}
-                  {...f}
-                  index={i}
+                  key={f.number} {...f} index={i}
                   isActive={activeId === f.number}
                   onHover={() => setActiveId(f.number)}
                   onLeave={() => setActiveId(null)}
@@ -598,7 +526,6 @@ export default function HowItWorks() {
               ))}
             </div>
 
-            {/* Link */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={inView ? { opacity: 1 } : {}}
@@ -609,62 +536,51 @@ export default function HowItWorks() {
                 href="#"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 7,
-                  fontSize: 13, fontWeight: 600,
-                  color: "#111827", textDecoration: "none",
-                  transition: "opacity 0.15s",
+                  fontSize: 13, fontWeight: 600, color: "#111827",
+                  textDecoration: "none", transition: "opacity 0.15s",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.6")}
                 onMouseLeave={(e) => (e.currentTarget.style.opacity = "1")}
               >
-                Explorer toutes les fonctionnalités <IconArrowRight />
+                {t("how.exploreAll", "Explore all features")} <IconArrowRight />
               </a>
             </motion.div>
           </div>
 
-          {/* ── Right ── */}
-          <div style={{ position: "sticky", top: 80 }}>
+          {/* Right */}
+          <div className="hiw-sticky" style={{ position: "sticky", top: 80 }}>
             <VideoThumb onClick={() => setModalOpen(true)} />
 
-            {/* Social proof */}
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ delay: 0.4 }}
-              style={{
-                marginTop: 18,
-                display: "flex", alignItems: "center", gap: 12,
-              }}
+              style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 12 }}
             >
               <div style={{ display: "flex" }}>
                 {["#C7D2FE", "#DDD6FE", "#BBF7D0", "#FDE68A"].map((bg, i) => (
                   <div key={i} style={{
                     width: 26, height: 26, borderRadius: "50%",
-                    border: "2px solid #fff",
-                    background: bg,
+                    border: "2px solid #fff", background: bg,
                     marginLeft: i === 0 ? 0 : -8,
-                    zIndex: 4 - i,
-                    position: "relative",
+                    zIndex: 4 - i, position: "relative",
                   }} />
                 ))}
               </div>
               <p style={{ fontSize: 12, color: "#6B7280", margin: 0 }}>
-                <span style={{ fontWeight: 600, color: "#111827" }}>4 200+</span> apprenants inscrits
+                <span style={{ fontWeight: 600, color: "#111827" }}>4 200+</span>{" "}
+                {t("how.enrolled", "learners enrolled")}
               </p>
             </motion.div>
 
-            {/* Mini feature indicator — shows which feature is hovered */}
             <AnimatePresence mode="wait">
               {activeFeature && (
                 <motion.div
                   key={activeFeature.number}
-                  initial={{ opacity: 0, y: 6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
+                  initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
                   transition={{ duration: 0.16 }}
                   style={{
-                    marginTop: 16,
-                    padding: "12px 14px",
-                    borderRadius: 10,
+                    marginTop: 16, padding: "12px 14px", borderRadius: 10,
                     background: activeFeature.accentMuted,
                     border: `1px solid ${activeFeature.accent}20`,
                     display: "flex", alignItems: "center", gap: 10,
@@ -673,8 +589,7 @@ export default function HowItWorks() {
                   <div style={{
                     width: 28, height: 28, borderRadius: 7, flexShrink: 0,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    background: "rgba(255,255,255,0.8)",
-                    color: activeFeature.accent,
+                    background: "rgba(255,255,255,0.8)", color: activeFeature.accent,
                   }}>
                     <activeFeature.Icon />
                   </div>

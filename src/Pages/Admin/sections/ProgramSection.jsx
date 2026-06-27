@@ -18,10 +18,12 @@ export default function ProgramsSection({
 
   /* ================= STATE ================= */
   const [programData, setProgramData] = useState({
-    title: "",
-    code: "",
-    description: ""
-  });
+  title: "",
+  code: "",
+  description: "",
+  category: "IT",
+  language: ""
+});
 
   const [loading, setLoading] = useState(false);
 
@@ -168,6 +170,8 @@ export default function ProgramsSection({
                 }
               />
 
+              
+
             </div>
 
             <p className="text-xs text-gray-400 mt-2">
@@ -175,11 +179,42 @@ export default function ProgramsSection({
             </p>
 
           </div>
+<div>
+  <label className="label">Category</label>
+  <select
+    value={programData.category}
+    className="input"
+    onChange={(e) => {
+      updateField("category", e.target.value);
+      if (e.target.value === "IT") updateField("language", "");
+    }}
+  >
+    <option value="IT">Informatique</option>
+    <option value="LANGUAGE">Langue</option>
+  </select>
+</div>
 
+{/* LANGUAGE — visible seulement si category === "LANGUAGE" */}
+{programData.category === "LANGUAGE" && (
+  <div>
+    <label className="label">Language</label>
+    <select
+      value={programData.language}
+      className="input"
+      onChange={(e) => updateField("language", e.target.value)}
+    >
+      <option value="">Select language</option>
+      <option value="en">Anglais</option>
+      <option value="fr">Français</option>
+    </select>
+  </div>
+)}
         </div>
-
+        
+        
         {/* ================= RIGHT ================= */}
         <div className="space-y-5">
+
 
           {/* DESCRIPTION */}
           <div>

@@ -1,7 +1,7 @@
 import api from "./api";
 
 export const getPremiumCourses = async (program = null) => {
-  const url = program ? `/premium/courses?program=${program}` : "/premium/courses";
+  const url = program ? `/premium/courses?program=${program}` : "/premium/courses/it";
   return await api.get(url);
 };
 

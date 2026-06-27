@@ -8,6 +8,8 @@ import ProgramsSection from "./sections/ProgramSection";
 import CoursesSection from "./sections/CourseSection";
 import ContentSection from "./sections/ContentSection";
 import SettingsSection from "./sections/SettingsSection";
+import CenterSection from "./sections/CenterSection";
+import TeacherSection from "./sections/TeacherSection";
 import toast from "react-hot-toast";
 import useAdminPin from "./hooks/useAdminPin";
 
@@ -20,6 +22,8 @@ export default function AdminDashboard() {
   const [programs, setPrograms] = useState([]);
   const [courses, setCourses] = useState([]);
   const [chapters, setChapters] = useState([]);
+  const [centers, setCenters] = useState([]);
+  const [teachers, setTeachers] = useState([]);
 
   const [programData, setProgramData] = useState({});
   const [courseData, setCourseData] = useState({});
@@ -172,6 +176,14 @@ export default function AdminDashboard() {
         {active === "settings" && (
            <SettingsSection />
         )}
+
+        {active === "centers" && (
+  <CenterSection setCenters={setCenters} />
+)}
+
+{active === "teachers" && (
+  <TeacherSection setTeachers={setTeachers} />
+)}
       </main>
 
       <PinModal

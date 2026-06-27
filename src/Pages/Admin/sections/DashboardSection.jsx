@@ -8,17 +8,20 @@ import StatCard from "../components/StatCard"
 export default function DashboardSection() {
   const [courses, setCourses] = useState([]);
   const [chapters, setChapters] = useState([]);
+  const [learners,setLearners]=useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function load() {
       try {
-        const [coursesRes, chaptersRes] = await Promise.all([
+        const [coursesRes, chaptersRes,learnersRes] = await Promise.all([
           adminService.getCourses(),
           adminService.getChapters(),
+          adminService.getLearners(),
         ]);
         setCourses(Array.isArray(coursesRes) ? coursesRes : []);
         setChapters(Array.isArray(chaptersRes) ? chaptersRes : []);
+        setLearners(Array.isArray(learnersRes) ? learnersRes : [] );
       } catch (e) {
         console.log(e);
       } finally {
@@ -28,9 +31,7 @@ export default function DashboardSection() {
     load();
   }, []);
 
-  // ── Construire les lignes du Gantt à partir des cours réels ──────
-  // Chaque cours occupe une plage de "semaines" dérivée de order_index,
-  // avec un statut dérivé du nombre de chapitres qu'il possède déjà.
+
   const ganttItems = courses.slice(0, 6).map((course, idx) => {
     const courseChapters = chapters.filter((ch) => ch.course_id === course.id);
     const hasChapters = courseChapters.length > 0;
@@ -70,7 +71,7 @@ export default function DashboardSection() {
 
         <StatCard
           title="Students"
-          value="320"
+          value={loading ? "..." : learners.length}
           icon={<Users size={18} />}
           accent="violet"
           trend={12.4}

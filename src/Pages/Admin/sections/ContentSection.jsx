@@ -323,6 +323,23 @@ export default function ContentSection({
 
             </div>
           </div>
+          {/* PDF URL */}
+<div>
+  <label className="label">
+    PDF URL (optional, can be combined with video)
+  </label>
+
+  <div className="relative">
+    <Link2 size={18} className="input-icon" />
+    <input
+      placeholder="https://.../document.pdf"
+      className="input pl-11"
+      onChange={(e) =>
+        updateLesson("pdf_url", e.target.value)
+      }
+    />
+  </div>
+</div>
 
           {/* EXTRA FIELDS */}
           <div className="grid grid-cols-2 gap-4">

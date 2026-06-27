@@ -9,6 +9,7 @@ import {
   Plus,
   Trash2
 } from "lucide-react";
+import toast from "react-hot-toast";
 
 import SectionCard from "../components/SectionCard";
 import api from "../../../services/api";
@@ -22,12 +23,30 @@ export default function CourseSection({
   const [requirements, setRequirements] = useState([""]);
   const [learning, setLearning] = useState([""]);
   const [programs, setPrograms] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [centers, setCenters] = useState([]);
 
   useEffect(() => {
-    // ✅ api.get retourne déjà la donnée brute via l'interceptor (response.data)
     api.get("/admin/programs")
-     .then((data) => setPrograms(Array.isArray(data) ? data : []))
-     .catch(console.log);
+      .then((data) => setPrograms(Array.isArray(data) ? data : []))
+      .catch((e) => {
+        console.log("Programs error:", e);
+        toast.error(e?.message || "Failed to load programs");
+      });
+
+    api.get("/admin/teachers")
+      .then((data) => setTeachers(Array.isArray(data) ? data : []))
+      .catch((e) => {
+        console.log("Teachers error:", e);
+        toast.error(e?.message || "Failed to load teachers");
+      });
+
+    api.get("/admin/centers")
+      .then((data) => setCenters(Array.isArray(data) ? data : []))
+      .catch((e) => {
+        console.log("Centers error:", e);
+        toast.error(e?.message || "Failed to load centers");
+      });
   }, []);
 
   /* ================= UPDATE FIELD ================= */
@@ -128,8 +147,8 @@ export default function CourseSection({
           </div>
 
           {/* PROGRAM */}
-          <div className="flex gap-3 p-2">
-            <label className="label p-2">Program</label>
+          <div>
+            <label className="label">Program</label>
 
             <select
               className="input p-2 cursor-pointer"
@@ -147,6 +166,45 @@ export default function CourseSection({
                 <option key={p.id} value={p.id}>
                   {p.title}
                 </option>
+              ))}
+            </select>
+          </div>
+          {/* TEACHER */}
+          <div>
+            <label className="label">Teacher</label>
+            <select
+              className="input"
+              onChange={(e) => updateField("teacher_id", e.target.value ? Number(e.target.value) : null)}
+            >
+              <option value="">No teacher assigned</option>
+              {teachers.map((t) => (
+                <option key={t.id} value={t.id}>{t.name}</option>
+              ))}
+            </select>
+          </div>
+
+          {/* DELIVERY MODE */}
+          <div>
+            <label className="label">Delivery Mode</label>
+            <select
+              className="input"
+              onChange={(e) => updateField("delivery_mode", e.target.value)}
+            >
+              <option value="online">Online</option>
+              <option value="offline">Offline (in-person)</option>
+            </select>
+          </div>
+
+          {/* CENTER */}
+          <div>
+            <label className="label">Center (for in-person courses)</label>
+            <select
+              className="input"
+              onChange={(e) => updateField("center_id", e.target.value ? Number(e.target.value) : null)}
+            >
+              <option value="">No center</option>
+              {centers.map((c) => (
+                <option key={c.id} value={c.id}>{c.name}</option>
               ))}
             </select>
           </div>
