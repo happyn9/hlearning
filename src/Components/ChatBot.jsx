@@ -245,6 +245,7 @@ export default function ChatBot({ onClose }) {
   const [copiedId, setCopiedId] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
   const [charCount, setCharCount] = useState(0);
+  const [isLg, setIsLg] = useState(() => window.innerWidth >= 1024);
   const MAX_CHARS = 1000;
 
   const [messages, setMessages] = useState([
@@ -255,6 +256,13 @@ export default function ChatBot({ onClose }) {
   const chatRef = useRef(null);
   const inputRef = useRef(null);
   const abortRef = useRef(null);
+  
+
+useEffect(() => {
+  const handler = () => setIsLg(window.innerWidth >= 1024);
+  window.addEventListener("resize", handler);
+  return () => window.removeEventListener("resize", handler);
+}, []);
 
   /* auto scroll */
   useEffect(() => {
@@ -316,21 +324,26 @@ export default function ChatBot({ onClose }) {
   /* ── STYLES (inline, fully token-driven) ── */
   const s = {
     overlay: {
-      position: "fixed", inset: 0, zIndex: 9999,
-      display: "flex", alignItems: "center", justifyContent: "center",
-      background: resolved === "dark" ? "rgba(0,0,0,0.72)" : "rgba(0,0,0,0.4)",
-      backdropFilter: "blur(8px)", WebkitBackdropFilter: "blur(8px)",
-      padding: 16,
-    },
-    card: {
-      position: "relative", width: "100%", maxWidth: 440,
-      height: "86vh", maxHeight: 480,
-      display: "flex", flexDirection: "column",
-      borderRadius: 28, overflow: "hidden",
-      background: tk.bg,
-      border: `1px solid ${tk.border}`,
-      boxShadow: tk.shadowCard,
-    },
+  position: "fixed", inset: 0, zIndex: 9999,
+  display: "flex",
+  alignItems: isLg ? "flex-end" : "center",
+  justifyContent: isLg ? "flex-end" : "center",
+  background: resolved === "dark" ? "rgba(0,0,0,0.62)" : "rgba(0,0,0,0.4)",
+  backdropFilter: "blur(2px)", WebkitBackdropFilter: "blur(2px)",
+  padding: 16,
+},
+card: {
+  position: "relative", width: "100%", maxWidth: 440,
+  height: "86vh", maxHeight: 480,
+  display: "flex", flexDirection: "column",
+  borderRadius: isLg ? "28px 28px 0 28px" : 28,  // angle bas-droite plat sur lg
+  overflow: "hidden",
+  background: tk.bg,
+  border: `1px solid ${tk.border}`,
+  boxShadow: tk.shadowCard,
+  marginRight: isLg ? 0 : undefined,   // colle au bord droit sur lg
+  marginBottom: isLg ? 0 : undefined,  // colle au bas sur lg
+},
     header: {
       display: "flex", alignItems: "center", justifyContent: "space-between",
       padding: "14px 18px",

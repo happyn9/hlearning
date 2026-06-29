@@ -260,20 +260,6 @@ export default function CourseInfo() {
     loadData();
   }, [id]);
 
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get("payment") === "success") {
-      alert("Payment successful! You now have access to this course.");
-      setIsSubscribed(true);
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-    if (params.get("already_subscribed")) {
-      alert("You are already subscribed to this course.");
-      setIsSubscribed(true);
-      window.history.replaceState({}, "", window.location.pathname);
-    }
-  }, []);
-
   if (loading)
     return (
       <div className="h-screen flex items-center justify-center bg-[#0f1115] text-white">

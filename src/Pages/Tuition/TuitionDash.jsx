@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import ChatPage from "./ChatPage";
 import ProPlanModal from "./Proplanmodal ";
+import VideosPage from "./Videospage";
 
 /* ══════════════════════════════════════════════════════════════
    DESIGN TOKENS — "Language Passport"
@@ -131,8 +132,8 @@ const NOTIFS = [
 
 const NAV_ITEMS = [
   { Icon: Brain,         label: "AI" },
-  { Icon: MessageSquare, label: "Chat",    action: "chat" },
-  { Icon: Youtube,       label: "Videos" },
+  { Icon: MessageSquare, label: "Chat",   action: "chat" },
+  { Icon: Youtube,       label: "Videos", action: "videos" },
   { Icon: Video,         label: "Classes" },
   { Icon: GraduationCap, label: "Progress" },
 ];
@@ -143,7 +144,7 @@ const NAV_ITEMS = [
 export default function TuitionDash() {
   const { t } = useTranslation();
   const prefersReduced = useReducedMotion();
-
+  const [videosOpen, setVideosOpen] = useState(false);
   const [chat, setChat]               = useState(false);
   const [video, setVideo]             = useState(null);
   const [selectedPlan, setSelectedPlan] = useState("online");
@@ -163,7 +164,7 @@ export default function TuitionDash() {
     setSelectedPlan(plan.key);
     if (plan.key === "online" || plan.key === "presentiel") {
       setProModal(true);
-    }
+    }else {setVideosOpen(true)}
   };
 
   const fadeUp = (delay = 0) => prefersReduced ? {} : {
@@ -301,7 +302,11 @@ export default function TuitionDash() {
             icon={<Icon size={16} strokeWidth={2.2} />}
             label={label}
             active={activeNav === i}
-            onClick={() => { setActiveNav(i); if (action === "chat") setChat(true); }}
+            onClick={() => {
+  setActiveNav(i);
+  if (action === "chat") setChat(true);
+  if (action === "videos") setVideosOpen(true);
+}}
           />
         ))}
       </aside>
@@ -625,6 +630,10 @@ export default function TuitionDash() {
       <AnimatePresence>
         {video && <VideoModal videoId={video} onClose={() => setVideo(null)} t={t} />}
       </AnimatePresence>
+
+      <AnimatePresence>
+  {videosOpen && <VideosPage onClose={() => setVideosOpen(false)} />}
+</AnimatePresence>
 
       {/* ── CHAT ── */}
       {chat && <ChatPage onClose={() => setChat(false)} />}

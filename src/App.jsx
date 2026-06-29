@@ -15,6 +15,7 @@ import WorkspaceGate from "./Pages/workspace/WorkspaceGate";
 import AdminDashboard from "./Pages/Admin/AdminDashboard";
 import TeacherDashboard from "./Pages/Teach/TeacherDashboard";
 import { Toaster } from "react-hot-toast";
+import PaymentCallback from "./Pages/PaymentCallback";
 import Dashboardtuition from "./Pages/Tuition/dash/Dashboardtuition";
 
 function App() {
@@ -34,7 +35,7 @@ function App() {
         <Route path="/workspace/:id" element={<WorkspaceLayout />} />
         <Route path="/workspace" element={<WorkspaceGate />} />
         <Route path="/tuition_dashboard/:label/hlearning" element={<Dashboardtuition />} />
-
+        <Route path="/payment/callback" element={<PaymentCallback />} />
         <Route path="/myprofile" element={<ProfilePage />} />
 
         <Route
