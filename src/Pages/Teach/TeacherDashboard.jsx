@@ -383,7 +383,7 @@ export default function TeacherDashboard() {
                     handleAiSend();
                   }
                 }}
-                placeholder="Ask anything about your teaching…"
+                placeholder="anything Ask about your teaching…"
                 className="input flex-1"
               />
               <button
