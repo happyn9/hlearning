@@ -289,7 +289,7 @@ export default function Technologies() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
-  const visiblePrograms = showAll ? programs : programs.slice(0, 4);
+  const visiblePrograms = showAll ? programs : programs.slice(0, 3);
   const activeProgram = programs.find((p) => p.id === activeId) || programs[0];
 
   return (
@@ -415,7 +415,7 @@ export default function Technologies() {
               >
                 {showAll
                   ? t("technology.showLess")
-                  : t("technology.showMore", { count: programs.length - 4 })}
+                  : t("technology.showMore", { count: programs.length - 3 })}
                 <ChevronRight size={12} style={{ transform: showAll ? "rotate(90deg)" : "rotate(0deg)", transition: "transform 0.2s" }} />
               </motion.button>
             </div>

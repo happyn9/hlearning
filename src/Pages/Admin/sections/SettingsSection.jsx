@@ -70,17 +70,13 @@ export default function SettingsSection() {
 
       {/* HEADER */}
       <div>
-        <h1 className="text-3xl font-bold text-white">
-          Security Settings
-        </h1>
-
         <p className="text-gray-400 mt-2">
           Manage administrator security and PIN protection
         </p>
       </div>
 
       {/* CARD */}
-      <div className="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
+      <div className="bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-xl">
 
         {/* TOP */}
         <div className="flex items-center gap-4 mb-8">

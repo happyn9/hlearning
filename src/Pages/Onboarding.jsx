@@ -428,16 +428,7 @@ export default function Onboarding() {
           )}
         </div>
 
-        {/* RIGHT IMAGE */}
-        {currentStep !== "StepPrivacy" && (
-          <div className="hidden lg:flex items-center justify-center">
-            <img
-              src={data.image}
-              alt="Onboarding"
-              className="max-h-80 drop-shadow-2xl animate-fade-in rounded-2xl"
-            />
-          </div>
-        )}
+        
       </div>
     </div>
   );

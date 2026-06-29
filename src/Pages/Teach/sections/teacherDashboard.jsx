@@ -10,7 +10,7 @@ import {
 import toast from "react-hot-toast";
 
 import { teacherService } from "../Admin/services/teacherService";
-import TeacherSidebar from "./sections/TeacherSidebar";
+import TeacherSidebar from "./components/TeacherSidebar";
 
 export default function TeacherDashboard() {
 

@@ -156,7 +156,7 @@ function CourseModal({ course, onClose }) {
 
   return (
     <motion.div
-      className="csl-sans fixed inset-0 z-[9999] flex flex-col"
+      className="csl-sans fixed inset-0 z-9999 flex flex-col"
       style={{ background: "#F7F6F3" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -164,7 +164,7 @@ function CourseModal({ course, onClose }) {
       transition={{ duration: 0.22 }}
     >
       {/* ── HERO BAND ── */}
-      <div className="relative h-[280px] md:h-[340px] shrink-0 overflow-hidden">
+      <div className="relative h-70 md:h-75 shrink-0 overflow-hidden">
         <img
           src={`${course.image}?auto=format&w=1400&q=80`}
           alt={course.title}
@@ -198,7 +198,7 @@ function CourseModal({ course, onClose }) {
       </div>
 
       {/* ── BODY ── */}
-      <div className="flex-1 overflow-hidden flex flex-col md:flex-row">
+      <div className="flex-1 absolute top-10 left-0 w-full overflow-hidden flex flex-col md:flex-row">
 
         {/* LEFT — course info */}
         <div className="hidden md:flex flex-col w-[320px] shrink-0 border-r border-black/[0.06] bg-white overflow-y-auto no-scrollbar p-8">
@@ -217,7 +217,7 @@ function CourseModal({ course, onClose }) {
               { label: t("courses.modal.format", "Format"),           value: t("courses.modal.formatValue", "100% Online") },
               { label: t("courses.modal.language", "Language"),       value: t("courses.modal.languageValue", "French / English") },
             ].map(({ label, value }) => (
-              <div key={label} className="flex justify-between text-sm border-b border-black/[0.05] pb-3">
+              <div key={label} className="flex justify-between text-sm border-b border-black/5 pb-3">
                 <span className="text-[#9CA3AF]">{label}</span>
                 <span className="text-[#0F0F1A] font-semibold">{value}</span>
               </div>
@@ -476,7 +476,7 @@ function CourseModal({ course, onClose }) {
 function CourseCard({ course, index, ctaLabel, t, onClick }) {
   return (
     <motion.div
-      className="csl-card bg-white rounded-2xl overflow-hidden border border-black/[0.06] flex flex-col cursor-pointer group"
+      className="csl-card bg-white rounded-2xl overflow-hidden border border-black/6 flex flex-col cursor-pointer group"
       style={{ transition: "box-shadow 0.22s, transform 0.22s" }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -484,7 +484,7 @@ function CourseCard({ course, index, ctaLabel, t, onClick }) {
       onClick={onClick}
       whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)" }}
     >
-      <div className="relative h-[172px] overflow-hidden shrink-0">
+      <div className="relative h-43 overflow-hidden shrink-0">
         <img
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
           src={`${course.image}?auto=format&w=600&q=80`}
@@ -503,7 +503,7 @@ function CourseCard({ course, index, ctaLabel, t, onClick }) {
         </div>
       </div>
 
-      <div className="px-[18px] pt-[18px] pb-3 flex-1 flex flex-col">
+      <div className="px-4.5 pt-4.5 pb-3 flex-1 flex flex-col">
         <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-indigo-500 mb-1.5">
           {course.program}
         </p>
@@ -513,14 +513,14 @@ function CourseCard({ course, index, ctaLabel, t, onClick }) {
         <div className="flex items-center gap-1.5 mt-3.5 text-[12px] text-[#9CA3AF]">
           <GraduationCap size={12} />
           <span>{course.school}</span>
-          <span className="w-[3px] h-[3px] rounded-full bg-[#D1D5DB]" />
+          <span className="w-0.75 h-0.75 rounded-full bg-[#D1D5DB]" />
           <BookOpen size={11} />
           <span>{t("courses.modal.online", "Online")}</span>
         </div>
       </div>
 
       <button
-        className="mx-[18px] mb-[18px] mt-3 py-[11px] rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] text-[#374151] text-[13px] font-semibold font-[inherit] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 group-hover:bg-indigo-500 group-hover:border-indigo-500 group-hover:text-white"
+        className="mx-4.5 mb-4.5 mt-3 py-2.75 rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] text-[#374151] text-[13px] font-semibold font-[inherit] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 group-hover:bg-indigo-500 group-hover:border-indigo-500 group-hover:text-white"
         tabIndex={-1}
       >
         {ctaLabel} <ArrowUpRight size={13} />
