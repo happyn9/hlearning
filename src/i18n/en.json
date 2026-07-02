@@ -15,7 +15,6 @@
     "copyright": "All rights reserved.",
     "built": "Designed & built with precision."
   },
-  
   "navbar": {
     "home": "Home",
     "programs": "Programs",
@@ -24,7 +23,6 @@
     "signup": "Sign Up",
     "search": "Search courses..."
   },
-  
   "hero": {
     "aiExperience": "AI Learning Experience",
     "welcomeBack": "Welcome back,",
@@ -38,7 +36,113 @@
     "progress": "Progress +87%",
     "smartCourses": "Smart Courses",
     "aiTutor": "AI Tutor",
-    "dailyStreak": "Daily Streak"
+    "dailyStreak": "Daily Streak",
+    "activeUsers": "active learners this month",
+    "liveSupport": "Live Support",
+    "trust": {
+      "noCreditCard": "No credit card required",
+      "cancelAnytime": "Cancel anytime",
+      "freeAccess": "Free access"
+    },
+    "strip": {
+      "instant": "Instant AI response",
+      "courses": "Adaptive courses",
+      "feedback": "Real-time feedback",
+      "track": "Progress tracking",
+      "cta": "View all courses"
+    },
+    "app": {
+      "windowTitle": "Dashboard",
+      "courses": "My courses",
+      "course1": "Algorithms",
+      "course2": "Databases",
+      "course3": "Networking",
+      "streak": "day streak",
+      "moduleLabel": "Module 4 / 7",
+      "lessonTitle": "Quick sort & complexity",
+      "userQuestion": "What's the difference between O(n) and O(n²)?",
+      "aiAnswer": "O(n) means execution time grows linearly with data size — if you double n, you double the time. O(n²) grows quadratically: doubling n quadruples the time. In practice, always prefer O(n) when possible!",
+      "inputPlaceholder": "Ask the AI a question..."
+    },
+    "dashboard": {
+      "inProgress": "In progress",
+      "module": "Module",
+      "courseTitle": "Advanced Algorithms",
+      "progress": "Progress",
+      "streak": "Streak",
+      "days": "day streak",
+      "aiReply": "AI Reply",
+      "average": "average",
+      "aiFeedbackHint": "Ask the AI a question about this course"
+    }
+  },
+  "cert": {
+    "eyebrow": "Certifications",
+    "title1": "Earn a certificate",
+    "title2": "recognized everywhere.",
+    "subtitle": "Complete the full learning path and download your official certificate in 4 simple steps.",
+    "stepsLabel": "Learning path steps",
+    "stepsCount": "steps",
+    "trust": {
+      "recognized": "Recognized cert.",
+      "ai": "AI-graded",
+      "instant": "Instant download"
+    },
+    "step1": {
+      "label": "Step 1 — Learn",
+      "title": "Follow the courses",
+      "desc": "Access videos, readings, and resources at your own pace. The AI adapts content to your level.",
+      "d1": "HD video courses with subtitles",
+      "d2": "Downloadable summary sheets",
+      "d3": "Unlimited access, no deadlines",
+      "stat": "Average learner rating",
+      "statLabel": "Average rating"
+    },
+    "step2": {
+      "label": "Step 2 — Practice",
+      "title": "Complete the exercises",
+      "desc": "Apply each concept with quizzes, projects, and real-world cases graded automatically.",
+      "d1": "Interactive quizzes after each lesson",
+      "d2": "Practical projects graded by AI",
+      "d3": "Detailed feedback on every answer",
+      "stat": "Average completion rate",
+      "statLabel": "Completion rate"
+    },
+    "step3": {
+      "label": "Step 3 — Validate",
+      "title": "Take the final exam",
+      "desc": "A secure 60-minute exam to validate your knowledge. Two attempts available if needed.",
+      "d1": "Exam under real conditions",
+      "d2": "Minimum passing score: 70%",
+      "d3": "Results available immediately",
+      "stat": "Exam pass rate",
+      "statLabel": "Pass rate"
+    },
+    "step4": {
+      "label": "Step 4 — Earn",
+      "title": "Download your certificate",
+      "desc": "Your signed digital certificate is ready. Share it on LinkedIn or download the official PDF.",
+      "d1": "High-resolution PDF certificate",
+      "d2": "Unique public verification link",
+      "d3": "Direct LinkedIn sharing in one click",
+      "stat": "Post-certification satisfaction",
+      "statLabel": "Satisfaction"
+    },
+    "mock": {
+      "subtitle": "Certificate of Achievement",
+      "course": "Advanced Algorithms & Data Structures",
+      "recipient": "Certified Learner",
+      "date": "Date of issue",
+      "score": "Final score",
+      "withDistinction": "With distinction",
+      "verified": "Certified and verified by EduAI",
+      "download": "Download PDF"
+    },
+    "cta": {
+      "eyebrow": "Ready to start?",
+      "title": "Join thousands of certified learners today.",
+      "btn": "Start for free"
+    }
   },
   "profile": {
     "title": "My Profile",
@@ -79,7 +183,6 @@
     "otpInvalid": "OTP invalid",
     "googleFailed": "Google login failed"
   },
-
   "otp": {
     "title": "Verify OTP",
     "subtitle": "Enter the 6 digit code sent to your email",
@@ -88,16 +191,18 @@
     "cancel": "Cancel"
   },
   "chatbot": {
-
-  "welcome": "👋 Welcome to Avila AI.\nYour intelligent learning assistant.",
-  "subtitle": "Smart Assistant",
-  "placeholder": "Ask Avila AI..."
-  
- },
+    "welcome": "👋 Welcome to Avila AI.\nYour intelligent learning assistant.",
+    "subtitle": "Smart Assistant",
+    "placeholder": "Ask Avila AI..."
+  },
   "courses": {
     "title": "More From H-Learning",
     "viewDetail": "View Details",
-
+    "catalogue": "Catalogue",
+    "headingPrefix": "Our",
+    "headingHighlight": "programs",
+    "subtitle": "Recognized programs, accessible online, to advance your career.",
+    "courseCount": "{{count}} courses",
     "tabs": {
       "software": "Software / IT",
       "business": "Business",
@@ -105,108 +210,134 @@
       "management": "Management",
       "entrepreneurship": "Entrepreneurship"
     },
-
     "software": [
       { "title": "Introduction to IoT", "program": "Software Engineering" },
       { "title": "ICT Fundamentals", "program": "Software Engineering" },
       { "title": "Web Development Basics", "program": "Software Engineering" },
       { "title": "Database Systems", "program": "Software Engineering" }
     ],
-
     "business": [
       { "title": "Principles of Accounting", "program": "Business" },
       { "title": "Business Mathematics", "program": "Business" },
       { "title": "Academic Writing", "program": "Business" },
       { "title": "Financial Management", "program": "Business" }
     ],
-
     "law": [
       { "title": "Introduction to Law", "program": "Law" },
       { "title": "Constitutional Law", "program": "Law" },
       { "title": "Criminal Law", "program": "Law" },
       { "title": "Contract Law", "program": "Law" }
     ],
-
     "management": [
       { "title": "Principles of Management", "program": "Management" },
       { "title": "Human Resource Management", "program": "Management" },
       { "title": "Project Management Basics", "program": "Management" },
       { "title": "Operations Management", "program": "Management" }
     ],
-
     "entrepreneurship": [
       { "title": "Entrepreneurship 101", "program": "Entrepreneurship" },
       { "title": "Small Business Management", "program": "Entrepreneurship" },
       { "title": "Startup Strategy", "program": "Entrepreneurship" },
       { "title": "Marketing for Entrepreneurs", "program": "Entrepreneurship" }
-    ]
+    ],
+    "modal": {
+      "close": "Close",
+      "online": "Online",
+      "about": "About",
+      "description": "This {{program}} program offered by {{school}} will give you the theoretical and practical tools to excel in your field, with 100% online access.",
+      "institution": "Institution",
+      "level": "Level",
+      "levelValue": "Bachelor / Master",
+      "duration": "Duration",
+      "durationValue": "12 – 24 months",
+      "format": "Format",
+      "formatValue": "100% Online",
+      "language": "Language",
+      "languageValue": "French / English",
+      "exploreWithAI": "Explore with AI",
+      "learnWithAI": "Learn with AI",
+      "aiSubtitle": "Avila AI · Answers instantly",
+      "aiIntro": "I can help you explore this course, answer your questions about career paths, prerequisites, enrollment, and much more.",
+      "startWithAI": "Start with AI",
+      "popularQuestions": "Popular questions",
+      "suggestedTopics": "Suggested topics",
+      "welcomeMessage": "Hello! I'm ready to guide you through **{{title}}**.\n\nChoose a topic below or ask me your question directly.",
+      "aiReply": "For \"{{title}}\" at {{school}}: great question! This {{program}} program is designed to give you solid foundations and practical skills. I recommend contacting the institution directly for official and up-to-date information.",
+      "thinking": "Thinking…",
+      "newTopic": "New topic",
+      "copied": "Copied!",
+      "copy": "Copy",
+      "inputPlaceholder": "Ask your question…",
+      "send": "Send",
+      "topic1": "What are the prerequisites for \"{{title}}\"?",
+      "topic2": "What are the career prospects for this program?",
+      "topic3": "How long does the program at {{school}} last?",
+      "topic4": "Is this course internationally recognized?",
+      "topic5": "How do I enroll at {{school}} for this program?",
+      "topic6": "What skills will I gain?"
+    }
   },
   "how": {
-  "title": "Learn smarter, not harder",
-  "features": {
-    "video": {
-      "title": "High-quality videos",
-      "desc": "Clear explanations with real-world implementations."
-    },
-    "written": {
-      "title": "Written courses",
-      "desc": "Structured lessons for deep understanding."
-    },
-    "quiz": {
-      "title": "Quizzes & projects",
-      "desc": "Apply knowledge through practice and evaluation."
-    }
-  }
- },
-"tuition": {
-  "header": {
-    "tag": "English & French Tuition",
-    "title": "Learn English Through Real Conversations",
-    "subtitle": "PDFs, videos and notes — all at your own pace."
-  },
-
-  "steps": {
-    "Beginner": {
-      "label": "Beginner",
-      "title": "Beginner Conversations",
-      "leftBubble": "Hey John, how are you? Long time no see!",
-      "rightBubble": "I’m doing well! Want to catch up this Saturday afternoon?"
-    },
-
-    "Intermediate": {
-      "label": "Intermediate",
-      "title": "Intermediate Conversations",
-      "leftBubble": "It’s nice to see you! Are you ready for the lesson?",
-      "rightBubble": "Yes! Let’s improve our English this week."
-    },
-
-    "Advanced": {
-      "label": "Advanced",
-      "title": "Advanced Conversations",
-      "leftBubble": "Could we reschedule the meeting for next week?",
-      "rightBubble": "Absolutely. I’ll update the calendar."
+    "title": "Learn smarter, not harder",
+    "features": {
+      "video": {
+        "title": "High-quality videos",
+        "desc": "Clear explanations with real-world implementations."
+      },
+      "written": {
+        "title": "Written courses",
+        "desc": "Structured lessons for deep understanding."
+      },
+      "quiz": {
+        "title": "Quizzes & projects",
+        "desc": "Apply knowledge through practice and evaluation."
+      }
     }
   },
-
-  "example": "Example situation",
-  "cta": "START WITH UP TO 50% OFF →",
-  "continue": "Continue & Enroll →",
-
-  "cards": {
-    "pdf": {
-      "title": "Conversation PDF",
-      "desc": "Grammar, vocabulary & examples"
+  "tuition": {
+    "header": {
+      "tag": "English & French Tuition",
+      "title": "Learn English Through Real Conversations",
+      "subtitle": "PDFs, videos and notes — all at your own pace."
     },
-    "video": {
-      "title": "Video Lesson",
-      "desc": "Watch & listen to real situations"
+    "steps": {
+      "Beginner": {
+        "label": "Beginner",
+        "title": "Beginner Conversations",
+        "leftBubble": "Hey John, how are you? Long time no see!",
+        "rightBubble": "I'm doing well! Want to catch up this Saturday afternoon?"
+      },
+      "Intermediate": {
+        "label": "Intermediate",
+        "title": "Intermediate Conversations",
+        "leftBubble": "It's nice to see you! Are you ready for the lesson?",
+        "rightBubble": "Yes! Let's improve our English this week."
+      },
+      "Advanced": {
+        "label": "Advanced",
+        "title": "Advanced Conversations",
+        "leftBubble": "Could we reschedule the meeting for next week?",
+        "rightBubble": "Absolutely. I'll update the calendar."
+      }
     },
-    "notes": {
-      "title": "Smart Notes",
-      "desc": "Key expressions & tips"
+    "example": "Example situation",
+    "cta": "START WITH UP TO 50% OFF →",
+    "continue": "Continue & Enroll →",
+    "cards": {
+      "pdf": {
+        "title": "Conversation PDF",
+        "desc": "Grammar, vocabulary & examples"
+      },
+      "video": {
+        "title": "Video Lesson",
+        "desc": "Watch & listen to real situations"
+      },
+      "notes": {
+        "title": "Smart Notes",
+        "desc": "Key expressions & tips"
+      }
     }
-  }
-},
+  },
   "why": {
     "title": "Why Choose h-Learning?",
     "items": {
@@ -224,99 +355,30 @@
       }
     }
   },
-  "technologies": {
-  "header": {
-    "title": "Career skills that work",
-    "subtitle": "World-class academic programs aligned with real industry needs.",
-    "cta": "Create Workspace"
-  },
-  "viewCurriculum": "View curriculum",
-  "showMore": "Show {{count}} more",
-  "showLess": "Show less",
-
-  "programs": {
-    "software": {
-      "title": "Software Engineering",
-      "desc": "Programming, systems, databases and real-world projects."
+  "technology": {
+    "header": {
+      "title": "Career skills that work",
+      "subtitle": "World-class academic programs aligned with real industry needs.",
+      "cta": "Create Workspace"
     },
-    "cs": {
-      "title": "Computer Science",
-      "desc": "Algorithms, data structures, logic and problem solving."
-    },
-    "network": {
-      "title": "Networking",
-      "desc": "Data communication, networks, protocols and security."
-    },
-    "finance": {
-      "title": "Finance & Economics",
-      "desc": "Micro & macroeconomics, finance fundamentals by level."
-    },
-    "accounting": {
-      "title": "Accounting",
-      "desc": "Accounting principles from level 1 to level 4."
-    },
-    "it": {
-      "title": "Information Technology",
-      "desc": "IT fundamentals, systems and infrastructure."
-    }
-  }
-},
-"technology": {
-  "header": {
-    "title": "Career skills that work",
-    "subtitle": "World-class academic programs aligned with real industry needs.",
-    "cta": "Create Workspace"
-  },
-  "viewCurriculum": "View curriculum",
-  "showMore": "Show {{count}} more",
-  "showLess": "Show less",
-
-  "programs": {
-    "software": {
-      "title": "Software Engineering",
-      "desc": "Programming, systems, databases and real-world projects."
-    },
-    "cs": {
-      "title": "Computer Science",
-      "desc": "Algorithms, data structures, logic and problem solving."
-    },
-    "network": {
-      "title": "Networking",
-      "desc": "Data communication, networks, protocols and security."
-    },
-    "finance": {
-      "title": "Finance & Economics",
-      "desc": "Micro & macroeconomics, finance fundamentals by level."
-    },
-    "accounting": {
-      "title": "Accounting",
-      "desc": "Accounting principles from level 1 to level 4."
-    },
-    "it": {
-      "title": "Information Technology",
-      "desc": "IT fundamentals, systems and infrastructure."
-    }
-  }
-},
-"faq": {
-    "q1": {
-      "question": "Can I try h-learning Plus before subscribing?",
-      "answer": "Yes. h-learning Plus offers a 7-day free trial with no commitment."
-    },
-    "q2": {
-      "question": "What is included in h-learning Plus?",
-      "answer": "You get access to premium courses, hands-on projects, and professional certificates."
-    },
-    "q3": {
-      "question": "Does h-learning Plus save money?",
-      "answer": "Yes. It is much cheaper than paying for each course individually."
-    },
-    "q4": {
-      "question": "Can I cancel anytime?",
-      "answer": "Yes. You can cancel anytime from your dashboard."
+    "viewCurriculum": "View curriculum",
+    "showMore": "Show {{count}} more",
+    "showLess": "Show less",
+    "programs": {
+      "software": { "title": "Software Engineering", "desc": "Programming, systems, databases and real-world projects." },
+      "cs": { "title": "Computer Science", "desc": "Algorithms, data structures, logic and problem solving." },
+      "network": { "title": "Networking", "desc": "Data communication, networks, protocols and security." },
+      "finance": { "title": "Finance & Economics", "desc": "Micro & macroeconomics, finance fundamentals by level." },
+      "accounting": { "title": "Accounting", "desc": "Accounting principles from level 1 to level 4." },
+      "it": { "title": "Information Technology", "desc": "IT fundamentals, systems and infrastructure." }
     }
   },
-
+  "faq": {
+    "q1": { "question": "Can I try h-learning Plus before subscribing?", "answer": "Yes. h-learning Plus offers a 7-day free trial with no commitment." },
+    "q2": { "question": "What is included in h-learning Plus?", "answer": "You get access to premium courses, hands-on projects, and professional certificates." },
+    "q3": { "question": "Does h-learning Plus save money?", "answer": "Yes. It is much cheaper than paying for each course individually." },
+    "q4": { "question": "Can I cancel anytime?", "answer": "Yes. You can cancel anytime from your dashboard." }
+  },
   "tuitionDash": {
     "title": "H-Tuition AI",
     "hero": {
@@ -327,13 +389,10 @@
       "free": "free",
       "online": "online",
       "presentiel": "in-person",
-
       "freeTitle": "Free Plan",
       "freeDesc": "YouTube videos access",
-
       "onlineTitle": "Online Premium",
       "onlineDesc": "WhatsApp + AI tutor",
-
       "presentielTitle": "In Person",
       "presentielDesc": "Physical classes"
     },
@@ -343,31 +402,14 @@
       "ai": "Grammar AI Coach",
       "french": "French Practice"
     },
-    "video": {
-      "title": "Lesson Video"
-    }
+    "video": { "title": "Lesson Video" }
   },
   "onboarding": {
-    "stepOne": {
-      "title": "What do you want to do?"
-    },
-
-    "stepTwo": {
-      "title": "What brings you here?"
-    },
-
-    "stepProgram": {
-      "title": "Choose your ZCAS program"
-    },
-
-    "stepThree": {
-      "title": "What are you interested in?"
-    },
-
-    "stepPrivacy": {
-      "title": "Privacy & Policies"
-    },
-
+    "stepOne": { "title": "What do you want to do?" },
+    "stepTwo": { "title": "What brings you here?" },
+    "stepProgram": { "title": "Choose your ZCAS program" },
+    "stepThree": { "title": "What are you interested in?" },
+    "stepPrivacy": { "title": "Privacy & Policies" },
     "options": {
       "Search": "Search",
       "Learn & study": "Learn & study",
@@ -375,13 +417,11 @@
       "Analyze data": "Analyze data",
       "Create something": "Create something",
       "Brainstorm": "Brainstorm",
-
       "School": "School",
       "Work": "Work",
       "Personal tasks": "Personal tasks",
       "Fun and entertainment": "Fun and entertainment",
       "Other": "Other",
-
       "math": "Math",
       "programming": "Programming",
       "design": "Design",
@@ -389,7 +429,6 @@
       "science": "Science",
       "writing": "Writing"
     },
-
     "programs": {
       "software": "Software Engineering",
       "cs": "Computer Science",
@@ -397,37 +436,154 @@
       "accounting": "Accounting & Finance",
       "languages": "Languages"
     },
-
     "privacy": {
-      "collect": {
-        "title": "What we collect",
-        "desc": "Personal information, academic preferences and usage data to improve your experience."
-      },
-
-      "use": {
-        "title": "How we use your data",
-        "desc": "We personalize recommendations, improve platform services and send important updates."
-      },
-
-      "rights": {
-        "title": "Your rights",
-        "desc": "You can access, edit or delete your data anytime and unsubscribe from communications."
-      },
-
-      "terms": {
-        "title": "Terms of Service",
-        "desc": "You agree to use the platform responsibly and comply with local laws."
-      }
+      "collect": { "title": "What we collect", "desc": "Personal information, academic preferences and usage data to improve your experience." },
+      "use": { "title": "How we use your data", "desc": "We personalize recommendations, improve platform services and send important updates." },
+      "rights": { "title": "Your rights", "desc": "You can access, edit or delete your data anytime and unsubscribe from communications." },
+      "terms": { "title": "Terms of Service", "desc": "You agree to use the platform responsibly and comply with local laws." }
     },
-
     "accept": "I have read and accept the",
     "privacyPolicy": "Privacy Policy",
     "and": "and",
     "terms": "Terms of Service",
-
     "continue": "Continue",
     "finish": "Finish",
     "completeAll": "Please complete all steps."
+  },
+  "visaObtain": {
+    "eyebrow": "Zambia Visa",
+    "title1": "Get your visa",
+    "title2": "the simple way.",
+    "subtitle": "Follow the complete visa application process for Zambia in 4 simple steps, from choosing your visa type to receiving the final document.",
+    "stepsLabel": "Application steps",
+    "stepsCount": "steps",
+    "trust": {
+      "recognized": "Official visa",
+      "ai": "Real-time tracking",
+      "instant": "Fast confirmation"
+    },
+    "step1": {
+      "label": "Step 1 — Choose",
+      "title": "Choose your visa type",
+      "desc": "Select the visa that fits your situation: tourist, business, transit, or Zambia e-Visa.",
+      "d1": "Single or multiple entry tourist visa",
+      "d2": "Business and transit visa",
+      "d3": "e-Visa available online",
+      "stat": "Available visa types",
+      "statLabel": "Categories"
+    },
+    "step2": {
+      "label": "Step 2 — Complete",
+      "title": "Fill out the application form",
+      "desc": "Complete the online form and upload the required documents: passport, photo, and travel proof.",
+      "d1": "Secure online application form",
+      "d2": "Passport valid for at least 6 months",
+      "d3": "ID photo and proof of stay",
+      "stat": "Average completion time",
+      "statLabel": "Average time"
+    },
+    "step3": {
+      "label": "Step 3 — Pay",
+      "title": "Pay the visa fees",
+      "desc": "Make a secure online payment based on the chosen visa type and desired length of stay.",
+      "d1": "Secure online payment",
+      "d2": "Fees based on nationality and duration",
+      "d3": "Instant payment receipt",
+      "stat": "Secure payment rate",
+      "statLabel": "Security"
+    },
+    "step4": {
+      "label": "Step 4 — Receive",
+      "title": "Receive your visa",
+      "desc": "Your visa is issued by email (e-Visa) or on arrival at the point of entry in Zambia.",
+      "d1": "e-Visa sent by email",
+      "d2": "Visa on arrival available",
+      "d3": "Quick border verification",
+      "stat": "Average issuance time",
+      "statLabel": "Average time"
+    },
+    "mock": {
+      "subtitle": "Republic of Zambia Visa",
+      "course": "Tourist Visa — Single Entry",
+      "recipient": "Visa Holder",
+      "date": "Date of issue",
+      "score": "Validity period",
+      "withDistinction": "Single entry",
+      "verified": "Verified by Zambian Immigration",
+      "download": "Download visa"
+    },
+    "cta": {
+      "eyebrow": "Ready to travel?",
+      "title": "Get your Zambia visa today.",
+      "btn": "Apply for my visa"
+    }
+  },
+  "visaRenewal": {
+    "eyebrow": "Visa Renewal",
+    "title1": "Renew your visa",
+    "title2": "hassle-free.",
+    "subtitle": "Extend your stay in Zambia by following these 4 clear steps, before your current visa expires.",
+    "stepsLabel": "Renewal steps",
+    "stepsCount": "steps",
+    "trust": {
+      "recognized": "Official renewal",
+      "ai": "Case tracking",
+      "instant": "Fast response"
+    },
+    "step1": {
+      "label": "Step 1 — Prepare",
+      "title": "Prepare your file",
+      "desc": "Gather your passport, current visa, and required supporting documents before the expiry date.",
+      "d1": "Valid passport and current visa",
+      "d2": "Proof of accommodation or employment",
+      "d3": "Application submitted before expiry",
+      "stat": "Recommended notice before expiry",
+      "statLabel": "Recommended notice"
+    },
+    "step2": {
+      "label": "Step 2 — Submit",
+      "title": "Submit the renewal application",
+      "desc": "Submit your application to the Zambia Immigration Department, online or in person.",
+      "d1": "Online renewal application form",
+      "d2": "In-person submission at immigration office",
+      "d3": "Case tracking number provided",
+      "stat": "Applications processed online",
+      "statLabel": "Online applications"
+    },
+    "step3": {
+      "label": "Step 3 — Pay",
+      "title": "Pay the renewal fees",
+      "desc": "Pay the fees corresponding to your visa category and the requested extension period.",
+      "d1": "Secure online or on-site payment",
+      "d2": "Fees based on visa category",
+      "d3": "Official receipt issued immediately",
+      "stat": "Successful processing rate",
+      "statLabel": "Success rate"
+    },
+    "step4": {
+      "label": "Step 4 — Receive",
+      "title": "Collect your renewed visa",
+      "desc": "Collect your passport with the renewed visa, valid for the new granted period.",
+      "d1": "Renewal sticker or stamp",
+      "d2": "New expiry date shown",
+      "d3": "Confirmation sent by email",
+      "stat": "Average renewal time",
+      "statLabel": "Average time"
+    },
+    "mock": {
+      "subtitle": "Visa Renewal — Zambia",
+      "course": "Residence Visa — Extension",
+      "recipient": "Visa Holder",
+      "date": "Date of renewal",
+      "score": "New validity",
+      "withDistinction": "Extension granted",
+      "verified": "Verified by Zambian Immigration",
+      "download": "Download certificate"
+    },
+    "cta": {
+      "eyebrow": "Visa expiring soon?",
+      "title": "Renew your Zambian visa before the deadline.",
+      "btn": "Renew now"
+    }
   }
-
 }

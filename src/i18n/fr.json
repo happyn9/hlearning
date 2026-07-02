@@ -36,7 +36,113 @@
     "progress": "Progression +87%",
     "smartCourses": "Cours intelligents",
     "aiTutor": "Tuteur IA",
-    "dailyStreak": "Série quotidienne"
+    "dailyStreak": "Série quotidienne",
+    "activeUsers": "apprenants actifs ce mois",
+    "liveSupport": "Support en direct",
+    "trust": {
+      "noCreditCard": "Sans carte bancaire",
+      "cancelAnytime": "Annulez à tout moment",
+      "freeAccess": "Accès gratuit"
+    },
+    "strip": {
+      "instant": "Réponse IA instantanée",
+      "courses": "Cours adaptatifs",
+      "feedback": "Feedback en temps réel",
+      "track": "Suivi de progression",
+      "cta": "Voir tous les cours"
+    },
+    "app": {
+      "windowTitle": "Tableau de bord",
+      "courses": "Mes cours",
+      "course1": "Algorithmique",
+      "course2": "Bases de données",
+      "course3": "Réseaux",
+      "streak": "jours de suite",
+      "moduleLabel": "Module 4 / 7",
+      "lessonTitle": "Tri rapide & complexité",
+      "userQuestion": "C'est quoi la différence entre O(n) et O(n²) ?",
+      "aiAnswer": "O(n) signifie que le temps d'exécution croît linéairement avec la taille des données — si tu doubles n, tu doubles le temps. O(n²) croît de façon quadratique : doubler n quadruple le temps. En pratique, préfère toujours O(n) quand c'est possible !",
+      "inputPlaceholder": "Pose une question à l'IA..."
+    },
+    "dashboard": {
+      "inProgress": "En cours",
+      "module": "Module",
+      "courseTitle": "Algorithmique avancée",
+      "progress": "Progression",
+      "streak": "Série",
+      "days": "jours de suite",
+      "aiReply": "Réponse IA",
+      "average": "moyenne",
+      "aiFeedbackHint": "Poser une question à l'IA sur ce cours"
+    }
+  },
+  "cert": {
+    "eyebrow": "Certifications",
+    "title1": "Obtenez un certificat",
+    "title2": "reconnu partout.",
+    "subtitle": "Suivez le parcours complet et téléchargez votre certificat officiel en 4 étapes simples.",
+    "stepsLabel": "Étapes du parcours",
+    "stepsCount": "étapes",
+    "trust": {
+      "recognized": "Certif. reconnu",
+      "ai": "Corrigé par IA",
+      "instant": "Téléchargement instantané"
+    },
+    "step1": {
+      "label": "Étape 1 — Suivre",
+      "title": "Suivre les cours",
+      "desc": "Accédez aux vidéos, lectures et ressources à votre rythme. L'IA adapte le contenu à votre niveau.",
+      "d1": "Cours vidéo HD avec sous-titres",
+      "d2": "Fiches récapitulatives téléchargeables",
+      "d3": "Accès illimité, sans délai",
+      "stat": "Note moyenne des apprenants",
+      "statLabel": "Note moyenne"
+    },
+    "step2": {
+      "label": "Étape 2 — Pratiquer",
+      "title": "Compléter les exercices",
+      "desc": "Mettez en pratique chaque notion avec des quiz, projets et cas concrets corrigés automatiquement.",
+      "d1": "Quiz interactifs après chaque leçon",
+      "d2": "Projets pratiques évalués par l'IA",
+      "d3": "Feedback détaillé sur chaque réponse",
+      "stat": "Taux de complétion moyen",
+      "statLabel": "Taux de complétion"
+    },
+    "step3": {
+      "label": "Étape 3 — Valider",
+      "title": "Passer l'examen final",
+      "desc": "Un examen sécurisé de 60 minutes pour valider vos acquis. Deux tentatives disponibles en cas d'échec.",
+      "d1": "Examen en conditions réelles",
+      "d2": "Score minimum requis : 70 %",
+      "d3": "Résultats disponibles immédiatement",
+      "stat": "Taux de réussite à l'examen",
+      "statLabel": "Taux de réussite"
+    },
+    "step4": {
+      "label": "Étape 4 — Obtenir",
+      "title": "Télécharger le certificat",
+      "desc": "Votre certificat numérique signé est prêt. Partagez-le sur LinkedIn ou téléchargez le PDF officiel.",
+      "d1": "Certificat PDF haute résolution",
+      "d2": "Lien de vérification public unique",
+      "d3": "Partage direct LinkedIn en un clic",
+      "stat": "Satisfaction après certification",
+      "statLabel": "Satisfaction"
+    },
+    "mock": {
+      "subtitle": "Certificat de réussite",
+      "course": "Algorithmique avancée & Structures de données",
+      "recipient": "Apprenant certifié",
+      "date": "Date d'obtention",
+      "score": "Score final",
+      "withDistinction": "Avec distinction",
+      "verified": "Certifié et vérifié par EduAI",
+      "download": "Télécharger le PDF"
+    },
+    "cta": {
+      "eyebrow": "Prêt à commencer ?",
+      "title": "Rejoignez des milliers d'apprenants certifiés dès aujourd'hui.",
+      "btn": "Commencer gratuitement"
+    }
   },
   "profile": {
     "title": "Mon Profil",
@@ -174,18 +280,9 @@
   "how": {
     "title": "Apprenez plus intelligemment",
     "features": {
-      "video": {
-        "title": "Vidéos de haute qualité",
-        "desc": "Des explications claires avec des applications concrètes."
-      },
-      "written": {
-        "title": "Cours écrits",
-        "desc": "Des leçons structurées pour une compréhension approfondie."
-      },
-      "quiz": {
-        "title": "Quiz et projets",
-        "desc": "Appliquez vos connaissances à travers la pratique et l'évaluation."
-      }
+      "video": { "title": "Vidéos de haute qualité", "desc": "Des explications claires avec des applications concrètes." },
+      "written": { "title": "Cours écrits", "desc": "Des leçons structurées pour une compréhension approfondie." },
+      "quiz": { "title": "Quiz et projets", "desc": "Appliquez vos connaissances à travers la pratique et l'évaluation." }
     }
   },
   "tuition": {
@@ -218,35 +315,17 @@
     "cta": "50% DE RÉDUCTION →",
     "continue": "Continuer & S'inscrire →",
     "cards": {
-      "pdf": {
-        "title": "PDF de conversation",
-        "desc": "Grammaire, vocabulaire & exemples"
-      },
-      "video": {
-        "title": "Leçon vidéo",
-        "desc": "Regardez et écoutez des situations réelles"
-      },
-      "notes": {
-        "title": "Notes intelligentes",
-        "desc": "Expressions clés & astuces"
-      }
+      "pdf": { "title": "PDF de conversation", "desc": "Grammaire, vocabulaire & exemples" },
+      "video": { "title": "Leçon vidéo", "desc": "Regardez et écoutez des situations réelles" },
+      "notes": { "title": "Notes intelligentes", "desc": "Expressions clés & astuces" }
     }
   },
   "why": {
     "title": "Pourquoi choisir h-Learning ?",
     "items": {
-      "free": {
-        "title": "Cours gratuits en ligne",
-        "desc": "Tous les cours sont 100% gratuits et accessibles partout dans le monde."
-      },
-      "flexible": {
-        "title": "Apprentissage flexible",
-        "desc": "Étudiez à votre rythme, sans délais ni contraintes."
-      },
-      "certificate": {
-        "title": "Certificats reconnus",
-        "desc": "Obtenez un certificat après votre formation pour valoriser votre CV."
-      }
+      "free": { "title": "Cours gratuits en ligne", "desc": "Tous les cours sont 100% gratuits et accessibles partout dans le monde." },
+      "flexible": { "title": "Apprentissage flexible", "desc": "Étudiez à votre rythme, sans délais ni contraintes." },
+      "certificate": { "title": "Certificats reconnus", "desc": "Obtenez un certificat après votre formation pour valoriser votre CV." }
     }
   },
   "technology": {
@@ -343,5 +422,141 @@
     "continue": "Continuer",
     "finish": "Terminer",
     "completeAll": "Veuillez compléter toutes les étapes."
+  },
+  "visaObtain": {
+    "eyebrow": "Visa Zambie",
+    "title1": "Obtenez votre visa",
+    "title2": "en toute simplicité.",
+    "subtitle": "Suivez le parcours complet d'obtention de visa pour la Zambie en 4 étapes simples, du choix du type de visa à la réception du document final.",
+    "stepsLabel": "Étapes de la demande",
+    "stepsCount": "étapes",
+    "trust": {
+      "recognized": "Visa officiel",
+      "ai": "Suivi en temps réel",
+      "instant": "Confirmation rapide"
+    },
+    "step1": {
+      "label": "Étape 1 — Choisir",
+      "title": "Choisir le type de visa",
+      "desc": "Sélectionnez le visa adapté à votre situation : tourisme, affaires, transit ou e-Visa Zambie.",
+      "d1": "Visa touristique simple ou multiple entrée",
+      "d2": "Visa affaires et visa de transit",
+      "d3": "e-Visa disponible en ligne",
+      "stat": "Types de visas disponibles",
+      "statLabel": "Catégories"
+    },
+    "step2": {
+      "label": "Étape 2 — Compléter",
+      "title": "Remplir le formulaire de demande",
+      "desc": "Complétez le formulaire en ligne et téléchargez les documents requis : passeport, photo, justificatifs de voyage.",
+      "d1": "Formulaire en ligne sécurisé",
+      "d2": "Passeport valide 6 mois minimum",
+      "d3": "Photo d'identité et preuve de séjour",
+      "stat": "Temps moyen de complétion",
+      "statLabel": "Durée moyenne"
+    },
+    "step3": {
+      "label": "Étape 3 — Payer",
+      "title": "Régler les frais de visa",
+      "desc": "Effectuez le paiement sécurisé en ligne selon le type de visa choisi et la durée de séjour souhaitée.",
+      "d1": "Paiement en ligne sécurisé",
+      "d2": "Tarifs selon nationalité et durée",
+      "d3": "Reçu de paiement immédiat",
+      "stat": "Taux de paiements sécurisés",
+      "statLabel": "Sécurité"
+    },
+    "step4": {
+      "label": "Étape 4 — Recevoir",
+      "title": "Recevoir votre visa",
+      "desc": "Votre visa est délivré par email (e-Visa) ou à votre arrivée au point d'entrée en Zambie.",
+      "d1": "e-Visa envoyé par email",
+      "d2": "Visa à l'arrivée disponible",
+      "d3": "Vérification rapide à la frontière",
+      "stat": "Délai moyen de délivrance",
+      "statLabel": "Délai moyen"
+    },
+    "mock": {
+      "subtitle": "Visa de la République de Zambie",
+      "course": "Visa touristique — Entrée simple",
+      "recipient": "Titulaire du visa",
+      "date": "Date de délivrance",
+      "score": "Durée de validité",
+      "withDistinction": "Entrée simple",
+      "verified": "Vérifié par l'immigration zambienne",
+      "download": "Télécharger le visa"
+    },
+    "cta": {
+      "eyebrow": "Prêt à voyager ?",
+      "title": "Obtenez votre visa pour la Zambie dès aujourd'hui.",
+      "btn": "Demander mon visa"
+    }
+  },
+  "visaRenewal": {
+    "eyebrow": "Renouvellement de visa",
+    "title1": "Renouvelez votre visa",
+    "title2": "sans complications.",
+    "subtitle": "Prolongez votre séjour en Zambie en suivant ces 4 étapes claires, avant l'expiration de votre visa actuel.",
+    "stepsLabel": "Étapes du renouvellement",
+    "stepsCount": "étapes",
+    "trust": {
+      "recognized": "Renouvellement officiel",
+      "ai": "Suivi de dossier",
+      "instant": "Réponse rapide"
+    },
+    "step1": {
+      "label": "Étape 1 — Préparer",
+      "title": "Préparer votre dossier",
+      "desc": "Rassemblez votre passeport, votre visa actuel et les justificatifs nécessaires avant la date d'expiration.",
+      "d1": "Passeport et visa en cours de validité",
+      "d2": "Justificatif d'hébergement ou d'emploi",
+      "d3": "Demande à soumettre avant expiration",
+      "stat": "Délai recommandé avant expiration",
+      "statLabel": "Délai recommandé"
+    },
+    "step2": {
+      "label": "Étape 2 — Soumettre",
+      "title": "Soumettre la demande de renouvellement",
+      "desc": "Déposez votre demande auprès du Département de l'Immigration de Zambie, en ligne ou en personne.",
+      "d1": "Formulaire de renouvellement en ligne",
+      "d2": "Dépôt possible en bureau d'immigration",
+      "d3": "Numéro de suivi de dossier fourni",
+      "stat": "Demandes traitées en ligne",
+      "statLabel": "Demandes en ligne"
+    },
+    "step3": {
+      "label": "Étape 3 — Payer",
+      "title": "Payer les frais de renouvellement",
+      "desc": "Réglez les frais correspondant à la catégorie de votre visa et à la durée de prolongation demandée.",
+      "d1": "Paiement sécurisé en ligne ou sur site",
+      "d2": "Tarifs selon catégorie de visa",
+      "d3": "Reçu officiel délivré immédiatement",
+      "stat": "Taux de traitement réussi",
+      "statLabel": "Taux de réussite"
+    },
+    "step4": {
+      "label": "Étape 4 — Obtenir",
+      "title": "Récupérer votre visa renouvelé",
+      "desc": "Récupérez votre passeport avec le visa renouvelé, valide pour la nouvelle durée accordée.",
+      "d1": "Vignette ou tampon de renouvellement",
+      "d2": "Nouvelle date d'expiration indiquée",
+      "d3": "Confirmation envoyée par email",
+      "stat": "Délai moyen de renouvellement",
+      "statLabel": "Délai moyen"
+    },
+    "mock": {
+      "subtitle": "Renouvellement de visa — Zambie",
+      "course": "Visa de séjour — Prolongation",
+      "recipient": "Titulaire du visa",
+      "date": "Date de renouvellement",
+      "score": "Nouvelle validité",
+      "withDistinction": "Prolongation accordée",
+      "verified": "Vérifié par l'immigration zambienne",
+      "download": "Télécharger l'attestation"
+    },
+    "cta": {
+      "eyebrow": "Visa bientôt expiré ?",
+      "title": "Renouvelez votre visa zambien avant la date limite.",
+      "btn": "Renouveler maintenant"
+    }
   }
 }

@@ -15,7 +15,9 @@ import HomeSkeleton from '../../Components/HomeSkeleton';
 import ChatBot from '../../Components/ChatBot';
 import { motion, AnimatePresence } from "framer-motion";
 import Usermodal from '../../Components/Home/Usermodal';
-import Certificationpage from '../../Components/Certificationpage';
+import CertificateSection from '../../Components/Certificatesection';
+import VisaSection from '../../Components/VisaSection';
+import VisaRenewalSection from '../../Components/VisaRenewalSection';
 
 
 export default function HomePage() {
@@ -101,9 +103,10 @@ export default function HomePage() {
       </div>
 
       <CoursesSection />
+      <CertificateSection onGetStarted={handleGetStarted} />
+      <VisaSection />
       <WhyChooseSection />
       <Technologies />
-      <Certificationpage />
       <Footer />
     </main>
   );
