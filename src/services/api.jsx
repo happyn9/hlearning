@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://h-back-2.onrender.com",
+  baseURL: "/api", 
   withCredentials: true,
 });
 
