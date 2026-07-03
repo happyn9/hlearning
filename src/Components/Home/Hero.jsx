@@ -7,128 +7,150 @@ import { useTranslation } from "react-i18next";
 import useTriggerWithProgress from "../../hooks/triggerWithProgress";
 
 import {
-  Sparkles,
   GraduationCap,
   MessageSquare,
   Flame,
   ArrowRight,
   PlayCircle,
-  TrendingUp,
-  BadgeQuestionMark,
   CheckCircle2,
-  Zap,
 } from "lucide-react";
 
-import student from "/src/assets/logo.png";
+/* ─────────────────────────────────────────────────────────
+   DESIGN TOKENS
+   Palette pulled from a code-editor's own vernacular so the
+   product (AI coding tutor) is visible in the chrome itself,
+   not just described in copy.
+   - ink    #12141C  editor/terminal background, primary text
+   - paper  #FAF9F5  page background (warm, not the generic AI cream)
+   - mint   #5EEAD4  "success" / cursor accent — primary signal
+   - pink   #F472B6  keyword accent — secondary signal
+   - amber  #FBBF24  warning / streak accent
+   - slate  #7C8394  muted text, comments
+   Type: display = 'Fragment Mono' (or JetBrains Mono) for anything
+   that should read as "code"; body = 'Inter' for everything else.
+   Make sure both are loaded once globally, e.g. in index.html:
+   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+───────────────────────────────────────────────────────── */
 
-/* ─── animation variants ─── */
+const mono = { fontFamily: "'JetBrains Mono', ui-monospace, monospace" };
+const COLORS = {
+  ink: "#12141C",
+  paper: "#FAF9F5",
+  mint: "#5EEAD4",
+  pink: "#F472B6",
+  amber: "#FBBF24",
+  slate: "#7C8394",
+};
+
+/* ─── animation: total reveal choreography ≈ 1.5s ─── */
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
+  hidden: { opacity: 0, y: 22 },
   visible: (i = 1) => ({
     opacity: 1,
     y: 0,
-    transition: { delay: i * 0.12, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
+    transition: { delay: i * 0.16, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
   }),
 };
+// 6 staggered items × 0.16s + 0.55s settle ≈ 1.5s total, so the whole
+// left column finishes landing right around the 1.5s mark.
 
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.94 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    transition: { duration: 0.65, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-
-/* ─── small reusable pill ─── */
-function Pill({ icon: Icon, label, className = "" }) {
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 text-xs font-medium px-3 py-1.5 rounded-full border border-stone-200 bg-white text-stone-500 ${className}`}
-    >
-      {Icon && <Icon size={12} />}
-      {label}
-    </span>
-  );
-}
-
-/* ─── dashboard card (right side) ─── */
-function DashCard({ t }) {
+/* ─── signature element: an IDE window standing in for the product ─── */
+function CodeWindow({ t }) {
   return (
     <motion.div
-      variants={scaleIn}
-      initial="hidden"
-      animate="visible"
-      className="relative bg-white rounded-2xl border border-stone-200 p-6 flex flex-col gap-5 h-full"
+      initial={{ opacity: 0, scale: 0.96 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.6, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="rounded-2xl overflow-hidden border border-black/10 shadow-[0_20px_60px_-15px_rgba(18,20,28,0.35)]"
+      style={{ background: COLORS.ink }}
     >
-      {/* header */}
-      <div className="flex items-center justify-between">
-        <span className="text-[11px] font-medium tracking-widest uppercase text-stone-400">
-          {t("hero.dashboard.inProgress")}
-        </span>
-        <span className="flex items-center gap-1.5 text-[11px] font-medium text-violet-600 bg-violet-50 px-2.5 py-1 rounded-full">
-          <span className="w-1.5 h-1.5 rounded-full bg-violet-500 animate-pulse" />
-          Live
-        </span>
-      </div>
-
-      {/* course title */}
-      <div>
-        <p className="text-[11px] text-stone-400 mb-1">{t("hero.dashboard.module")} 4 / 7</p>
-        <h3 className="text-lg font-semibold text-stone-900 leading-snug tracking-tight">
-          {t("hero.dashboard.courseTitle")}
-        </h3>
-      </div>
-
-      {/* progress */}
-      <div>
-        <div className="flex justify-between text-[11px] text-stone-400 mb-2">
-          <span>{t("hero.dashboard.progress")}</span>
-          <span className="text-stone-800 font-medium">57 %</span>
-        </div>
-        <div className="w-full h-1.5 bg-stone-100 rounded-full overflow-hidden">
-          <motion.div
-            className="h-full bg-violet-500 rounded-full"
-            initial={{ width: 0 }}
-            animate={{ width: "57%" }}
-            transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
-          />
+      {/* title bar */}
+      <div className="flex items-center gap-2 px-4 py-3 border-b border-white/10">
+        <span className="w-2.5 h-2.5 rounded-full bg-[#F87171]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#FBBF24]" />
+        <span className="w-2.5 h-2.5 rounded-full bg-[#5EEAD4]" />
+        <div className="flex items-center gap-4 ml-4">
+          <span
+            className="text-[11px] text-white/40 border-b-2 pb-[10px] -mb-[13px]"
+            style={{ ...mono, borderColor: "transparent" }}
+          >
+            lesson_04.py
+          </span>
+          <span
+            className="text-[11px] flex items-center gap-1.5 pb-[10px] -mb-[13px] border-b-2"
+            style={{ ...mono, color: COLORS.mint, borderColor: COLORS.mint }}
+          >
+            <MessageSquare size={10} /> {t("hero.dashboard.aiFeedbackHint") ? "ai_tutor" : "ai_tutor"}
+          </span>
         </div>
       </div>
 
-      {/* divider */}
-      <div className="border-t border-stone-100" />
-
-      {/* stat row */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="bg-stone-50 rounded-xl p-3">
-          <div className="flex items-center gap-1.5 mb-1">
-            <Flame size={13} className="text-orange-400" />
-            <span className="text-[11px] text-stone-400">{t("hero.dashboard.streak")}</span>
+      {/* code body */}
+      <div className="px-5 py-5 text-[13px] leading-relaxed" style={mono}>
+        <div className="flex gap-4">
+          <div className="text-white/25 select-none text-right w-4 shrink-0">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n}>{n}</div>
+            ))}
           </div>
-          <p className="text-xl font-semibold text-stone-900 tracking-tight">14</p>
-          <p className="text-[10px] text-stone-400">{t("hero.dashboard.days")}</p>
-        </div>
-        <div className="bg-stone-50 rounded-xl p-3">
-          <div className="flex items-center gap-1.5 mb-1">
-            <Zap size={13} className="text-violet-400" />
-            <span className="text-[11px] text-stone-400">{t("hero.dashboard.aiReply")}</span>
+          <div className="text-white/85 space-y-0">
+            <div>
+              <span style={{ color: COLORS.pink }}>def</span>{" "}
+              <span style={{ color: COLORS.mint }}>reverse_word</span>
+              (word):
+            </div>
+            <div className="pl-4">
+              <span style={{ color: COLORS.pink }}>return</span> word[::
+              <span style={{ color: COLORS.amber }}>-1</span>]
+            </div>
+            <div className="pl-4 text-white/25">
+              # try reverse_word(&quot;code&quot;)
+            </div>
+            <div>
+              <span style={{ color: COLORS.slate }}>print(</span>
+              reverse_word(<span style={{ color: COLORS.amber }}>&quot;code&quot;</span>)
+              <span style={{ color: COLORS.slate }}>)</span>
+            </div>
           </div>
-          <p className="text-xl font-semibold text-stone-900 tracking-tight">3 s</p>
-          <p className="text-[10px] text-stone-400">{t("hero.dashboard.average")}</p>
         </div>
+
+        {/* inline AI review comment */}
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.2, duration: 0.4 }}
+          className="mt-4 ml-8 rounded-lg border px-3 py-2.5 flex gap-2"
+          style={{ background: "rgba(94,234,212,0.08)", borderColor: "rgba(94,234,212,0.25)" }}
+        >
+          <span style={{ color: COLORS.mint }} className="text-[12px] shrink-0">
+            ◆
+          </span>
+          <p className="text-[12px] text-white/70" style={{ fontFamily: "'Inter', sans-serif" }}>
+            {t("hero.dashboard.aiFeedbackHint")}
+          </p>
+        </motion.div>
       </div>
 
-      {/* ai feedback chip */}
-      <motion.button
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.1 }}
-        className="flex items-center gap-2 text-xs text-stone-500 border border-stone-200 rounded-xl px-3 py-2.5 bg-white hover:bg-stone-50 transition cursor-pointer text-left"
-      >
-        <MessageSquare size={13} className="text-violet-500 shrink-0" />
-        <span>{t("hero.dashboard.aiFeedbackHint")}</span>
-      </motion.button>
+      {/* status bar — reuses lesson progress as a build/test readout */}
+      <div className="flex items-center justify-between px-5 py-3 border-t border-white/10">
+        <div className="flex items-center gap-2">
+          <span className="text-[11px] text-white/40" style={mono}>
+            {t("hero.dashboard.module")} 4/7
+          </span>
+          <div className="w-20 h-1 rounded-full bg-white/10 overflow-hidden">
+            <motion.div
+              className="h-full rounded-full"
+              style={{ background: COLORS.mint }}
+              initial={{ width: 0 }}
+              animate={{ width: "57%" }}
+              transition={{ delay: 0.9, duration: 0.9, ease: "easeOut" }}
+            />
+          </div>
+        </div>
+        <span className="flex items-center gap-1.5 text-[11px]" style={{ ...mono, color: COLORS.amber }}>
+          <Flame size={11} /> 14d
+        </span>
+      </div>
     </motion.div>
   );
 }
@@ -144,11 +166,11 @@ function Hero({ onGetStarted, onWatch, onFeedback, onModalUser }) {
   const goAuth = () => trigger(() => navigate("/auth"));
 
   return (
-    <div className="relative bg-[#F7F6F2] min-h-screen">
-      {/* progress bar */}
+    <div className="relative min-h-screen" style={{ background: COLORS.paper }}>
       {loadingAction && (
         <motion.div
-          className="fixed top-0 left-0 h-[2px] bg-violet-500 z-50"
+          className="fixed top-0 left-0 h-[2px] z-50"
+          style={{ background: COLORS.mint }}
           initial={{ width: 0 }}
           animate={{ width: `${progress}%` }}
         />
@@ -157,21 +179,16 @@ function Hero({ onGetStarted, onWatch, onFeedback, onModalUser }) {
       <Navbar onModal={onModalUser} OnNav={goAuth} />
 
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-24">
-        <div className="flex flex-col lg:flex-row gap-12 items-start">
-
+        <div className="flex flex-col lg:flex-row gap-14 items-start">
           {/* ── LEFT ── */}
           <div className="flex-1 flex flex-col">
-
-            {/* eyebrow */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={1}
-              className="flex items-center gap-2 mb-8"
-            >
-              <span className="w-5 h-[1px] bg-stone-400" />
-              <span className="text-[11px] font-medium tracking-[0.1em] uppercase text-stone-400">
+            {/* eyebrow, written like a code comment */}
+            <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={1} className="mb-7">
+              <span
+                className="text-[12px] tracking-tight"
+                style={{ ...mono, color: COLORS.slate }}
+              >
+                {"// "}
                 {t("hero.aiExperience")}
               </span>
             </motion.div>
@@ -182,33 +199,34 @@ function Hero({ onGetStarted, onWatch, onFeedback, onModalUser }) {
               initial="hidden"
               animate="visible"
               custom={2}
-              className="text-5xl sm:text-6xl font-semibold leading-[1.08] tracking-[-0.03em] text-stone-900 mb-6"
+              className="text-5xl sm:text-6xl font-semibold leading-[1.08] tracking-[-0.03em] mb-6"
+              style={{ color: COLORS.ink, fontFamily: "'Inter', sans-serif" }}
             >
               {connected ? (
                 <>
                   {t("hero.welcomeBack")}{" "}
-                  <span className="text-violet-600 italic font-medium">
-                    {user?.name}
-                  </span>
+                  <span style={{ ...mono, color: COLORS.pink }}>{user?.name}</span>
                 </>
               ) : (
                 <>
                   {t("hero.title1")}
                   <br />
-                  <span className="text-violet-600 italic font-medium">
-                    {t("hero.title2")}
+                  <span style={mono}>
+                    <span style={{ color: COLORS.mint }}>{"{"}</span>
+                    <span style={{ color: COLORS.ink }}> {t("hero.title2")} </span>
+                    <span style={{ color: COLORS.mint }}>{"}"}</span>
                   </span>
                 </>
               )}
             </motion.h1>
 
-            {/* subtitle */}
             <motion.p
               variants={fadeUp}
               initial="hidden"
               animate="visible"
               custom={3}
-              className="text-[15px] text-stone-500 leading-relaxed max-w-md mb-10"
+              className="text-[15px] leading-relaxed max-w-md mb-10"
+              style={{ color: COLORS.slate, fontFamily: "'Inter', sans-serif" }}
             >
               {t("hero.subtitle")}
             </motion.p>
@@ -223,22 +241,24 @@ function Hero({ onGetStarted, onWatch, onFeedback, onModalUser }) {
             >
               <button
                 onClick={onGetStarted}
-                className="flex cursor-pointer items-center gap-2 px-6 py-3 bg-stone-900 text-white text-sm font-medium rounded-full hover:bg-stone-800 transition"
+                className="flex cursor-pointer items-center gap-2 px-6 py-3 text-sm font-medium rounded-full transition hover:opacity-90"
+                style={{ background: COLORS.ink, color: COLORS.paper }}
               >
                 {user ? t("hero.ready") : t("hero.getStarted")}
-                {user ? <BadgeQuestionMark size={16} /> : <ArrowRight size={16} />}
+                <ArrowRight size={16} />
               </button>
 
               <button
                 onClick={onWatch}
-                className="flex cursor-pointer items-center gap-2 px-6 py-3 bg-transparent text-sm font-medium text-stone-600 border border-stone-200 rounded-full hover:bg-white transition"
+                className="flex cursor-pointer items-center gap-2 px-6 py-3 bg-transparent text-sm font-medium rounded-full border transition hover:bg-black/[0.03]"
+                style={{ borderColor: "rgba(18,20,28,0.15)", color: COLORS.ink }}
               >
                 <PlayCircle size={16} />
                 {t("hero.watchDemo")}
               </button>
             </motion.div>
 
-            {/* social proof */}
+            {/* social proof, styled like a contributor stat */}
             <motion.div
               variants={fadeUp}
               initial="hidden"
@@ -250,87 +270,51 @@ function Hero({ onGetStarted, onWatch, onFeedback, onModalUser }) {
                 {["AL", "MR", "JK", "SC"].map((init, i) => (
                   <div
                     key={i}
-                    className="w-7 h-7 rounded-full border-2 border-[#F7F6F2] bg-stone-200 flex items-center justify-center text-[10px] font-medium text-stone-600"
+                    className="w-7 h-7 rounded-full border-2 flex items-center justify-center text-[10px] font-medium"
+                    style={{ borderColor: COLORS.paper, background: "rgba(18,20,28,0.08)", color: COLORS.ink }}
                   >
                     {init}
                   </div>
                 ))}
               </div>
-              <p className="text-[13px] text-stone-400">
-                <span className="text-stone-800 font-medium">+12 000</span>{" "}
+              <p className="text-[13px]" style={{ color: COLORS.slate }}>
+                <span style={{ ...mono, color: COLORS.ink }}>+12,000</span>{" "}
                 {t("hero.activeUsers")}
               </p>
             </motion.div>
 
             {/* feature list */}
-            <motion.div
-              variants={fadeUp}
-              initial="hidden"
-              animate="visible"
-              custom={6}
-              className="flex flex-col gap-2.5"
-            >
+            <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={6} className="flex flex-col gap-2.5">
               {[
                 { icon: GraduationCap, label: t("hero.smartCourses") },
                 { icon: MessageSquare, label: t("hero.aiTutor") },
                 { icon: Flame, label: t("hero.dailyStreak") },
               ].map(({ icon: Icon, label }) => (
-                <div key={label} className="flex items-center gap-2.5 text-[13px] text-stone-500">
-                  <CheckCircle2 size={14} className="text-violet-500 shrink-0" />
+                <div key={label} className="flex items-center gap-2.5 text-[13px]" style={{ color: COLORS.slate }}>
+                  <CheckCircle2 size={14} style={{ color: COLORS.mint }} className="shrink-0" />
                   {label}
                 </div>
               ))}
             </motion.div>
           </div>
 
-          {/* ── RIGHT ── */}
-          <div className="w-full lg:w-[420px] lg:sticky lg:top-24 relative">
+          {/* ── RIGHT: signature IDE window ── */}
+          <div className="w-full lg:w-[440px] lg:sticky lg:top-24 relative">
+            <CodeWindow t={t} />
 
-            {/* ── Floating student image ── */}
+            {/* diff-style badge, echoing a git-diff insertion line */}
             <motion.div
-              initial={{ opacity: 0, x: -20, y: 8 }}
-              animate={{ opacity: 1, x: 0, y: 0 }}
-              transition={{ delay: 0.65, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-              className="hidden lg:block absolute -left-14 top-1/2 -translate-y-1/2 z-10"
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 1.4, duration: 0.35, ease: "backOut" }}
+              className="absolute -bottom-4 -right-3 flex items-center gap-1 rounded-lg px-2.5 py-1.5 shadow-md border"
+              style={{ background: COLORS.ink, borderColor: "rgba(94,234,212,0.3)" }}
             >
-              {/* soft violet halo */}
-              <div
-                className="absolute inset-0 rounded-full blur-2xl pointer-events-none"
-                style={{
-                  background: "radial-gradient(circle, rgba(139,92,246,0.25), transparent 70%)",
-                  transform: "scale(1.4)",
-                }}
-              />
-
-              {/* avatar ring */}
-              <div
-                className="relative w-[88px] h-[88px] rounded-full overflow-hidden"
-                style={{
-                  boxShadow: "0 0 0 3px #fff, 0 0 0 5px #ede9fe, 0 12px 32px rgba(109,40,217,0.2)",
-                }}
-              >
-                <img
-                  src={student}
-                  alt="student"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* +87% badge */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.7 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.1, duration: 0.35, ease: "backOut" }}
-                className="absolute -bottom-2.5 -right-3 flex items-center gap-1 bg-white rounded-full pl-1.5 pr-2.5 py-1 shadow-md border border-stone-100"
-              >
-                <TrendingUp size={10} className="text-violet-500" />
-                <span className="text-[10px] font-bold text-stone-800">+87%</span>
-              </motion.div>
+              <span className="text-[11px]" style={{ ...mono, color: COLORS.mint }}>
+                + 87%
+              </span>
             </motion.div>
-
-            <DashCard t={t} />
           </div>
-
         </div>
       </section>
     </div>
