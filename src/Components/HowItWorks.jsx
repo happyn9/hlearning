@@ -3,6 +3,20 @@ import { motion, AnimatePresence, useInView } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import intro from "../assets/intro.mp4";
 
+/* Same token system as Hero.jsx / Tuition.jsx — keep in sync. */
+const COLORS = {
+  ink: "#12141C",
+  paper: "#FAF9F5",
+  white: "#FFFFFF",
+  mint: "#5EEAD4",
+  mintDeep: "#0D9488",
+  pink: "#F472B6",
+  amber: "#FBBF24",
+  slate: "#7C8394",
+  line: "rgba(18,20,28,0.08)",
+};
+const mono = "'JetBrains Mono', ui-monospace, monospace";
+
 const IconVideo = () => (
   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
     <path d="M15 10l4.553-2.276A1 1 0 0121 8.723v6.554a1 1 0 01-1.447.894L15 14M3 8a2 2 0 012-2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V8z"/>
@@ -62,7 +76,7 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
         padding: "20px 16px",
         borderRadius: 10,
         background: isActive ? accentMuted : "transparent",
-        borderBottom: "1px solid #F3F4F6",
+        borderBottom: `1px solid ${COLORS.line}`,
         cursor: "default",
         transition: "background 0.2s",
         marginLeft: -16,
@@ -71,7 +85,7 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
     >
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8, paddingTop: 2 }}>
         <span style={{
-          fontFamily: "monospace", fontSize: 10, fontWeight: 700,
+          fontFamily: mono, fontSize: 10, fontWeight: 700,
           letterSpacing: "0.08em",
           color: isActive ? accent : "#D1D5DB",
           transition: "color 0.2s",
@@ -81,7 +95,7 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
         <div style={{
           width: 32, height: 32, borderRadius: 8,
           display: "flex", alignItems: "center", justifyContent: "center",
-          background: isActive ? accentMuted : "#F3F4F6",
+          background: isActive ? accentMuted : COLORS.paper,
           color: isActive ? accent : "#9CA3AF",
           transition: "all 0.2s",
         }}>
@@ -91,7 +105,7 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
       <div>
         <p style={{
           fontSize: 14, fontWeight: 600,
-          color: isActive ? "#111827" : "#374151",
+          color: isActive ? COLORS.ink : "#374151",
           margin: "0 0 5px",
           letterSpacing: "-0.01em",
           transition: "color 0.2s",
@@ -102,7 +116,7 @@ function FeatureRow({ Icon, number, label, desc, accent, accentMuted, index, isA
           initial={false}
           animate={{ opacity: isActive ? 1 : 0.55 }}
           transition={{ duration: 0.18 }}
-          style={{ fontSize: 13, color: "#6B7280", lineHeight: 1.65, margin: 0 }}
+          style={{ fontSize: 13, color: COLORS.slate, lineHeight: 1.65, margin: 0 }}
         >
           {desc}
         </motion.p>
@@ -125,59 +139,47 @@ function VideoThumb({ onClick }) {
       onClick={onClick}
       style={{
         position: "relative", borderRadius: 20, overflow: "hidden",
-        aspectRatio: "4/3", background: "#111827", cursor: "pointer",
+        aspectRatio: "4/3", background: COLORS.ink, cursor: "pointer",
         userSelect: "none",
         transform: hovered ? "translateY(-3px)" : "translateY(0)",
         boxShadow: hovered
-          ? "0 20px 48px rgba(0,0,0,0.14), 0 4px 12px rgba(0,0,0,0.08)"
-          : "0 8px 28px rgba(0,0,0,0.1), 0 2px 6px rgba(0,0,0,0.06)",
+          ? "0 20px 48px rgba(18,20,28,0.22), 0 4px 12px rgba(18,20,28,0.12)"
+          : "0 8px 28px rgba(18,20,28,0.16), 0 2px 6px rgba(18,20,28,0.08)",
         transition: "transform 0.28s ease, box-shadow 0.28s ease",
       }}
     >
       <div style={{
         position: "absolute", inset: 0,
-        background: "linear-gradient(135deg, rgba(79,70,229,0.3) 0%, rgba(124,58,237,0.15) 50%, rgba(17,24,39,0) 100%)",
+        background: `linear-gradient(135deg, ${COLORS.mint}33 0%, ${COLORS.pink}22 50%, rgba(18,20,28,0) 100%)`,
       }} />
-      <div style={{ position: "absolute", inset: 0, padding: 28, display: "flex", gap: 16 }}>
-        <div style={{ width: "28%", display: "flex", flexDirection: "column", gap: 10, paddingTop: 4 }}>
-          <div style={{ height: 7, borderRadius: 100, background: "rgba(165,180,252,0.6)", width: "80%" }} />
-          {[65, 85, 55, 72].map((w, i) => (
-            <div key={i} style={{
-              height: 5, borderRadius: 100, width: `${w}%`,
-              background: i === 1 ? "rgba(165,180,252,0.45)" : "rgba(255,255,255,0.1)",
-            }} />
-          ))}
+      {/* code-editor style mock, echoing the Hero's IDE window */}
+      <div style={{ position: "absolute", inset: 0, padding: 28, display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "flex", gap: 6 }}>
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: "#F87171", opacity: 0.6 }} />
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: COLORS.amber, opacity: 0.6 }} />
+          <span style={{ width: 8, height: 8, borderRadius: "50%", background: COLORS.mint }} />
         </div>
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
-          <div style={{ height: 6, borderRadius: 100, width: "45%", background: "rgba(255,255,255,0.12)" }} />
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10, justifyContent: "center" }}>
           <div style={{
-            flex: 1, borderRadius: 14,
-            border: "1px solid rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.04)",
-            display: "flex", flexDirection: "column",
-            alignItems: "center", justifyContent: "center", gap: 10, padding: 12,
+            width: "100%", aspectRatio: "16/9", borderRadius: 10,
+            background: "rgba(94,234,212,0.14)",
+            border: `1px solid ${COLORS.mint}33`,
+            display: "flex", alignItems: "center", justifyContent: "center",
           }}>
             <div style={{
-              width: "100%", aspectRatio: "16/9", borderRadius: 10,
-              background: "rgba(79,70,229,0.35)",
-              border: "1px solid rgba(99,102,241,0.2)",
-              display: "flex", alignItems: "center", justifyContent: "center",
+              width: 28, height: 28, borderRadius: "50%",
+              background: `${COLORS.mint}55`,
+              display: "flex", alignItems: "center", justifyContent: "center", color: "#fff",
             }}>
-              <div style={{
-                width: 28, height: 28, borderRadius: "50%",
-                background: "rgba(99,102,241,0.5)",
-                display: "flex", alignItems: "center", justifyContent: "center", color: "#fff",
-              }}>
-                <IconPlay size={12} />
-              </div>
+              <IconPlay size={12} />
             </div>
-            {[70, 48, 60].map((w, i) => (
-              <div key={i} style={{ height: 4, borderRadius: 100, width: `${w}%`, background: "rgba(255,255,255,0.09)" }} />
-            ))}
           </div>
-          <div style={{ height: 4, borderRadius: 100, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-            <div style={{ height: "100%", width: "38%", borderRadius: 100, background: "#818CF8" }} />
-          </div>
+          {[70, 48, 60].map((w, i) => (
+            <div key={i} style={{ height: 4, borderRadius: 100, width: `${w}%`, background: "rgba(255,255,255,0.1)" }} />
+          ))}
+        </div>
+        <div style={{ height: 4, borderRadius: 100, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+          <div style={{ height: "100%", width: "38%", borderRadius: 100, background: COLORS.mint }} />
         </div>
       </div>
       <div style={{
@@ -190,9 +192,9 @@ function VideoThumb({ onClick }) {
           animate={{ scale: hovered ? 1.08 : 1 }}
           transition={{ type: "spring", stiffness: 260, damping: 22 }}
           style={{
-            width: 56, height: 56, borderRadius: "50%", background: "#fff",
+            width: 56, height: 56, borderRadius: "50%", background: COLORS.white,
             display: "flex", alignItems: "center", justifyContent: "center",
-            color: "#111827",
+            color: COLORS.ink,
             boxShadow: hovered ? "0 0 0 14px rgba(255,255,255,0.12)" : "0 0 0 0px rgba(255,255,255,0)",
             transition: "box-shadow 0.28s ease",
           }}
@@ -218,7 +220,7 @@ function VideoThumb({ onClick }) {
         position: "absolute", top: 14, right: 14,
         padding: "4px 10px", borderRadius: 6,
         background: "rgba(0,0,0,0.5)", backdropFilter: "blur(6px)",
-        fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)", fontFamily: "monospace",
+        fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.7)", fontFamily: mono,
       }}>
         2:14
       </div>
@@ -264,7 +266,7 @@ function VideoModal({ onClose }) {
       style={{
         position: "fixed", inset: 0, zIndex: 50,
         display: "flex", alignItems: "center", justifyContent: "center",
-        padding: 24, background: "rgba(15,15,30,0.55)", backdropFilter: "blur(12px)",
+        padding: 16, background: "rgba(15,15,30,0.55)", backdropFilter: "blur(12px)",
       }}
     >
       <motion.div
@@ -274,17 +276,17 @@ function VideoModal({ onClose }) {
         transition={{ type: "spring", stiffness: 280, damping: 28 }}
         onClick={(e) => e.stopPropagation()}
         style={{
-          width: "100%", maxWidth: 820, background: "#FFFFFF",
-          border: "1px solid #E5E7EB", borderRadius: 18, overflow: "hidden",
-          boxShadow: "0 28px 70px rgba(0,0,0,0.14), 0 4px 14px rgba(0,0,0,0.06)",
+          width: "100%", maxWidth: 820, background: COLORS.white,
+          border: `1px solid ${COLORS.line}`, borderRadius: 18, overflow: "hidden",
+          boxShadow: "0 28px 70px rgba(18,20,28,0.18), 0 4px 14px rgba(18,20,28,0.08)",
         }}
       >
         <div style={{
           display: "flex", alignItems: "center", justifyContent: "space-between",
-          padding: "14px 20px", borderBottom: "1px solid #F3F4F6",
+          padding: "14px 16px", borderBottom: `1px solid ${COLORS.line}`,
         }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#111827" }} />
+            <div style={{ width: 8, height: 8, borderRadius: "50%", background: COLORS.ink }} />
             <span style={{ fontSize: 13, fontWeight: 600, color: "#374151", letterSpacing: "-0.01em" }}>
               Product walkthrough
             </span>
@@ -293,7 +295,7 @@ function VideoModal({ onClose }) {
             onClick={onClose}
             style={{
               width: 28, height: 28, borderRadius: 7,
-              background: "#F3F4F6", border: "1px solid #E5E7EB",
+              background: COLORS.paper, border: `1px solid ${COLORS.line}`,
               color: "#9CA3AF", display: "flex", alignItems: "center",
               justifyContent: "center", cursor: "pointer",
             }}
@@ -302,7 +304,7 @@ function VideoModal({ onClose }) {
           </button>
         </div>
         <div
-          style={{ position: "relative", background: "#0F172A", aspectRatio: "16/9", cursor: "pointer" }}
+          style={{ position: "relative", background: COLORS.ink, aspectRatio: "16/9", cursor: "pointer" }}
           onClick={togglePlay}
         >
           {intro ? (
@@ -320,7 +322,7 @@ function VideoModal({ onClose }) {
               alignItems: "center", justifyContent: "center", gap: 10,
             }}>
               <p style={{ color: "#475569", fontSize: 13 }}>Connect your video source</p>
-              <code style={{ color: "#818CF8", fontSize: 11, opacity: 0.7 }}>{"import intro from \"../assets/intro.mp4\""}</code>
+              <code style={{ color: COLORS.mint, fontSize: 11, opacity: 0.8, fontFamily: mono }}>{"import intro from \"../assets/intro.mp4\""}</code>
             </div>
           )}
           <AnimatePresence>
@@ -335,9 +337,9 @@ function VideoModal({ onClose }) {
                 }}
               >
                 <div style={{
-                  width: 52, height: 52, borderRadius: "50%", background: "#fff",
+                  width: 52, height: 52, borderRadius: "50%", background: COLORS.white,
                   display: "flex", alignItems: "center", justifyContent: "center",
-                  color: "#111827", boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                  color: COLORS.ink, boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
                 }}>
                   <IconPlay size={20} />
                 </div>
@@ -346,39 +348,39 @@ function VideoModal({ onClose }) {
           </AnimatePresence>
         </div>
         <div style={{
-          display: "flex", alignItems: "center", gap: 12, padding: "12px 20px",
-          background: "#FAFAFA", borderTop: "1px solid #F3F4F6",
+          display: "flex", alignItems: "center", gap: 10, padding: "12px 16px",
+          background: COLORS.paper, borderTop: `1px solid ${COLORS.line}`, flexWrap: "wrap",
         }}>
           <button
             onClick={togglePlay}
             style={{
               width: 32, height: 32, borderRadius: 8, flexShrink: 0,
               display: "flex", alignItems: "center", justifyContent: "center",
-              background: "#fff", border: "1px solid #E5E7EB", color: "#374151", cursor: "pointer",
+              background: COLORS.white, border: `1px solid ${COLORS.line}`, color: "#374151", cursor: "pointer",
             }}
           >
             {playing ? <IconPause size={16} /> : <IconPlay size={16} />}
           </button>
-          <span style={{ fontSize: 11, fontFamily: "monospace", color: "#9CA3AF", width: 36, textAlign: "right", flexShrink: 0 }}>
+          <span style={{ fontSize: 11, fontFamily: mono, color: "#9CA3AF", width: 36, textAlign: "right", flexShrink: 0 }}>
             {fmt(progress)}
           </span>
           <div onClick={seek} style={{
-            flex: 1, height: 4, borderRadius: 100,
-            background: "#E5E7EB", cursor: "pointer", position: "relative",
+            flex: 1, minWidth: 80, height: 4, borderRadius: 100,
+            background: COLORS.line, cursor: "pointer", position: "relative",
           }}>
             <div style={{
-              height: "100%", borderRadius: 100, background: "#111827",
+              height: "100%", borderRadius: 100, background: COLORS.ink,
               width: `${pct}%`, position: "relative", transition: "width 0.1s linear",
             }}>
               <div style={{
                 position: "absolute", right: 0, top: "50%", transform: "translateY(-50%)",
                 width: 12, height: 12, borderRadius: "50%",
-                background: "#fff", border: "2px solid #111827",
+                background: COLORS.white, border: `2px solid ${COLORS.ink}`,
                 boxShadow: "0 1px 4px rgba(0,0,0,0.15)",
               }} />
             </div>
           </div>
-          <span style={{ fontSize: 11, fontFamily: "monospace", color: "#9CA3AF", width: 36, flexShrink: 0 }}>
+          <span style={{ fontSize: 11, fontFamily: mono, color: "#9CA3AF", width: 36, flexShrink: 0 }}>
             {fmt(duration)}
           </span>
           <button style={{
@@ -408,24 +410,24 @@ export default function HowItWorks() {
       number: "01",
       label: t("how.features.video.title"),
       desc: t("how.features.video.desc"),
-      accent: "#E0534A",
-      accentMuted: "rgba(224,83,74,0.08)",
+      accent: COLORS.mintDeep,
+      accentMuted: "rgba(94,234,212,0.10)",
     },
     {
       Icon: IconPen,
       number: "02",
       label: t("how.features.written.title"),
       desc: t("how.features.written.desc"),
-      accent: "#2563EB",
-      accentMuted: "rgba(37,99,235,0.08)",
+      accent: "#DB2777",
+      accentMuted: "rgba(244,114,182,0.10)",
     },
     {
       Icon: IconBrain,
       number: "03",
       label: t("how.features.quiz.title"),
       desc: t("how.features.quiz.desc"),
-      accent: "#7C3AED",
-      accentMuted: "rgba(124,58,237,0.08)",
+      accent: "#B45309",
+      accentMuted: "rgba(251,191,36,0.12)",
     },
   ];
 
@@ -447,17 +449,24 @@ export default function HowItWorks() {
           gap: 80px;
           align-items: start;
         }
+        @media (max-width: 900px) {
+          .hiw-grid { grid-template-columns: 1fr 300px; gap: 48px; }
+        }
         @media (max-width: 768px) {
           .hiw-grid {
             grid-template-columns: 1fr;
-            gap: 40px;
+            gap: 36px;
           }
           .hiw-sticky {
             position: static !important;
           }
           .hiw-section {
-            padding: 48px 20px !important;
+            padding: 56px 20px !important;
           }
+        }
+        @media (max-width: 420px) {
+          .hiw-section { padding: 44px 16px !important; }
+          .hiw-row { margin-left: -4px !important; margin-right: -4px !important; padding-left: 4px !important; padding-right: 4px !important; }
         }
       `}</style>
 
@@ -465,7 +474,7 @@ export default function HowItWorks() {
         ref={ref}
         className="hiw-section"
         style={{
-          background: "#FFFFFF",
+          background: COLORS.paper,
           fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
           position: "relative",
           overflow: "hidden",
@@ -476,8 +485,8 @@ export default function HowItWorks() {
           position: "absolute", top: 0, left: 0,
           width: 480, height: 480, pointerEvents: "none",
           background: activeFeature
-            ? `radial-gradient(ellipse at 10% 5%, ${activeFeature.accent}09 0%, transparent 65%)`
-            : "radial-gradient(ellipse at 10% 5%, rgba(79,70,229,0.05) 0%, transparent 65%)",
+            ? `radial-gradient(ellipse at 10% 5%, ${activeFeature.accent}12 0%, transparent 65%)`
+            : `radial-gradient(ellipse at 10% 5%, ${COLORS.mint}14 0%, transparent 65%)`,
           transition: "background 0.6s ease",
         }} />
 
@@ -491,31 +500,28 @@ export default function HowItWorks() {
               transition={{ duration: 0.5 }}
               style={{ marginBottom: 48 }}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 24 }}>
-                <div style={{ width: 24, height: 1, background: "#D1D5DB" }} />
-                <span style={{
-                  fontSize: 10, fontWeight: 700, letterSpacing: "0.18em",
-                  textTransform: "uppercase", color: "#9CA3AF",
-                }}>
-                  {t("how.sectionLabel", "How it works")}
-                </span>
-              </div>
+              <span style={{
+                fontFamily: mono, fontSize: 12, color: COLORS.slate,
+                display: "block", marginBottom: 20,
+              }}>
+                {"// "}{t("how.sectionLabel", "How it works")}
+              </span>
               <h2 style={{
-                fontSize: "clamp(24px,3.5vw,44px)", fontWeight: 700,
+                fontSize: "clamp(26px,3.5vw,44px)", fontWeight: 700,
                 letterSpacing: "-0.03em", lineHeight: 1.1,
-                color: "#111827", margin: "0 0 16px",
+                color: COLORS.ink, margin: "0 0 16px",
               }}>
                 {t("how.title")}
               </h2>
               <p style={{
-                fontSize: 14, lineHeight: 1.7, color: "#6B7280",
+                fontSize: 14, lineHeight: 1.7, color: COLORS.slate,
                 maxWidth: 360, margin: 0,
               }}>
                 {t("how.subtitle", "Pick the format that fits your moment — deep session or five free minutes, it all counts.")}
               </p>
             </motion.div>
 
-            <div style={{ marginLeft: 16, marginRight: 16 }}>
+            <div className="hiw-row" style={{ marginLeft: 16, marginRight: 16 }}>
               {FEATURES.map((f, i) => (
                 <FeatureRow
                   key={f.number} {...f} index={i}
@@ -536,7 +542,7 @@ export default function HowItWorks() {
                 href="#"
                 style={{
                   display: "inline-flex", alignItems: "center", gap: 7,
-                  fontSize: 13, fontWeight: 600, color: "#111827",
+                  fontSize: 13, fontWeight: 600, color: COLORS.ink,
                   textDecoration: "none", transition: "opacity 0.15s",
                 }}
                 onMouseEnter={(e) => (e.currentTarget.style.opacity = "0.6")}
@@ -558,17 +564,17 @@ export default function HowItWorks() {
               style={{ marginTop: 18, display: "flex", alignItems: "center", gap: 12 }}
             >
               <div style={{ display: "flex" }}>
-                {["#C7D2FE", "#DDD6FE", "#BBF7D0", "#FDE68A"].map((bg, i) => (
+                {[COLORS.mint, COLORS.pink, COLORS.amber, "#C7D2FE"].map((bg, i) => (
                   <div key={i} style={{
                     width: 26, height: 26, borderRadius: "50%",
-                    border: "2px solid #fff", background: bg,
+                    border: `2px solid ${COLORS.paper}`, background: bg,
                     marginLeft: i === 0 ? 0 : -8,
                     zIndex: 4 - i, position: "relative",
                   }} />
                 ))}
               </div>
-              <p style={{ fontSize: 12, color: "#6B7280", margin: 0 }}>
-                <span style={{ fontWeight: 600, color: "#111827" }}>4 200+</span>{" "}
+              <p style={{ fontSize: 12, color: COLORS.slate, margin: 0 }}>
+                <span style={{ fontWeight: 600, color: COLORS.ink }}>4 200+</span>{" "}
                 {t("how.enrolled", "learners enrolled")}
               </p>
             </motion.div>
@@ -597,7 +603,7 @@ export default function HowItWorks() {
                     <div style={{ fontSize: 11, fontWeight: 700, color: activeFeature.accent, marginBottom: 2 }}>
                       {activeFeature.label}
                     </div>
-                    <div style={{ fontSize: 11, color: "#6B7280", lineHeight: 1.5 }}>
+                    <div style={{ fontSize: 11, color: COLORS.slate, lineHeight: 1.5 }}>
                       {activeFeature.desc.slice(0, 60)}…
                     </div>
                   </div>
