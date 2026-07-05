@@ -25,6 +25,11 @@ function Usermodal() {
       }
     });
   };
+const handleHblog = () => {
+    trigger(async () => {
+      navigate("/hblog");
+    });
+  };
 
   return (
     <AnimatePresence>
@@ -66,7 +71,7 @@ function Usermodal() {
         <div className="border-t border-gray-200" />
 
         {/* Blog */}
-        <button className="w-full text-left px-4 py-3 text-gray-600 text-sm hover:bg-gray-100">
+        <button onClick={handleHblog} className="w-full text-left px-4 py-3 text-gray-600 text-sm hover:bg-gray-100">
           {t("modal.blog")}
         </button>
 

@@ -10,8 +10,13 @@ export default async function initLanguage() {
     return;
   }
 
-  const country = await getUserCountry();
-  const lang = detectLanguage(country);
+  let lang = "en";
+  try {
+    const country = await getUserCountry();
+    lang = detectLanguage(country);
+  } catch (err) {
+    console.warn("Language detection failed, defaulting to English:", err);
+  }
 
   i18n.changeLanguage(lang);
   localStorage.setItem("lang", lang);

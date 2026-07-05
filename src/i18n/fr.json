@@ -15,6 +15,58 @@
     "copyright": "Tous droits réservés.",
     "built": "Conçu avec précision."
   },
+  "skeleton": {
+    "loading": "Chargement de la page…"
+  },
+  "blog": {
+  "tag": "// blog",
+  "title": "hblog",
+  "subtitle": "Tutoriels, retours d'expérience et coulisses de la communauté hlearning.",
+  "searchPlaceholder": "Rechercher un article",
+  "categories": {
+    "all": "Tout",
+    "tutorials": "Tutoriels",
+    "career": "Carrière",
+    "community": "Communauté"
+  },
+  "featuredBadge": "À la une",
+  "readTimeSuffix": "de lecture",
+  "noResults": {
+    "title": "Aucun article ne correspond",
+    "hint": "Essaie une autre catégorie ou un autre mot-clé."
+  },
+  "newsletter": {
+    "title": "Un article par semaine, pas plus.",
+    "subtitle": "Le meilleur du blog, sans spam, dans ta boîte mail.",
+    "cta": "S'abonner"
+  },
+  "articles": {
+    "1": {
+      "title": "Comprendre les closures en JavaScript sans se perdre",
+      "excerpt": "Une explication visuelle des closures, avec des exemples concrets tirés de vrais bugs rencontrés en cours."
+    },
+    "2": {
+      "title": "Comment j'ai décroché mon premier poste dev sans diplôme",
+      "excerpt": "Le parcours réel d'un apprenant hlearning, de zéro ligne de code à son premier CDI."
+    },
+    "3": {
+      "title": "Python vs JavaScript : lequel apprendre en premier ?",
+      "excerpt": "Un comparatif honnête basé sur les données de progression de nos 12 000 apprenants."
+    },
+    "4": {
+      "title": "Les meilleurs projets de la communauté ce mois-ci",
+      "excerpt": "Cinq projets construits par des apprenants qui nous ont impressionnés."
+    },
+    "5": {
+      "title": "Négocier son salaire de développeur junior",
+      "excerpt": "Ce que révèlent nos enquêtes salariales, et comment s'en servir en entretien."
+    },
+    "6": {
+      "title": "Debugger comme un senior : la méthode en 4 étapes",
+      "excerpt": "La checklist que nos mentors utilisent en review pour ne rater aucun bug."
+    }
+  }
+},
   "navbar": {
     "home": "Accueil",
     "programs": "Programmes",

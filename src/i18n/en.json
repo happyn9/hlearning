@@ -15,6 +15,58 @@
     "copyright": "All rights reserved.",
     "built": "Designed & built with precision."
   },
+  "skeleton": {
+    "loading": " Loading ..."
+  },
+  "blog": {
+  "tag": "// blog",
+  "title": "hblog",
+  "subtitle": "Tutorials, experience stories, and behind-the-scenes from the hlearning community.",
+  "searchPlaceholder": "Search for an article",
+  "categories": {
+    "all": "All",
+    "tutorials": "Tutorials",
+    "career": "Career",
+    "community": "Community"
+  },
+  "featuredBadge": "Featured",
+  "readTimeSuffix": "read",
+  "noResults": {
+    "title": "No articles match",
+    "hint": "Try another category or keyword."
+  },
+  "newsletter": {
+    "title": "One article a week, no more.",
+    "subtitle": "The best of the blog, no spam, straight to your inbox.",
+    "cta": "Subscribe"
+  },
+  "articles": {
+    "1": {
+      "title": "Understanding JavaScript closures without getting lost",
+      "excerpt": "A visual explanation of closures, with real examples pulled from bugs seen in class."
+    },
+    "2": {
+      "title": "How I landed my first dev job without a degree",
+      "excerpt": "The real journey of an hlearning student, from zero lines of code to a full-time offer."
+    },
+    "3": {
+      "title": "Python vs JavaScript: which one to learn first?",
+      "excerpt": "An honest comparison based on progress data from our 12,000 learners."
+    },
+    "4": {
+      "title": "The best community projects this month",
+      "excerpt": "Five projects built by learners that genuinely impressed us."
+    },
+    "5": {
+      "title": "Negotiating your junior developer salary",
+      "excerpt": "What our salary surveys reveal, and how to use them in an interview."
+    },
+    "6": {
+      "title": "Debugging like a senior: the 4-step method",
+      "excerpt": "The checklist our mentors use in review so no bug slips through."
+    }
+  }
+},
   "navbar": {
     "home": "Home",
     "programs": "Programs",

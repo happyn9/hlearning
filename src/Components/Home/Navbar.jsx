@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useUser } from "../../context/UserContext";
 import { ArrowRight, Search, Home, BookOpen, LogIn, X, Flame, CornerDownLeft, TrendingUp, Code2, Database } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -81,6 +81,8 @@ function SearchOverlay({ open, onClose, navigate }) {
   const [q, setQ] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef(null);
+  const {user} =useUser();
+  const isConnected = Boolean(user);
 
   const COURSES = [
     { id: 1, title: "Python", category: t("navbar.categories.language"), icon: Code2, trending: true },
@@ -101,7 +103,10 @@ function SearchOverlay({ open, onClose, navigate }) {
       if (e.key === "ArrowUp") { e.preventDefault(); setActiveIndex(i => Math.max(i - 1, 0)); }
       if (e.key === "Enter" && filtered[activeIndex]) {
         onClose();
-        navigate(`/course/info/${filtered[activeIndex].id}`);
+        if (isConnected){
+          navigate(`/course/info/${filtered[activeIndex].id}`);
+        }
+        navigate('/auth')
       }
     };
     window.addEventListener("keydown", onKeyDown);
@@ -207,9 +212,70 @@ function SearchOverlay({ open, onClose, navigate }) {
   );
 }
 
+/* ══════════════════════════════════════════════════════════
+   BOTTOM NAV — façon "vraie app" native
+   - pastille active qui glisse (layoutId, spring)
+   - icône qui change de poids/teinte quand active
+   - retour tactile (whileTap) sur chaque bouton
+   - barre en verre avec profondeur en couches (pas un flat blur)
+   - respecte la safe-area des iPhone à encoche (env(safe-area-inset-bottom))
+═══════════════════════════════════════════════════════════ */
+function AppBottomNav({ items }) {
+  return (
+    <nav
+      className="md:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center gap-0.5 px-1.5 py-1.5 rounded-[26px]"
+      style={{
+        bottom: "calc(env(safe-area-inset-bottom, 0px) + 14px)",
+        background: COLORS.surface,
+        backdropFilter: "saturate(200%) blur(24px)",
+        WebkitBackdropFilter: "saturate(200%) blur(24px)",
+        border: `1px solid ${COLORS.hairline}`,
+        boxShadow: `
+          0 1px 0 rgba(255,255,255,0.6) inset,
+          0 18px 40px -12px rgba(0,0,0,0.18),
+          0 4px 10px rgba(0,0,0,0.06)
+        `,
+      }}
+    >
+      {items.map(({ icon: Icon, label, action, active }) => (
+        <motion.button
+          key={label}
+          onClick={action}
+          whileTap={{ scale: 0.88 }}
+          transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          className="relative flex flex-col items-center gap-0.5 px-4 py-2 rounded-[18px]"
+        >
+          {active && (
+            <motion.span
+              layoutId="bottomNavPill"
+              className="absolute inset-0 rounded-[18px]"
+              style={{ background: COLORS.blueTint }}
+              transition={{ type: "spring", stiffness: 480, damping: 38 }}
+            />
+          )}
+          <div className="relative w-5 h-5 flex items-center justify-center z-10">
+            <Icon
+              size={19}
+              style={{ color: active ? COLORS.blue : COLORS.ink }}
+              strokeWidth={active ? 2.1 : 1.75}
+            />
+          </div>
+          <span
+            className="relative z-10 text-[9px] transition-colors"
+            style={{ ...sf, color: active ? COLORS.blue : COLORS.gray, fontWeight: active ? 600 : 400 }}
+          >
+            {label}
+          </span>
+        </motion.button>
+      ))}
+    </nav>
+  );
+}
+
 export default function Navbar({ OnNav, onModal }) {
   const { user, loading } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
   const { loadingAction, progress, trigger } = useTriggerWithProgress();
   const { t } = useTranslation();
 
@@ -222,20 +288,27 @@ export default function Navbar({ OnNav, onModal }) {
 
   if (loading) return null;
 
-  /* ── Bottom nav items (mobile) ── */
+  /* ── Bottom nav items (mobile) — chaque item connaît sa route
+     pour déterminer son état actif, sauf recherche (overlay) qui
+     s'active avec searchOpen. ── */
   const bottomNav = [
-    { icon: Home, label: t("navbar.home"), action: goHome },
-    { icon: Search, label: t("navbar.searchLabel"), action: () => setSearchOpen(true) },
-    { icon: BookOpen, label: t("navbar.courses"), action: () => trigger(() => navigate("/courses")) },
+    { icon: Home, label: t("navbar.home"), action: goHome, active: location.pathname === "/" },
+    { icon: Search, label: t("navbar.searchLabel"), action: () => setSearchOpen(true), active: searchOpen },
+    { icon: BookOpen, label: "hblog", action: () => trigger(() => navigate("/hblog")), active: location.pathname.startsWith("/hblog") },
     connected
-      ? { icon: () => (
+      ? {
+          icon: () => (
             <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium overflow-hidden" style={{ background: COLORS.blueTint, color: COLORS.blue }}>
               {user?.photo_url
                 ? <img src={user.photo_url} className="w-full h-full object-cover" alt="avatar" />
                 : userInitial}
             </div>
-          ), label: t("navbar.profile"), action: onModal }
-      : { icon: LogIn, label: t("navbar.signin"), action: OnNav },
+          ),
+          label: t("navbar.profile"),
+          action: onModal,
+          active: false,
+        }
+      : { icon: LogIn, label: t("navbar.signin"), action: OnNav, active: location.pathname === "/auth" },
   ];
 
   return (
@@ -314,24 +387,8 @@ export default function Navbar({ OnNav, onModal }) {
         </div>
       </header>
 
-      {/* ── MOBILE BOTTOM NAV ── */}
-      <nav
-        className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-[28px] border"
-        style={{ background: COLORS.surface, backdropFilter: "saturate(180%) blur(20px)", borderColor: COLORS.hairline, boxShadow: "0 8px 30px rgba(0,0,0,0.08)" }}
-      >
-        {bottomNav.map(({ icon: Icon, label, action }) => (
-          <button
-            key={label}
-            onClick={action}
-            className="flex flex-col items-center gap-0.5 px-4 py-2 rounded-2xl transition-all active:scale-95"
-          >
-            <div className="w-5 h-5 flex items-center justify-center">
-              <Icon size={19} style={{ color: COLORS.ink }} strokeWidth={1.75} />
-            </div>
-            <span className="text-[9px]" style={{ ...sf, color: COLORS.gray }}>{label}</span>
-          </button>
-        ))}
-      </nav>
+      {/* ── MOBILE BOTTOM NAV, façon vraie app ── */}
+      <AppBottomNav items={bottomNav} />
 
       {/* Search overlay (partagé desktop/mobile) */}
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} navigate={navigate} />

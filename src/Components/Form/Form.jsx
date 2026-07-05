@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 
 const INITIAL_SKELETON_DURATION = 800; // uniquement pour le skeleton au montage
 
-export default function Auth() {
+export default function Form() {
   const navigate = useNavigate();
   const { refreshUser } = useUser();
   const { t } = useTranslation();
@@ -28,6 +28,27 @@ export default function Auth() {
 
   const [loading, setLoading] = useState(false); // reflète la vraie requête en cours
   const [error, setError] = useState("");
+
+  /* ================= GOOGLE BTN SIZING =================
+     Le vrai bouton <GoogleLogin> a besoin d'une largeur en px fixe
+     (prop `width`). S'il ne correspond pas exactement au conteneur
+     visuel, la zone réellement cliquable ne couvre pas tout le
+     bouton stylé qu'on affiche par-dessus → clics "morts". On mesure
+     donc le conteneur et on répercute sa largeur réelle au bouton. */
+  const googleBtnRef = useRef(null);
+  const [googleWidth, setGoogleWidth] = useState(0);
+
+  useEffect(() => {
+    const el = googleBtnRef.current;
+    if (!el) return;
+
+    const update = () => setGoogleWidth(Math.round(el.offsetWidth));
+    update();
+
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   /* ================= INITIAL SKELETON (montage uniquement) ================= */
   useEffect(() => {
@@ -281,12 +302,14 @@ export default function Auth() {
           </p>
 
           {/* GOOGLE — bouton stylé "5D" ; le vrai <GoogleLogin> (iframe) est
-              superposé en transparent pour capter le clic réel */}
-          <div className="group relative w-full h-[52px] select-none">
-            {/* couche visuelle — ne reçoit jamais le clic, réagit via
-                group-hover/group-active déclenchés par la couche du dessus */}
+              superposé en transparent pour capter le clic réel. Sa largeur
+              est mesurée dynamiquement pour coller exactement au visuel. */}
+          <div ref={googleBtnRef} className="group relative w-full h-10 select-none">
+            {/* couche visuelle — au-dessus, ne reçoit jamais le clic
+                (pointer-events-none), réagit via group-hover/group-active
+                déclenchés par le survol/clic de la couche réelle en dessous */}
             <div
-              className="absolute inset-0 z-0 flex items-center justify-center gap-3 rounded-full font-semibold text-[15px] pointer-events-none transition-all duration-200 ease-out group-hover:-translate-y-0.5 group-active:translate-y-[1px] group-active:scale-[0.99]"
+              className="absolute inset-0 z-10 flex items-center justify-center gap-3 rounded-full font-semibold text-[14px] pointer-events-none transition-all duration-200 ease-out group-hover:-translate-y-0.5 group-active:translate-y-[1px] group-active:scale-[0.99]"
               style={{
                 background:
                   "linear-gradient(180deg, #2a2a2a 0%, #1c1c1c 55%, #141414 100%)",
@@ -309,14 +332,21 @@ export default function Auth() {
               {t("auth.continueWithGoogle")}
             </div>
 
-            {/* couche réelle — invisible, capte le clic Google légitime */}
-            <div className="absolute inset-0 z-10 opacity-0 overflow-hidden rounded-full [&_iframe]:!w-full [&_iframe]:!h-full [&_div]:!w-full">
-              <GoogleLogin
-                onSuccess={handleGoogleSuccess}
-                onError={() => setError(t("auth.googleFailed"))}
-                size="large"
-                width="400"
-              />
+            {/* couche réelle — invisible, capte le clic Google légitime.
+                Rendue seulement une fois la largeur du conteneur connue,
+                sinon Google utilise une largeur par défaut qui ne
+                correspond pas au visuel et une partie des clics tombe
+                dans le vide. */}
+            <div className="absolute inset-0 z-0 opacity-0 overflow-hidden rounded-full flex items-center justify-center">
+              {googleWidth > 0 && (
+                <GoogleLogin
+                  key={googleWidth}
+                  onSuccess={handleGoogleSuccess}
+                  onError={() => setError(t("auth.googleFailed"))}
+                  size="large"
+                  width={String(googleWidth)}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -17,6 +17,7 @@ import TeacherDashboard from "./Pages/Teach/TeacherDashboard";
 import { Toaster } from "react-hot-toast";
 import PaymentCallback from "./Pages/PaymentCallback";
 import Dashboardtuition from "./Pages/Tuition/dash/Dashboardtuition";
+import Hblog from "./Pages/Hblog";
 
 function App() {
 
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        <Route path="/hblog" element={<Hblog />} />
         <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
 
         <Route path="/auth" element={<Form />} />
