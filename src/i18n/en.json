@@ -21,7 +21,23 @@
     "courses": "Courses",
     "signin": "Sign In",
     "signup": "Sign Up",
-    "search": "Search courses..."
+    "search": "Search courses...",
+    "searchLabel": "Search",
+    "searchOverlayPlaceholder": "Search for a course, a language…",
+    "profile": "Profile",
+    "trending": "Trending",
+    "resultsCount_one": "{{count}} result",
+    "resultsCount_other": "{{count}} results",
+    "noResults": "No results for \"{{query}}\"",
+    "noResultsHint": "Try another language or topic.",
+    "navigate": "navigate",
+    "open": "open",
+    "close": "close",
+    "streakDay": "d",
+    "categories": {
+      "language": "Language",
+      "data": "Data"
+    }
   },
   "hero": {
     "aiExperience": "AI Learning Experience",

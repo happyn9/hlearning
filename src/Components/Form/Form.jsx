@@ -7,6 +7,8 @@ import OTPModal from "./OTPModal";
 import { GoogleLogin } from "@react-oauth/google";
 import { useTranslation } from "react-i18next";
 
+const LOADING_DURATION = 1500; // 🔥 durée unique de chargement (1.5s)
+
 export default function Auth() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -29,16 +31,16 @@ export default function Auth() {
   const [error, setError] = useState("");
 
   /* ================= LOADING CONTROL (IMPORTANT) ================= */
-  const triggerPageLoading = (time = 2000) => {
+  const triggerPageLoading = (time = LOADING_DURATION) => {
     setPageLoading(true);
     setTimeout(() => {
       setPageLoading(false);
     }, time);
   };
 
-  /* initial skeleton 5 sec */
+  /* initial skeleton */
   useEffect(() => {
-    triggerPageLoading(5000);
+    triggerPageLoading(LOADING_DURATION);
   }, []);
 
   /* ================= LOGIN ================= */
@@ -51,7 +53,7 @@ export default function Auth() {
       return;
     }
 
-    triggerPageLoading(2000); // 🔥 loading UX pendant action
+    triggerPageLoading(LOADING_DURATION); // 🔥 loading UX pendant action
     setLoading(true);
 
     try {
@@ -80,7 +82,7 @@ export default function Auth() {
       return;
     }
 
-    triggerPageLoading(500);
+    triggerPageLoading(LOADING_DURATION);
     setLoading(true);
 
     try {
@@ -229,11 +231,11 @@ export default function Auth() {
           {/* GOOGLE */}
           <div className="flex p-1 rounded-full justify-center w-full bg-white/5 backdrop-blur-md border border-white/10">
             <GoogleLogin
-              onClick={() => triggerPageLoading(2000)}   // 🔥 IMPORTANT
+              onClick={() => triggerPageLoading(LOADING_DURATION)}   // 🔥 IMPORTANT
               
 onSuccess={async (credentialResponse) => {
   try {
-    triggerPageLoading(2000);
+    triggerPageLoading(LOADING_DURATION);
 
     await api.post("/auth/google", {
       token: credentialResponse.credential,

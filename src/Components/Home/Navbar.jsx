@@ -1,98 +1,206 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import { useUser } from "../../context/UserContext";
-import { ArrowRight, Search, Home, BookOpen, LogIn, X, Flame } from "lucide-react";
+import { ArrowRight, Search, Home, BookOpen, LogIn, X, Flame, CornerDownLeft, TrendingUp, Code2, Database } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import useTriggerWithProgress from "../../hooks/triggerWithProgress";
 import { useTranslation } from "react-i18next";
 
-const mono = { fontFamily: "'JetBrains Mono', ui-monospace, monospace" };
+/*
+  Design tokens — "Apple light"
+  ──────────────────────────────
+  Une seule police système pour tout (pas de mélange serif/mono/sans),
+  un seul accent (bleu), fond blanc translucide, hairlines à 1px, zéro
+  ombre lourde. La discipline typographique et l'espace négatif portent
+  le design plutôt qu'une palette ou une texture.
+*/
+
+const sf = { fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif" };
+
 const COLORS = {
-  ink: "#12141C", paper: "#FAF9F5", mint: "#5EEAD4",
-  pink: "#F472B6", amber: "#FBBF24", slate: "#7C8394",
+  ink: "#1D1D1F",
+  gray: "#86868B",
+  hairline: "rgba(0,0,0,0.08)",
+  surface: "rgba(255,255,255,0.82)",
+  surfaceSolid: "#FFFFFF",
+  blue: "#0071E3",
+  blueHover: "#0077ED",
+  blueTint: "rgba(0,113,227,0.08)",
 };
 
-/* ── Logo ── */
-const HLearningLogo = () => (
-  <svg width="36" height="36" viewBox="0 0 40 40" fill="none">
-    <defs>
-      <linearGradient id="flameGradNav" x1="0%" y1="100%" x2="100%" y2="0%">
-        <stop offset="0%" stopColor="#534AB7" />
-        <stop offset="100%" stopColor="#1D9E75" />
-      </linearGradient>
-    </defs>
-    <path d="M20 38C20 38 6 30 7 19C8 11 14 8 14 8C12 14 17 17 18 12C19 7 17 2 22 0C21 7 26 10 27 16C29 10 30 4 28 0C34 7 33 16 31 22C33 30 20 38 20 38Z"
-      fill="url(#flameGradNav)" />
-    <ellipse cx="20" cy="24" rx="5" ry="7" fill="white" opacity="0.18" />
-    <text x="20" y="30" textAnchor="middle" fontFamily="Georgia,serif" fontSize="16" fontWeight="700" fill="white">h</text>
+/* ── Logo : trait fin, monochrome, pas de dégradé ── */
+const HLearningMark = () => (
+  <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
+    <path
+      d="M20 36C20 36 8 29 8.5 19.5C9 12.5 15 10 15 10C13.5 15 17 17 17.5 13.5C18 10 16.5 6.5 20 5C19 10 23 12.5 23.5 17C25 12.5 26 8 24.5 5C29 10 28 17 26.5 21.5C28 29 20 36 20 36Z"
+      stroke={COLORS.ink}
+      strokeWidth="1.5"
+      strokeLinejoin="round"
+      fill="none"
+    />
   </svg>
 );
 
-/* ── Search overlay ── */
+/* ── Search overlay : palette de commande façon Spotlight ── */
+function ResultRow({ course, active, onHover, onSelect, index }) {
+  const { t } = useTranslation();
+  const Icon = course.icon;
+  return (
+    <button
+      onMouseEnter={() => onHover(index)}
+      onClick={onSelect}
+      className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl text-left transition-colors"
+      style={{ background: active ? COLORS.blueTint : "transparent" }}
+    >
+      <div className="flex items-center gap-3 min-w-0">
+        <div
+          className="w-8 h-8 rounded-[9px] flex items-center justify-center shrink-0 transition-colors"
+          style={{ background: active ? COLORS.blue : "#F0F0F2" }}
+        >
+          <Icon size={15} style={{ color: active ? "#FFFFFF" : COLORS.gray }} />
+        </div>
+        <div className="min-w-0">
+          <div className="text-[14px] truncate" style={{ ...sf, color: COLORS.ink, fontWeight: 500 }}>{course.title}</div>
+          <div className="text-[11.5px]" style={{ ...sf, color: COLORS.gray }}>{course.category}</div>
+        </div>
+      </div>
+      {active ? (
+        <div className="flex items-center gap-1 shrink-0" style={{ color: COLORS.blue }}>
+          <span className="text-[11px]" style={{ ...sf }}>{t("navbar.open")}</span>
+          <CornerDownLeft size={13} />
+        </div>
+      ) : course.trending ? (
+        <TrendingUp size={13} style={{ color: COLORS.gray }} className="shrink-0" />
+      ) : null}
+    </button>
+  );
+}
+
 function SearchOverlay({ open, onClose, navigate }) {
+  const { t } = useTranslation();
   const [q, setQ] = useState("");
-  const courses = [
-    { id: 1, title: "Python" }, { id: 2, title: "JavaScript" },
-    { id: 3, title: "Java" }, { id: 4, title: "Data Science" },
+  const [activeIndex, setActiveIndex] = useState(0);
+  const inputRef = useRef(null);
+
+  const COURSES = [
+    { id: 1, title: "Python", category: t("navbar.categories.language"), icon: Code2, trending: true },
+    { id: 2, title: "JavaScript", category: t("navbar.categories.language"), icon: Code2, trending: true },
+    { id: 3, title: "Java", category: t("navbar.categories.language"), icon: Code2 },
+    { id: 4, title: "Data Science", category: t("navbar.categories.data"), icon: Database, trending: true },
   ];
-  const filtered = q ? courses.filter(c => c.title.toLowerCase().includes(q.toLowerCase())) : courses;
+
+  const filtered = q ? COURSES.filter(c => c.title.toLowerCase().includes(q.toLowerCase())) : COURSES;
+
+  useEffect(() => setActiveIndex(0), [q, open]);
+
+  useEffect(() => {
+    if (!open) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Escape") { onClose(); return; }
+      if (e.key === "ArrowDown") { e.preventDefault(); setActiveIndex(i => Math.min(i + 1, filtered.length - 1)); }
+      if (e.key === "ArrowUp") { e.preventDefault(); setActiveIndex(i => Math.max(i - 1, 0)); }
+      if (e.key === "Enter" && filtered[activeIndex]) {
+        onClose();
+        navigate(`/course/info/${filtered[activeIndex].id}`);
+      }
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, filtered, activeIndex, onClose, navigate]);
+
+  const select = (course) => { onClose(); navigate(`/course/info/${course.id}`); };
 
   return (
     <AnimatePresence>
       {open && (
         <motion.div
-          initial={{ opacity: 0, y: "100%" }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: "100%" }}
-          transition={{ type: "spring", stiffness: 380, damping: 34 }}
-          className="fixed inset-0 z-[60] flex flex-col"
-          style={{ background: COLORS.paper }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.18 }}
+          className="fixed inset-0 z-[60] flex flex-col items-center px-4 pt-[8vh] sm:pt-[14vh]"
+          style={{ background: "rgba(29,29,31,0.35)", backdropFilter: "blur(4px)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
-          {/* Header search */}
-          <div className="flex items-center gap-3 px-5 pt-14 pb-4 border-b border-black/[0.07]">
-            <div className="flex-1 flex items-center gap-3 bg-black/[0.05] rounded-2xl px-4 py-3">
-              <Search size={16} style={{ color: COLORS.slate }} />
+          <motion.div
+            initial={{ opacity: 0, y: -12, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 420, damping: 34 }}
+            onAnimationComplete={() => inputRef.current?.focus()}
+            className="w-full max-w-[560px] rounded-2xl overflow-hidden flex flex-col"
+            style={{
+              background: COLORS.surfaceSolid,
+              boxShadow: "0 30px 60px -12px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.04)",
+              maxHeight: "70vh",
+            }}
+          >
+            {/* Search field */}
+            <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: COLORS.hairline }}>
+              <Search size={18} style={{ color: COLORS.blue }} strokeWidth={2.25} />
               <input
+                ref={inputRef}
                 autoFocus
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search courses…"
-                className="flex-1 bg-transparent outline-none text-sm"
-                style={{ color: COLORS.ink, fontFamily: "'Inter', sans-serif" }}
+                placeholder={t("navbar.searchOverlayPlaceholder")}
+                className="flex-1 bg-transparent outline-none text-[16px]"
+                style={{ ...sf, color: COLORS.ink }}
               />
+              {q && (
+                <button onClick={() => setQ("")} className="w-5 h-5 rounded-full flex items-center justify-center shrink-0" style={{ background: "#EDEDEF" }}>
+                  <X size={11} style={{ color: COLORS.gray }} />
+                </button>
+              )}
+              <button onClick={onClose} className="text-[12px] px-2 py-1 rounded-md shrink-0" style={{ ...sf, color: COLORS.gray, background: "#F5F5F7" }}>
+                esc
+              </button>
             </div>
-            <button onClick={onClose} className="w-10 h-10 flex items-center justify-center rounded-full bg-black/[0.06]">
-              <X size={18} style={{ color: COLORS.ink }} />
-            </button>
-          </div>
 
-          {/* Results */}
-          <div className="flex-1 overflow-y-auto px-5 py-4">
-            <p className="text-[11px] uppercase tracking-widest mb-4" style={{ ...mono, color: COLORS.slate }}>
-              {q ? "Results" : "All courses"}
-            </p>
-            <div className="flex flex-col gap-2">
-              {filtered.map((c, i) => (
-                <motion.button
-                  key={c.id}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: i * 0.05 }}
-                  onClick={() => { onClose(); navigate(`/course/info/${c.id}`); }}
-                  className="flex items-center justify-between w-full px-4 py-4 rounded-2xl text-left border border-black/[0.07] hover:bg-black/[0.03] transition"
-                  style={{ background: "white" }}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: "rgba(94,234,212,0.15)" }}>
-                      <BookOpen size={16} style={{ color: COLORS.mint }} />
-                    </div>
-                    <span className="text-sm font-medium" style={{ color: COLORS.ink }}>{c.title}</span>
+            {/* Results */}
+            <div className="flex-1 overflow-y-auto px-2.5 py-2">
+              <p className="text-[11px] uppercase tracking-wide px-2.5 pt-2 pb-1.5" style={{ ...sf, color: COLORS.gray, letterSpacing: "0.04em" }}>
+                {q ? t("navbar.resultsCount", { count: filtered.length }) : t("navbar.trending")}
+              </p>
+              {filtered.length > 0 ? (
+                <div className="flex flex-col gap-0.5 pb-1">
+                  {filtered.map((c, i) => (
+                    <ResultRow
+                      key={c.id}
+                      course={c}
+                      index={i}
+                      active={i === activeIndex}
+                      onHover={setActiveIndex}
+                      onSelect={() => select(c)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center py-10 text-center px-6">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ background: "#F5F5F7" }}>
+                    <Search size={16} style={{ color: COLORS.gray }} />
                   </div>
-                  <ArrowRight size={15} style={{ color: COLORS.slate }} />
-                </motion.button>
-              ))}
+                  <p className="text-[14px]" style={{ ...sf, color: COLORS.ink, fontWeight: 500 }}>{t("navbar.noResults", { query: q })}</p>
+                  <p className="text-[12.5px] mt-1" style={{ ...sf, color: COLORS.gray }}>{t("navbar.noResultsHint")}</p>
+                </div>
+              )}
             </div>
-          </div>
+
+            {/* Footer hints */}
+            <div className="flex items-center justify-between px-5 py-2.5 border-t" style={{ borderColor: COLORS.hairline, background: "#FAFAFA" }}>
+              <div className="flex items-center gap-3">
+                <span className="flex items-center gap-1 text-[11.5px]" style={{ ...sf, color: COLORS.gray }}>
+                  <span className="px-1.5 py-0.5 rounded-[5px] text-[10px]" style={{ background: "#EFEFF1" }}>↑↓</span> {t("navbar.navigate")}
+                </span>
+                <span className="flex items-center gap-1 text-[11.5px]" style={{ ...sf, color: COLORS.gray }}>
+                  <span className="px-1.5 py-0.5 rounded-[5px] text-[10px]" style={{ background: "#EFEFF1" }}>↵</span> {t("navbar.open")}
+                </span>
+              </div>
+              <span className="flex items-center gap-1 text-[11.5px]" style={{ ...sf, color: COLORS.gray }}>
+                <span className="px-1.5 py-0.5 rounded-[5px] text-[10px]" style={{ background: "#EFEFF1" }}>esc</span> {t("navbar.close")}
+              </span>
+            </div>
+          </motion.div>
         </motion.div>
       )}
     </AnimatePresence>
@@ -106,6 +214,7 @@ export default function Navbar({ OnNav, onModal }) {
   const { t } = useTranslation();
 
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
 
   const connected = Boolean(user);
   const userInitial = user?.name?.charAt(0)?.toUpperCase();
@@ -115,55 +224,71 @@ export default function Navbar({ OnNav, onModal }) {
 
   /* ── Bottom nav items (mobile) ── */
   const bottomNav = [
-    { icon: Home, label: "Home", action: goHome },
-    { icon: Search, label: "Search", action: () => setSearchOpen(true) },
-    { icon: BookOpen, label: "Courses", action: () => trigger(() => navigate("/courses")) },
+    { icon: Home, label: t("navbar.home"), action: goHome },
+    { icon: Search, label: t("navbar.searchLabel"), action: () => setSearchOpen(true) },
+    { icon: BookOpen, label: t("navbar.courses"), action: () => trigger(() => navigate("/courses")) },
     connected
       ? { icon: () => (
-            <div className="w-6 h-6 rounded-full bg-gray-800 flex items-center justify-center text-white text-[10px] font-bold overflow-hidden">
+            <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-medium overflow-hidden" style={{ background: COLORS.blueTint, color: COLORS.blue }}>
               {user?.photo_url
                 ? <img src={user.photo_url} className="w-full h-full object-cover" alt="avatar" />
                 : userInitial}
             </div>
-          ), label: "Profile", action: onModal }
-      : { icon: LogIn, label: "Sign in", action: OnNav },
+          ), label: t("navbar.profile"), action: onModal }
+      : { icon: LogIn, label: t("navbar.signin"), action: OnNav },
   ];
 
   return (
     <>
       {/* ── DESKTOP NAVBAR ── */}
-      <header className="hidden md:block w-full" style={{ background: `${COLORS.paper}CC`, backdropFilter: "blur(12px)" }}>
+      <header
+        className="hidden md:block w-full sticky top-0 z-40 border-b"
+        style={{ background: COLORS.surface, backdropFilter: "saturate(180%) blur(20px)", borderColor: COLORS.hairline }}
+      >
         {loadingAction && (
-          <motion.div className="fixed top-0 left-0 h-[2px] z-50" style={{ background: COLORS.mint }}
+          <motion.div className="fixed top-0 left-0 h-[2px] z-50" style={{ background: COLORS.blue }}
             initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
         )}
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-10 py-4">
-          <div onClick={goHome} className="flex items-center gap-3 cursor-pointer">
-            <HLearningLogo />
-            <span className="text-xl font-light tracking-tight" style={{ color: COLORS.ink }}>hlearning</span>
+        <div className="max-w-7xl mx-auto flex items-center justify-between px-6 lg:px-10 h-14">
+          <div onClick={goHome} className="flex items-center gap-2 cursor-pointer">
+            <HLearningMark />
+            <span className="text-[17px] font-semibold tracking-tight" style={{ ...sf, color: COLORS.ink }}>
+              hlearning
+            </span>
           </div>
 
           {/* Desktop search */}
-          <div className="relative">
+          <motion.div
+            className="relative flex items-center rounded-full"
+            animate={{ width: searchFocused ? 320 : 240 }}
+            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+            style={{ background: "#F5F5F7" }}
+          >
+            <Search size={14} className="absolute left-3.5" style={{ color: COLORS.gray }} />
             <input
               type="text"
               placeholder={t("navbar.search")}
-              className="w-80 px-5 py-2.5 rounded-full text-sm outline-none border border-black/[0.08]"
-              style={{ background: "rgba(18,20,28,0.04)", color: COLORS.ink, fontFamily: "'Inter',sans-serif" }}
-              onFocus={() => setSearchOpen(true)}
+              className="w-full pl-9 pr-4 py-2 rounded-full text-[13px] outline-none bg-transparent"
+              style={{ ...sf, color: COLORS.ink }}
+              onFocus={() => { setSearchFocused(true); setSearchOpen(true); }}
+              onBlur={() => setSearchFocused(false)}
               readOnly
             />
-            <Search size={15} className="absolute right-4 top-1/2 -translate-y-1/2" style={{ color: COLORS.slate }} />
-          </div>
+          </motion.div>
 
           {connected ? (
-            <div onClick={onModal} className="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-white cursor-pointer overflow-hidden">
-              {user?.photo_url ? <img src={user.photo_url} className="w-full h-full object-cover" alt="avatar" /> : <span>{userInitial}</span>}
+            <div onClick={onModal} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer overflow-hidden" style={{ background: COLORS.blueTint, color: COLORS.blue }}>
+              {user?.photo_url ? <img src={user.photo_url} className="w-full h-full object-cover" alt="avatar" /> : <span style={{ ...sf, fontSize: 13, fontWeight: 500 }}>{userInitial}</span>}
             </div>
           ) : (
-            <button onClick={OnNav} className="flex cursor-pointer items-center gap-2 px-5 py-2 rounded-full text-sm font-medium transition hover:opacity-90"
-              style={{ background: COLORS.ink, color: COLORS.paper }}>
-              {t("navbar.signup")} <ArrowRight size={16} />
+            <button
+              onClick={OnNav}
+              className="flex items-center gap-1.5 text-[14px] font-medium transition-colors"
+              style={{ ...sf, color: COLORS.blue }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = COLORS.blueHover)}
+              onMouseLeave={(e) => (e.currentTarget.style.color = COLORS.blue)}
+            >
+              {t("navbar.signup")} <ArrowRight size={14} />
             </button>
           )}
         </div>
@@ -171,34 +296,39 @@ export default function Navbar({ OnNav, onModal }) {
 
       {/* ── MOBILE PROGRESS BAR ── */}
       {loadingAction && (
-        <motion.div className="fixed top-0 left-0 h-[2px] z-50 md:hidden" style={{ background: COLORS.mint }}
+        <motion.div className="fixed top-0 left-0 h-[2px] z-50 md:hidden" style={{ background: COLORS.blue }}
           initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
       )}
 
       {/* ── MOBILE TOP BAR (logo only) ── */}
-      <header className="md:hidden flex items-center justify-between px-5 pt-12 pb-3 relative z-10">
-        <div onClick={goHome} className="flex items-center gap-2.5 cursor-pointer">
-          <HLearningLogo />
-          <span className="text-lg font-light tracking-tight" style={{ color: COLORS.ink }}>hlearning</span>
+      <header
+        className="md:hidden flex items-center justify-between px-5 pt-12 pb-3 relative z-10 border-b"
+        style={{ background: COLORS.surfaceSolid, borderColor: COLORS.hairline }}
+      >
+        <div onClick={goHome} className="flex items-center gap-2 cursor-pointer">
+          <HLearningMark />
+          <span className="text-[16px] font-semibold tracking-tight" style={{ ...sf, color: COLORS.ink }}>hlearning</span>
         </div>
-        <div className="flex items-center gap-1.5">
-          <div className="flex items-center gap-1 text-xs px-2.5 py-1.5 rounded-full border border-black/[0.08]"
-            style={{ ...mono, color: COLORS.mint, background: "rgba(94,234,212,0.08)" }}>
-            <Flame size={11} style={{ color: COLORS.amber }} /> 14d
-          </div>
+        <div className="flex items-center gap-1 text-[12px] px-2.5 py-1 rounded-full" style={{ ...sf, color: COLORS.gray, background: "#F5F5F7" }}>
+          <Flame size={12} style={{ color: COLORS.blue }} /> 14{t("navbar.streakDay")}
         </div>
       </header>
 
       {/* ── MOBILE BOTTOM NAV ── */}
-      <nav className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-3 py-2.5 rounded-3xl border border-black/[0.08] shadow-[0_20px_60px_-15px_rgba(18,20,28,0.25)]"
-        style={{ background: `${COLORS.paper}E8`, backdropFilter: "blur(20px)" }}>
-        {bottomNav.map(({ icon: Icon, label, action }, i) => (
-          <button key={label} onClick={action}
-            className="flex flex-col items-center gap-0.5 px-4 py-2 rounded-2xl transition-all hover:bg-black/[0.05] active:scale-95">
+      <nav
+        className="md:hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 px-2 py-2 rounded-[28px] border"
+        style={{ background: COLORS.surface, backdropFilter: "saturate(180%) blur(20px)", borderColor: COLORS.hairline, boxShadow: "0 8px 30px rgba(0,0,0,0.08)" }}
+      >
+        {bottomNav.map(({ icon: Icon, label, action }) => (
+          <button
+            key={label}
+            onClick={action}
+            className="flex flex-col items-center gap-0.5 px-4 py-2 rounded-2xl transition-all active:scale-95"
+          >
             <div className="w-5 h-5 flex items-center justify-center">
-              <Icon size={20} style={{ color: COLORS.ink }} />
+              <Icon size={19} style={{ color: COLORS.ink }} strokeWidth={1.75} />
             </div>
-            <span className="text-[9px] tracking-wide" style={{ ...mono, color: COLORS.slate }}>{label}</span>
+            <span className="text-[9px]" style={{ ...sf, color: COLORS.gray }}>{label}</span>
           </button>
         ))}
       </nav>

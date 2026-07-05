@@ -21,7 +21,23 @@
     "courses": "Cours",
     "signin": "Connexion",
     "signup": "S'inscrire",
-    "search": "Rechercher des cours..."
+    "search": "Rechercher des cours...",
+    "searchLabel": "Recherche",
+    "searchOverlayPlaceholder": "Rechercher un cours, un langage…",
+    "profile": "Profil",
+    "trending": "Tendances",
+    "resultsCount_one": "{{count}} résultat",
+    "resultsCount_other": "{{count}} résultats",
+    "noResults": "Aucun résultat pour « {{query}} »",
+    "noResultsHint": "Essaie un autre langage ou une autre thématique.",
+    "navigate": "naviguer",
+    "open": "ouvrir",
+    "close": "fermer",
+    "streakDay": "j",
+    "categories": {
+      "language": "Langage",
+      "data": "Data"
+    }
   },
   "hero": {
     "aiExperience": "Expérience d'apprentissage IA",
