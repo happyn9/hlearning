@@ -5,15 +5,7 @@ import { ArrowRight, Search, Home, BookOpen, LogIn, X, Flame, CornerDownLeft, Tr
 import { motion, AnimatePresence } from "framer-motion";
 import useTriggerWithProgress from "../../hooks/triggerWithProgress";
 import { useTranslation } from "react-i18next";
-
-/*
-  Design tokens — "Apple light"
-  ──────────────────────────────
-  Une seule police système pour tout (pas de mélange serif/mono/sans),
-  un seul accent (bleu), fond blanc translucide, hairlines à 1px, zéro
-  ombre lourde. La discipline typographique et l'espace négatif portent
-  le design plutôt qu'une palette ou une texture.
-*/
+import { usePwaDisplayMode, hapticTap } from "../../hooks/usePwaDisplayMode";
 
 const sf = { fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif" };
 
@@ -28,7 +20,6 @@ const COLORS = {
   blueTint: "rgba(0,113,227,0.08)",
 };
 
-/* ── Logo : trait fin, monochrome, pas de dégradé ── */
 const HLearningMark = () => (
   <svg width="26" height="26" viewBox="0 0 40 40" fill="none">
     <path
@@ -41,7 +32,6 @@ const HLearningMark = () => (
   </svg>
 );
 
-/* ── Search overlay : palette de commande façon Spotlight ── */
 function ResultRow({ course, active, onHover, onSelect, index }) {
   const { t } = useTranslation();
   const Icon = course.icon;
@@ -81,7 +71,7 @@ function SearchOverlay({ open, onClose, navigate }) {
   const [q, setQ] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const inputRef = useRef(null);
-  const {user} =useUser();
+  const { user } = useUser();
   const isConnected = Boolean(user);
 
   const COURSES = [
@@ -103,7 +93,7 @@ function SearchOverlay({ open, onClose, navigate }) {
       if (e.key === "ArrowUp") { e.preventDefault(); setActiveIndex(i => Math.max(i - 1, 0)); }
       if (e.key === "Enter" && filtered[activeIndex]) {
         onClose();
-        if (isConnected){
+        if (isConnected) {
           navigate(`/course/info/${filtered[activeIndex].id}`);
         }
         navigate('/auth')
@@ -140,7 +130,6 @@ function SearchOverlay({ open, onClose, navigate }) {
               maxHeight: "70vh",
             }}
           >
-            {/* Search field */}
             <div className="flex items-center gap-3 px-5 py-4 border-b" style={{ borderColor: COLORS.hairline }}>
               <Search size={18} style={{ color: COLORS.blue }} strokeWidth={2.25} />
               <input
@@ -162,7 +151,6 @@ function SearchOverlay({ open, onClose, navigate }) {
               </button>
             </div>
 
-            {/* Results */}
             <div className="flex-1 overflow-y-auto px-2.5 py-2">
               <p className="text-[11px] uppercase tracking-wide px-2.5 pt-2 pb-1.5" style={{ ...sf, color: COLORS.gray, letterSpacing: "0.04em" }}>
                 {q ? t("navbar.resultsCount", { count: filtered.length }) : t("navbar.trending")}
@@ -191,7 +179,6 @@ function SearchOverlay({ open, onClose, navigate }) {
               )}
             </div>
 
-            {/* Footer hints */}
             <div className="flex items-center justify-between px-5 py-2.5 border-t" style={{ borderColor: COLORS.hairline, background: "#FAFAFA" }}>
               <div className="flex items-center gap-3">
                 <span className="flex items-center gap-1 text-[11.5px]" style={{ ...sf, color: COLORS.gray }}>
@@ -213,12 +200,7 @@ function SearchOverlay({ open, onClose, navigate }) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   BOTTOM NAV — façon "vraie app" native
-   - pastille active qui glisse (layoutId, spring)
-   - icône qui change de poids/teinte quand active
-   - retour tactile (whileTap) sur chaque bouton
-   - barre en verre avec profondeur en couches (pas un flat blur)
-   - respecte la safe-area des iPhone à encoche (env(safe-area-inset-bottom))
+   BOTTOM NAV — façon "vraie app" native, avec retour haptique
 ═══════════════════════════════════════════════════════════ */
 function AppBottomNav({ items }) {
   return (
@@ -240,10 +222,10 @@ function AppBottomNav({ items }) {
       {items.map(({ icon: Icon, label, action, active }) => (
         <motion.button
           key={label}
-          onClick={action}
+          onClick={() => { hapticTap(); action(); }}
           whileTap={{ scale: 0.88 }}
           transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="relative flex flex-col items-center gap-0.5 px-4 py-2 rounded-[18px]"
+          className="relative flex flex-col items-center gap-0.5 px-4 py-2 rounded-[18px] active:scale-95"
         >
           {active && (
             <motion.span
@@ -278,19 +260,17 @@ export default function Navbar({ OnNav, onModal }) {
   const location = useLocation();
   const { loadingAction, progress, trigger } = useTriggerWithProgress();
   const { t } = useTranslation();
+  const displayMode = usePwaDisplayMode();
 
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
 
   const connected = Boolean(user);
   const userInitial = user?.name?.charAt(0)?.toUpperCase();
-  const goHome = () => trigger(() => navigate("/"));
+  const goHome = () => { hapticTap(); trigger(() => navigate("/")); };
 
   if (loading) return null;
 
-  /* ── Bottom nav items (mobile) — chaque item connaît sa route
-     pour déterminer son état actif, sauf recherche (overlay) qui
-     s'active avec searchOpen. ── */
   const bottomNav = [
     { icon: Home, label: t("navbar.home"), action: goHome, active: location.pathname === "/" },
     { icon: Search, label: t("navbar.searchLabel"), action: () => setSearchOpen(true), active: searchOpen },
@@ -311,6 +291,16 @@ export default function Navbar({ OnNav, onModal }) {
       : { icon: LogIn, label: t("navbar.signin"), action: OnNav, active: location.pathname === "/auth" },
   ];
 
+  /* Quand l'app tourne en fullscreen réel (Android), il n'y a plus de
+     barre système du tout — le contenu peut se retrouver littéralement
+     sous l'encoche/caméra perforée. On force une marge de sécurité
+     minimale dans ce cas précis ; sinon on se fie à env(safe-area-inset-top)
+     natif (suffisant en standalone/navigateur). */
+  const topPadding =
+    displayMode === "fullscreen"
+      ? "max(env(safe-area-inset-top, 0px), 28px)"
+      : "env(safe-area-inset-top, 0px)";
+
   return (
     <>
       {/* ── DESKTOP NAVBAR ── */}
@@ -330,7 +320,6 @@ export default function Navbar({ OnNav, onModal }) {
             </span>
           </div>
 
-          {/* Desktop search */}
           <motion.div
             className="relative flex items-center rounded-full"
             animate={{ width: searchFocused ? 320 : 240 }}
@@ -373,12 +362,16 @@ export default function Navbar({ OnNav, onModal }) {
           initial={{ width: 0 }} animate={{ width: `${progress}%` }} />
       )}
 
-      {/* ── MOBILE TOP BAR (logo only) ── */}
+      {/* ── MOBILE TOP BAR — padding haut dynamique selon le mode d'affichage ── */}
       <header
-        className="md:hidden flex items-center justify-between px-5 pt-12 pb-3 relative z-10 border-b"
-        style={{ background: COLORS.surfaceSolid, borderColor: COLORS.hairline }}
+        className="md:hidden flex items-center justify-between px-5 pb-3 relative z-10 border-b"
+        style={{
+          background: COLORS.surfaceSolid,
+          borderColor: COLORS.hairline,
+          paddingTop: `calc(${topPadding} + 12px)`,
+        }}
       >
-        <div onClick={goHome} className="flex items-center gap-2 cursor-pointer">
+        <div onClick={goHome} className="flex items-center gap-2 cursor-pointer active:scale-95 transition-transform">
           <HLearningMark />
           <span className="text-[16px] font-semibold tracking-tight" style={{ ...sf, color: COLORS.ink }}>hlearning</span>
         </div>
@@ -387,10 +380,9 @@ export default function Navbar({ OnNav, onModal }) {
         </div>
       </header>
 
-      {/* ── MOBILE BOTTOM NAV, façon vraie app ── */}
+      {/* ── MOBILE BOTTOM NAV ── */}
       <AppBottomNav items={bottomNav} />
 
-      {/* Search overlay (partagé desktop/mobile) */}
       <SearchOverlay open={searchOpen} onClose={() => setSearchOpen(false)} navigate={navigate} />
     </>
   );
