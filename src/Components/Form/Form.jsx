@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { useUser } from "../../context/UserContext";
@@ -280,12 +280,42 @@ export default function Auth() {
             </button>
           </p>
 
-          {/* GOOGLE */}
-          <div className="flex p-1 rounded-full justify-center w-full bg-white/5 backdrop-blur-md border border-white/10 overflow-hidden">
-            <div className="max-w-full">
+          {/* GOOGLE — bouton stylé "5D" ; le vrai <GoogleLogin> (iframe) est
+              superposé en transparent pour capter le clic réel */}
+          <div className="group relative w-full h-[52px] select-none">
+            {/* couche visuelle — ne reçoit jamais le clic, réagit via
+                group-hover/group-active déclenchés par la couche du dessus */}
+            <div
+              className="absolute inset-0 z-0 flex items-center justify-center gap-3 rounded-full font-semibold text-[15px] pointer-events-none transition-all duration-200 ease-out group-hover:-translate-y-0.5 group-active:translate-y-[1px] group-active:scale-[0.99]"
+              style={{
+                background:
+                  "linear-gradient(180deg, #2a2a2a 0%, #1c1c1c 55%, #141414 100%)",
+                boxShadow: `
+                  0 1px 0 0 rgba(255,255,255,0.08) inset,
+                  0 -1px 0 0 rgba(0,0,0,0.6) inset,
+                  0 10px 24px -8px rgba(0,0,0,0.65),
+                  0 2px 6px rgba(0,0,0,0.4),
+                  0 0 0 1px rgba(255,255,255,0.06)
+                `,
+                color: "#F5F5F5",
+              }}
+            >
+              <span
+                className="flex items-center justify-center w-6 h-6 rounded-full bg-white shrink-0"
+                style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
+              >
+                <GoogleGlyph size={15} />
+              </span>
+              {t("auth.continueWithGoogle")}
+            </div>
+
+            {/* couche réelle — invisible, capte le clic Google légitime */}
+            <div className="absolute inset-0 z-10 opacity-0 overflow-hidden rounded-full [&_iframe]:!w-full [&_iframe]:!h-full [&_div]:!w-full">
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => setError(t("auth.googleFailed"))}
+                size="large"
+                width="400"
               />
             </div>
           </div>
@@ -307,6 +337,31 @@ export default function Auth() {
         )}
       </AnimatePresence>
     </div>
+  );
+}
+
+/* ================= GOOGLE GLYPH ================= */
+
+function GoogleGlyph({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+      <path
+        fill="#FFC107"
+        d="M43.6 20.5H42V20.4H24v7.2h11.3c-1.6 4.5-5.9 7.7-11 7.7-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C34.5 6.1 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.7-.4-3.5z"
+      />
+      <path
+        fill="#FF3D00"
+        d="M6.3 14.7l5.9 4.3C13.9 15.1 18.6 12 24 12c3.1 0 5.9 1.2 8 3.1l5.1-5.1C34.5 6.1 29.5 4 24 4c-7.5 0-14 4.1-17.7 10.7z"
+      />
+      <path
+        fill="#4CAF50"
+        d="M24 44c5.4 0 10.3-2 14-5.4l-6.4-5.4c-2 1.4-4.6 2.3-7.6 2.3-5.1 0-9.4-3.2-11-7.7l-6.2 4.8C10 39.9 16.5 44 24 44z"
+      />
+      <path
+        fill="#1976D2"
+        d="M43.6 20.5H42V20.4H24v7.2h11.3c-.8 2.3-2.2 4.2-4.1 5.6l6.4 5.4C41.4 35.7 44 30.4 44 24c0-1.3-.1-2.7-.4-3.5z"
+      />
+    </svg>
   );
 }
 

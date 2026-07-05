@@ -185,7 +185,7 @@
     "fullName": "Full name",
     "email": "Email address",
     "password": "Password",
-    "remember": "Remember me",
+    "rememberMe": "Remember me",
     "loading": "Loading...",
     "continue": "Continue",
     "create": "Create account",
@@ -197,7 +197,9 @@
     "loginFailed": "Login failed",
     "registerFailed": "Registration failed",
     "otpInvalid": "OTP invalid",
-    "googleFailed": "Google login failed"
+    "googleFailed": "Google login failed",
+    "continueWithGoogle": "continue with Google"
+    
   },
   "otp": {
     "title": "Verify OTP",
