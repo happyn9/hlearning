@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hors ligne — hlearning</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif;
+      background: #FAFAFA;
+      color: #1D1D1F;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      text-align: center;
+      padding: 20px;
+    }
+    .box { max-width: 360px; }
+    h1 { font-size: 20px; margin-bottom: 8px; }
+    p { color: #86868B; font-size: 14px; }
+    button {
+      margin-top: 20px;
+      padding: 10px 24px;
+      border-radius: 999px;
+      border: none;
+      background: #0071E3;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+    button:hover { background: #0077ED; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>Pas de connexion</h1>
+    <p>Vérifie ta connexion internet et réessaie. Certaines pages restent disponibles hors ligne.</p>
+    <button onclick="location.reload()">Réessayer</button>
+  </div>
+</body>
+</html>

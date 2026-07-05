@@ -1,0 +1,36 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="flameGrad" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#534AB7"/>
+      <stop offset="100%" stop-color="#1D9E75"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Flame shape — scaled up 5x from 40x40 -->
+  <path
+    d="M100 190
+       C100 190 30 150 35 95
+       C40 55 70 40 70 40
+       C60 70 85 85 90 60
+       C95 35 85 10 110 0
+       C105 35 130 50 135 80
+       C145 50 150 20 140 0
+       C170 35 165 80 155 110
+       C165 150 100 190 100 190Z"
+    fill="url(#flameGrad)"
+  />
+
+  <!-- Inner white glow -->
+  <ellipse cx="100" cy="120" rx="25" ry="35" fill="white" opacity="0.15"/>
+
+  <!-- "h" letter -->
+  <text
+    x="100"
+    y="148"
+    text-anchor="middle"
+    font-family="Georgia, serif"
+    font-size="80"
+    font-weight="700"
+    fill="white"
+  >h</text>
+</svg>

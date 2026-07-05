@@ -15,6 +15,11 @@
     "copyright": "Tous droits réservés.",
     "built": "Conçu avec précision."
   },
+    "pwa":{
+    "new":"Nouvelle version disponible",
+    "install":"Installer Hlearning",
+    "update":"Mettre à jour"
+  },
   "skeleton": {
     "loading": "Chargement de la page…"
   },

@@ -18,13 +18,15 @@ import { Toaster } from "react-hot-toast";
 import PaymentCallback from "./Pages/PaymentCallback";
 import Dashboardtuition from "./Pages/Tuition/dash/Dashboardtuition";
 import Hblog from "./Pages/Hblog";
+import PwaBanner from "./Components/PwaBanner";
 
 function App() {
 
-  
+
   return (
     <div>
       <Toaster position="top-right" />
+      <PwaBanner />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />

@@ -15,6 +15,11 @@
     "copyright": "All rights reserved.",
     "built": "Designed & built with precision."
   },
+  "pwa":{
+    "new":"New version available",
+    "install":"Install Hlearning",
+    "update":"Update"
+  },
   "skeleton": {
     "loading": " Loading ..."
   },
