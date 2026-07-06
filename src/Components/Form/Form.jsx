@@ -82,6 +82,7 @@ export default function Form() {
         name,
         email,
         password,
+        language: i18n.language,
       });
 
       setShowOTP(true);
