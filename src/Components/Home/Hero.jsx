@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import useTriggerWithProgress from "../../hooks/triggerWithProgress";
 
+
 import {
   GraduationCap,
   MessageSquare,
@@ -15,22 +16,6 @@ import {
   CheckCircle2,
 } from "lucide-react";
 
-/* ─────────────────────────────────────────────────────────
-   DESIGN TOKENS
-   Palette pulled from a code-editor's own vernacular so the
-   product (AI coding tutor) is visible in the chrome itself,
-   not just described in copy.
-   - ink    #12141C  editor/terminal background, primary text
-   - paper  #FAF9F5  page background (warm, not the generic AI cream)
-   - mint   #5EEAD4  "success" / cursor accent — primary signal
-   - pink   #F472B6  keyword accent — secondary signal
-   - amber  #FBBF24  warning / streak accent
-   - slate  #7C8394  muted text, comments
-   Type: display = 'Fragment Mono' (or JetBrains Mono) for anything
-   that should read as "code"; body = 'Inter' for everything else.
-   Make sure both are loaded once globally, e.g. in index.html:
-   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-───────────────────────────────────────────────────────── */
 
 const mono = { fontFamily: "'JetBrains Mono', ui-monospace, monospace" };
 const COLORS = {
@@ -42,7 +27,7 @@ const COLORS = {
   slate: "#7C8394",
 };
 
-/* ─── animation: total reveal choreography ≈ 1.5s ─── */
+
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
   visible: (i = 1) => ({
@@ -51,10 +36,8 @@ const fadeUp = {
     transition: { delay: i * 0.16, duration: 0.55, ease: [0.22, 1, 0.36, 1] },
   }),
 };
-// 6 staggered items × 0.16s + 0.55s settle ≈ 1.5s total, so the whole
-// left column finishes landing right around the 1.5s mark.
 
-/* ─── signature element: an IDE window standing in for the product ─── */
+
 function CodeWindow({ t }) {
   return (
     <motion.div

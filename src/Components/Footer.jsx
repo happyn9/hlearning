@@ -24,13 +24,27 @@ const faqs = [
   { questionKey: "faq.q4.question", answerKey: "faq.q4.answer" },
 ];
 
+/* ================= LIENS EXTERNES =================
+   ⚠️ Remplace ces placeholders par tes vrais liens. */
+const SOCIAL_LINKS = {
+  instagram: "https://www.instagram.com/your_username",
+  facebook: "https://www.facebook.com/profile.php?id=61591099634553",
+  youtube: "https://www.youtube.com/@your_channel",
+  twitter: "https://x.com/your_username",
+};
+
+const STORE_LINKS = {
+  appStore: "https://apps.apple.com/app/idXXXXXXXXX",
+  googlePlay: "https://play.google.com/store/apps/details?id=com.your.app",
+};
+
 export default function Footer({ showfaq = true }) {
   const [activeIndex, setActiveIndex] = useState(null);
+  const navigate = useNavigate();
 
-  // ✅ Un seul appel — t ET i18n depuis le même hook
+  // Un seul appel — t ET i18n depuis le même hook
   const { t, i18n } = useTranslation();
 
-  const navigate = useNavigate();
   const { loadingAction, progress, trigger } = useTriggerWithProgress();
   const [country, setCountry] = useState("");
 
@@ -42,13 +56,13 @@ export default function Footer({ showfaq = true }) {
     loadCountry();
   }, []);
 
-  // ✅ On utilise i18n.changeLanguage depuis le hook, pas l'import bare
+  // On utilise i18n.changeLanguage depuis le hook, pas l'import bare
   const handleChangeLanguage = (lang) => {
     trigger(async (setProgress) => {
       setProgress(10);
       await new Promise((r) => setTimeout(r, 150));
       setProgress(40);
-      await i18n.changeLanguage(lang); // ← hook instance, React re-render garanti
+      await i18n.changeLanguage(lang); // hook instance, React re-render garanti
       setProgress(80);
       await new Promise((r) => setTimeout(r, 150));
       setProgress(100);
@@ -167,15 +181,61 @@ export default function Footer({ showfaq = true }) {
             {/* SOCIAL */}
             <div>
               <h4 className="text-white font-semibold mb-6">{t("footer.connect")}</h4>
-              <div className="flex gap-4 text-lg">
-                <FaInstagram className="hover:text-amber-500 transition cursor-pointer" />
-                <FaFacebookF className="hover:text-amber-500 transition cursor-pointer" />
-                <FaYoutube className="hover:text-amber-500 transition cursor-pointer" />
-                <FaTwitter className="hover:text-amber-500 transition cursor-pointer" />
+              <div className="flex items-center gap-4">
+                <a
+                  href={SOCIAL_LINKS.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram className="hover:text-amber-500 transition cursor-pointer" />
+                </a>
+
+                <a
+                  href={SOCIAL_LINKS.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
+                  <FaFacebookF className="hover:text-amber-500 transition cursor-pointer" />
+                </a>
+
+                <a
+                  href={SOCIAL_LINKS.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                >
+                  <FaYoutube className="hover:text-amber-500 transition cursor-pointer" />
+                </a>
+
+                <a
+                  href={SOCIAL_LINKS.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Twitter / X"
+                >
+                  <FaTwitter className="hover:text-amber-500 transition cursor-pointer" />
+                </a>
               </div>
+
               <div className="flex gap-4 mt-6 text-3xl">
-                <FaAppStore className="hover:text-amber-500 transition cursor-pointer" />
-                <FaGooglePlay className="hover:text-amber-500 transition cursor-pointer" />
+                <a
+                  href={STORE_LINKS.appStore}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="App Store"
+                >
+                  <FaAppStore className="hover:text-amber-500 transition cursor-pointer" />
+                </a>
+                <a
+                  href={STORE_LINKS.googlePlay}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Google Play"
+                >
+                  <FaGooglePlay className="hover:text-amber-500 transition cursor-pointer" />
+                </a>
               </div>
             </div>
           </div>

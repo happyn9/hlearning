@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import api from "../../services/api";
 import { useUser } from "../../context/UserContext";
 import OTPModal from "./OTPModal";
-import { GoogleLogin } from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import { useTranslation } from "react-i18next";
 
 const INITIAL_SKELETON_DURATION = 800; // uniquement pour le skeleton au montage
@@ -15,7 +15,7 @@ export default function Form() {
   const { t } = useTranslation();
 
   const [mode, setMode] = useState("login");
-  const [initialLoading, setInitialLoading] = useState(true); // skeleton au montage seulement
+  const [initialLoading, setInitialLoading] = useState(true);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -26,29 +26,8 @@ export default function Form() {
   const [otp, setOtp] = useState("");
   const [showOTP, setShowOTP] = useState(false);
 
-  const [loading, setLoading] = useState(false); // reflète la vraie requête en cours
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-
-  /* ================= GOOGLE BTN SIZING =================
-     Le vrai bouton <GoogleLogin> a besoin d'une largeur en px fixe
-     (prop `width`). S'il ne correspond pas exactement au conteneur
-     visuel, la zone réellement cliquable ne couvre pas tout le
-     bouton stylé qu'on affiche par-dessus → clics "morts". On mesure
-     donc le conteneur et on répercute sa largeur réelle au bouton. */
-  const googleBtnRef = useRef(null);
-  const [googleWidth, setGoogleWidth] = useState(0);
-
-  useEffect(() => {
-    const el = googleBtnRef.current;
-    if (!el) return;
-
-    const update = () => setGoogleWidth(Math.round(el.offsetWidth));
-    update();
-
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
 
   /* ================= INITIAL SKELETON (montage uniquement) ================= */
   useEffect(() => {
@@ -146,14 +125,20 @@ export default function Form() {
     }
   };
 
-  /* ================= GOOGLE ================= */
-  const handleGoogleSuccess = async (credentialResponse) => {
+  /* ================= GOOGLE =================
+     useGoogleLogin déclenche le flux Google directement au clic,
+     sur un vrai bouton stylé — plus de bouton officiel invisible
+     à superposer, donc plus de clics "morts". */
+  const handleGoogleSuccess = async (accessToken) => {
     setError("");
     setLoading(true);
 
     try {
+      // ⚠️ adapter le backend : il doit accepter un access_token
+      // et récupérer les infos via l'API userinfo de Google,
+      // au lieu de vérifier un credential (JWT id_token).
       await api.post("/auth/google", {
-        token: credentialResponse.credential,
+        access_token: accessToken,
       });
 
       const user = await refreshUser();
@@ -167,12 +152,18 @@ export default function Form() {
       if (!user.onboarding_completed) redirect = "/onboarding";
 
       navigate(redirect, { replace: true });
-    } catch {
+    } catch (err) {
+      console.error("GOOGLE ERR:", err);
       setError(t("auth.googleFailed"));
     } finally {
       setLoading(false);
     }
   };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => handleGoogleSuccess(tokenResponse.access_token),
+    onError: () => setError(t("auth.googleFailed")),
+  });
 
   const showSkeleton = initialLoading;
 
@@ -301,54 +292,35 @@ export default function Form() {
             </button>
           </p>
 
-          {/* GOOGLE — bouton stylé "5D" ; le vrai <GoogleLogin> (iframe) est
-              superposé en transparent pour capter le clic réel. Sa largeur
-              est mesurée dynamiquement pour coller exactement au visuel. */}
-          <div ref={googleBtnRef} className="group relative w-full h-10 select-none">
-            {/* couche visuelle — au-dessus, ne reçoit jamais le clic
-                (pointer-events-none), réagit via group-hover/group-active
-                déclenchés par le survol/clic de la couche réelle en dessous */}
-            <div
-              className="absolute inset-0 z-10 flex items-center justify-center gap-3 rounded-full font-semibold text-[14px] pointer-events-none transition-all duration-200 ease-out group-hover:-translate-y-0.5 group-active:translate-y-[1px] group-active:scale-[0.99]"
-              style={{
-                background:
-                  "linear-gradient(180deg, #2a2a2a 0%, #1c1c1c 55%, #141414 100%)",
-                boxShadow: `
-                  0 1px 0 0 rgba(255,255,255,0.08) inset,
-                  0 -1px 0 0 rgba(0,0,0,0.6) inset,
-                  0 10px 24px -8px rgba(0,0,0,0.65),
-                  0 2px 6px rgba(0,0,0,0.4),
-                  0 0 0 1px rgba(255,255,255,0.06)
-                `,
-                color: "#F5F5F5",
-              }}
+          {/* GOOGLE — vrai bouton, stylé directement, plus d'overlay.
+              Le clic appelle googleLogin() qui ouvre le flux Google
+              (popup) immédiatement, sans passer par un iframe caché. */}
+          <button
+            type="button"
+            onClick={() => googleLogin()}
+            disabled={loading}
+            className="group relative w-full h-10 flex items-center justify-center gap-3 rounded-full font-semibold text-[14px] transition-all duration-200 ease-out hover:-translate-y-0.5 active:translate-y-[1px] active:scale-[0.99] disabled:opacity-60"
+            style={{
+              background:
+                "linear-gradient(180deg, #2a2a2a 0%, #1c1c1c 55%, #141414 100%)",
+              boxShadow: `
+                0 1px 0 0 rgba(255,255,255,0.08) inset,
+                0 -1px 0 0 rgba(0,0,0,0.6) inset,
+                0 10px 24px -8px rgba(0,0,0,0.65),
+                0 2px 6px rgba(0,0,0,0.4),
+                0 0 0 1px rgba(255,255,255,0.06)
+              `,
+              color: "#F5F5F5",
+            }}
+          >
+            <span
+              className="flex items-center justify-center w-6 h-6 rounded-full bg-white shrink-0"
+              style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
             >
-              <span
-                className="flex items-center justify-center w-6 h-6 rounded-full bg-white shrink-0"
-                style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
-              >
-                <GoogleGlyph size={15} />
-              </span>
-              {t("auth.continueWithGoogle")}
-            </div>
-
-            {/* couche réelle — invisible, capte le clic Google légitime.
-                Rendue seulement une fois la largeur du conteneur connue,
-                sinon Google utilise une largeur par défaut qui ne
-                correspond pas au visuel et une partie des clics tombe
-                dans le vide. */}
-            <div className="absolute inset-0 z-0 opacity-0 overflow-hidden rounded-full flex items-center justify-center">
-              {googleWidth > 0 && (
-                <GoogleLogin
-                  key={googleWidth}
-                  onSuccess={handleGoogleSuccess}
-                  onError={() => setError(t("auth.googleFailed"))}
-                  size="large"
-                  width={String(googleWidth)}
-                />
-              )}
-            </div>
-          </div>
+              <GoogleGlyph size={15} />
+            </span>
+            {t("auth.continueWithGoogle")}
+          </button>
         </div>
       </div>
 

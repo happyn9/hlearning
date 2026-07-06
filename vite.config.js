@@ -11,27 +11,27 @@ export default defineConfig({
       registerType: 'prompt',
       includeAssets: ['favicon.ico', 'apple-touch-icon-180x180.png', 'hlearninglogo.svg'],
       manifest: {
-  name: 'hlearning',
-  short_name: 'hlearning',
-  description: "Apprends l'anglais, la programmation et des compétences réelles avec l'IA.",
-  theme_color: '#0071E3',
-  background_color: '#FAFAFA',
-  display: 'fullscreen',
-  display_override: ['fullscreen', 'standalone', 'minimal-ui', 'browser'],
-  orientation: 'portrait',
-  start_url: '/',
-  scope: '/',
-  icons: [
-    { src: '/pwa-64x64.png', sizes: '64x64', type: 'image/png' },
-    { src: '/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
-    { src: '/pwa-512x512.png', sizes: '512x512', type: 'image/png' },
-    { src: '/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-  ],
-  shortcuts: [
-    { name: 'Blog', url: '/blog', icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }] },
-    { name: 'Mon profil', url: '/profile', icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }] },
-  ],
-},
+        name: 'hlearning',
+        short_name: 'hlearning',
+        description: "Apprends l'anglais, la programmation et des compétences réelles avec l'IA.",
+        theme_color: '#0071E3',
+        background_color: '#FAFAFA',
+        display: 'standalone',
+        display_override: ['standalone', 'minimal-ui', 'browser'],
+        orientation: 'portrait',
+        start_url: '/',
+        scope: '/',
+        icons: [
+          { src: '/pwa-64x64.png', sizes: '64x64', type: 'image/png' },
+          { src: '/pwa-192x192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/pwa-512x512.png', sizes: '512x512', type: 'image/png' },
+          { src: '/maskable-icon-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
+        shortcuts: [
+          { name: 'Blog', url: '/blog', icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }] },
+          { name: 'Mon profil', url: '/profile', icons: [{ src: '/pwa-192x192.png', sizes: '192x192' }] },
+        ],
+      },
       workbox: {
         runtimeCaching: [
           {
