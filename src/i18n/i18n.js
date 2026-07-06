@@ -6,7 +6,7 @@ import fr from "./fr.json";
 
 // ⚠️ Adapte ce chemin vers ton client HTTP existant (celui qui ajoute déjà
 // le token d'auth dans les headers, ex: axios.create({ baseURL: ... })).
-import api from "./api";
+import api from "../services/api";
 
 const savedLang =
   localStorage.getItem("lang") ||
