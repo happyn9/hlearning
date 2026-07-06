@@ -18,6 +18,78 @@ import {
   Users, BarChart3, ArrowLeft, ShieldCheck,
 } from "lucide-react";
 
+const COURSE_LOGOS = [logoPy, logoReact, logoHtml, logoJv, logoJs];
+
+/* ============================================================
+   FULL-SCREEN LOADER — reprend le halo/anneau du hero pour que
+   le chargement se sente déjà comme "le" cours qu'on attend,
+   pas un spinner générique.
+   ============================================================ */
+function CourseLoader({ logo }) {
+  return (
+    <div className="h-screen w-full flex items-center justify-center bg-[#0f1115] relative overflow-hidden">
+      {/* Halos ambiants, très discrets */}
+      <motion.div
+        className="absolute w-[520px] h-[520px] rounded-full bg-indigo-600/15 blur-3xl"
+        style={{ top: "-12%", left: "-8%" }}
+        animate={{ opacity: [0.25, 0.45, 0.25] }}
+        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute w-[420px] h-[420px] rounded-full bg-purple-600/10 blur-3xl"
+        style={{ bottom: "-10%", right: "-6%" }}
+        animate={{ opacity: [0.2, 0.35, 0.2] }}
+        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+      />
+
+      <div className="relative z-10 flex flex-col items-center gap-8">
+        {/* Anneaux qui se propagent depuis le logo du cours */}
+        <div className="relative w-40 h-40 flex items-center justify-center">
+          {[0, 1].map((i) => (
+            <motion.span
+              key={i}
+              className="absolute inset-0 rounded-full border border-indigo-500/30"
+              animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
+              transition={{
+                duration: 2.2,
+                repeat: Infinity,
+                ease: "easeOut",
+                delay: i * 1.1,
+              }}
+            />
+          ))}
+
+          <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-[#1a1c1f]/90 backdrop-blur-xl border border-slate-700 shadow-2xl flex items-center justify-center">
+            {logo ? (
+              <img src={logo} alt="" className="w-14 md:w-16 object-contain" />
+            ) : (
+              <BookOpen size={30} className="text-indigo-400" />
+            )}
+          </div>
+        </div>
+
+        <div className="text-center">
+          <p className="text-white text-lg font-semibold tracking-tight">
+            Preparing your course
+          </p>
+          <p className="text-slate-500 text-sm mt-1">This won't take long</p>
+        </div>
+
+        <div className="flex gap-2">
+          {[0, 1, 2].map((i) => (
+            <motion.span
+              key={i}
+              className="w-1.5 h-1.5 rounded-full bg-indigo-500"
+              animate={{ y: [0, -6, 0], opacity: [0.35, 1, 0.35] }}
+              transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* ============================================================
    SUBSCRIPTION PAGE (replaces the modal)
    ============================================================ */
@@ -236,7 +308,7 @@ export default function CourseInfo() {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { loadingAction, progress, trigger } = useTriggerWithProgress();
 
-  const images = [logoPy, logoReact, logoHtml, logoJv, logoJs];
+  const images = COURSE_LOGOS;
 
   useEffect(() => {
     async function loadData() {
@@ -261,11 +333,7 @@ export default function CourseInfo() {
   }, [id]);
 
   if (loading)
-    return (
-      <div className="h-screen flex items-center justify-center bg-[#0f1115] text-white">
-        Loading...
-      </div>
-    );
+    return <CourseLoader logo={images[Number(id)] || logoPy} />;
 
   return (
     <div className="min-h-screen bg-[#111315] text-slate-200">
