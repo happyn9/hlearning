@@ -21,69 +21,147 @@ import {
 const COURSE_LOGOS = [logoPy, logoReact, logoHtml, logoJv, logoJs];
 
 /* ============================================================
-   FULL-SCREEN LOADER — reprend le halo/anneau du hero pour que
-   le chargement se sente déjà comme "le" cours qu'on attend,
-   pas un spinner générique.
+   SHIMMER — brique de base du skeleton. Un balayage de lumière
+   traverse chaque bloc en boucle, à la Linear/Stripe.
+   ============================================================ */
+function Shimmer({ className = "" }) {
+  return (
+    <div
+      className={`bg-slate-800/70 bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.08),transparent)] bg-[length:200%_100%] animate-[shimmer_1.8s_ease-in-out_infinite] ${className}`}
+    />
+  );
+}
+
+/* ============================================================
+   FULL-SCREEN LOADER — un vrai skeleton qui reprend la structure
+   exacte de la page (hero, titre, stats, actions, grille de
+   contenu), pour qu'il n'y ait aucun saut visuel à l'arrivée des
+   données. Le seul moment "signature" : le logo du cours qui
+   pulse au centre du hero, exactement là où il sera une fois
+   chargé.
    ============================================================ */
 function CourseLoader({ logo }) {
   return (
-    <div className="h-screen w-full flex items-center justify-center bg-[#0f1115] relative overflow-hidden">
-      {/* Halos ambiants, très discrets */}
-      <motion.div
-        className="absolute w-[520px] h-[520px] rounded-full bg-indigo-600/15 blur-3xl"
-        style={{ top: "-12%", left: "-8%" }}
-        animate={{ opacity: [0.25, 0.45, 0.25] }}
-        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute w-[420px] h-[420px] rounded-full bg-purple-600/10 blur-3xl"
-        style={{ bottom: "-10%", right: "-6%" }}
-        animate={{ opacity: [0.2, 0.35, 0.2] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-      />
+    <div className="min-h-screen bg-[#111315] text-slate-200">
+      <style>{`
+        @keyframes shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `}</style>
 
-      <div className="relative z-10 flex flex-col items-center gap-8">
-        {/* Anneaux qui se propagent depuis le logo du cours */}
-        <div className="relative w-40 h-40 flex items-center justify-center">
-          {[0, 1].map((i) => (
-            <motion.span
-              key={i}
-              className="absolute inset-0 rounded-full border border-indigo-500/30"
-              animate={{ scale: [1, 1.9], opacity: [0.5, 0] }}
-              transition={{
-                duration: 2.2,
-                repeat: Infinity,
-                ease: "easeOut",
-                delay: i * 1.1,
-              }}
-            />
-          ))}
+      {/* HERO */}
+      <div className="relative h-70 md:h-80 w-full overflow-hidden">
+        <Shimmer className="absolute inset-0" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/90 via-black/70 to-black/40" />
 
-          <div className="w-28 h-28 md:w-32 md:h-32 rounded-full bg-[#1a1c1f]/90 backdrop-blur-xl border border-slate-700 shadow-2xl flex items-center justify-center">
-            {logo ? (
-              <img src={logo} alt="" className="w-14 md:w-16 object-contain" />
-            ) : (
-              <BookOpen size={30} className="text-indigo-400" />
-            )}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="relative w-32 h-32 md:w-40 md:h-40 flex items-center justify-center">
+            {[0, 1].map((i) => (
+              <motion.span
+                key={i}
+                className="absolute inset-0 rounded-full border border-indigo-500/30"
+                animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+                transition={{ duration: 2.2, repeat: Infinity, ease: "easeOut", delay: i * 1.1 }}
+              />
+            ))}
+            <div className="w-full h-full rounded-full bg-[#1a1c1f]/90 backdrop-blur-xl border border-slate-700 shadow-2xl flex items-center justify-center">
+              {logo ? (
+                <img src={logo} alt="" className="w-16 md:w-20 object-contain" />
+              ) : (
+                <BookOpen size={32} className="text-indigo-400" />
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* HEADER */}
+      <div className="max-w-6xl mx-auto px-6 -mt-14 relative z-20">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+          <div className="flex-1 max-w-2xl">
+            <Shimmer className="h-9 w-2/3 rounded-lg mb-4" />
+            <Shimmer className="h-4 w-full rounded mb-2" />
+            <Shimmer className="h-4 w-5/6 rounded mb-6" />
+
+            <div className="flex flex-wrap gap-8">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex items-center gap-2">
+                  <Shimmer className="w-[18px] h-[18px] rounded-full" />
+                  <Shimmer className="h-3.5 w-20 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex gap-4">
+            <Shimmer className="h-11 w-36 rounded-lg" />
+            <Shimmer className="h-11 w-32 rounded-lg" />
+          </div>
+        </div>
+      </div>
+
+      {/* MAIN GRID */}
+      <div className="max-w-6xl mx-auto px-6 mt-16 grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="lg:col-span-2 space-y-10">
+          <div className="bg-[#1a1c1f] border border-slate-800 rounded-2xl p-8 shadow-xl">
+            <div className="flex items-center gap-3 mb-6">
+              <Shimmer className="w-5 h-5 rounded" />
+              <Shimmer className="h-5 w-40 rounded" />
+            </div>
+            <div className="space-y-4">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="flex gap-3 items-center">
+                  <Shimmer className="w-[18px] h-[18px] rounded-full shrink-0" />
+                  <Shimmer className={`h-3.5 rounded ${i % 2 ? "w-2/3" : "w-4/5"}`} />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-[#1a1c1f] border border-slate-800 rounded-2xl p-8 shadow-xl">
+            <div className="flex items-center gap-3 mb-6">
+              <Shimmer className="w-5 h-5 rounded" />
+              <Shimmer className="h-5 w-56 rounded" />
+            </div>
+            <div className="grid md:grid-cols-2 gap-6">
+              {[0, 1, 2, 3].map((i) => (
+                <div key={i} className="flex gap-3 items-center">
+                  <Shimmer className="w-[18px] h-[18px] rounded-full shrink-0" />
+                  <Shimmer className={`h-3.5 rounded ${i % 2 ? "w-3/4" : "w-5/6"}`} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
 
-        <div className="text-center">
-          <p className="text-white text-lg font-semibold tracking-tight">
-            Preparing your course
-          </p>
-          <p className="text-slate-500 text-sm mt-1">This won't take long</p>
-        </div>
+        <div className="space-y-8">
+          <div className="bg-[#1a1c1f] border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Shimmer className="w-[18px] h-[18px] rounded" />
+              <Shimmer className="h-4 w-32 rounded" />
+            </div>
+            <div className="space-y-4">
+              {[0, 1, 2].map((i) => (
+                <div key={i} className="flex justify-between">
+                  <Shimmer className="h-3.5 w-16 rounded" />
+                  <Shimmer className="h-3.5 w-8 rounded" />
+                </div>
+              ))}
+            </div>
+          </div>
 
-        <div className="flex gap-2">
-          {[0, 1, 2].map((i) => (
-            <motion.span
-              key={i}
-              className="w-1.5 h-1.5 rounded-full bg-indigo-500"
-              animate={{ y: [0, -6, 0], opacity: [0.35, 1, 0.35] }}
-              transition={{ duration: 1, repeat: Infinity, delay: i * 0.15 }}
-            />
-          ))}
+          <div className="bg-[#1a1c1f] border border-slate-800 rounded-2xl p-6 shadow-xl">
+            <div className="flex items-center gap-2 mb-4">
+              <Shimmer className="w-[18px] h-[18px] rounded" />
+              <Shimmer className="h-4 w-28 rounded" />
+            </div>
+            <div className="space-y-2">
+              <Shimmer className="h-3.5 w-full rounded" />
+              <Shimmer className="h-3.5 w-full rounded" />
+              <Shimmer className="h-3.5 w-2/3 rounded" />
+            </div>
+          </div>
         </div>
       </div>
     </div>
