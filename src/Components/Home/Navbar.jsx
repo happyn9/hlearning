@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import useTriggerWithProgress from "../../hooks/triggerWithProgress";
 import { useTranslation } from "react-i18next";
 import { usePwaDisplayMode, hapticTap } from "../../hooks/usePwaDisplayMode";
+import NotificationBell from "../Notifications/NotificationBell";
 
 const sf = { fontFamily: "-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Inter', sans-serif" };
 
@@ -339,8 +340,19 @@ export default function Navbar({ OnNav, onModal }) {
           </motion.div>
 
           {connected ? (
-            <div onClick={onModal} className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer overflow-hidden" style={{ background: COLORS.blueTint, color: COLORS.blue }}>
-              {user?.photo_url ? <img src={user.photo_url} className="w-full h-full object-cover" alt="avatar" /> : <span style={{ ...sf, fontSize: 13, fontWeight: 500 }}>{userInitial}</span>}
+            <div className="flex items-center gap-3">
+              <NotificationBell />
+              <div
+                onClick={onModal}
+                className="w-8 h-8 rounded-full flex items-center justify-center cursor-pointer overflow-hidden"
+                style={{ background: COLORS.blueTint, color: COLORS.blue }}
+              >
+                {user?.photo_url ? (
+                  <img src={user.photo_url} className="w-full h-full object-cover" alt="avatar" />
+                ) : (
+                  <span style={{ ...sf, fontSize: 13, fontWeight: 500 }}>{userInitial}</span>
+                )}
+              </div>
             </div>
           ) : (
             <button
@@ -375,8 +387,11 @@ export default function Navbar({ OnNav, onModal }) {
           <HLearningMark />
           <span className="text-[16px] font-semibold tracking-tight" style={{ ...sf, color: COLORS.ink }}>hlearning</span>
         </div>
-        <div className="flex items-center gap-1 text-[12px] px-2.5 py-1 rounded-full" style={{ ...sf, color: COLORS.gray, background: "#F5F5F7" }}>
-          <Flame size={12} style={{ color: COLORS.blue }} /> 14{t("navbar.streakDay")}
+        <div className="flex items-center gap-2">
+          {connected && <NotificationBell />}
+          <div className="flex items-center gap-1 text-[12px] px-2.5 py-1 rounded-full" style={{ ...sf, color: COLORS.gray, background: "#F5F5F7" }}>
+            <Flame size={12} style={{ color: COLORS.blue }} /> 14{t("navbar.streakDay")}
+          </div>
         </div>
       </header>
 

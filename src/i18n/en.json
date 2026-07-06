@@ -19,7 +19,15 @@
     "new":"Update this app",
     "install":"Install this App",
     "update":"Update"
-  },
+  },"notifications": {
+  "title": "Notifications",
+  "markAllRead": "Mark all Read",
+  "empty": "empty",
+  "now": "now",
+  "minutesAgo": "{{count}} ago",
+  "hoursAgo": "{{count}} hour(s) ago",
+  "daysAgo": "{{count}} days ago"
+},
   "skeleton": {
     "loading": " Loading ..."
   },

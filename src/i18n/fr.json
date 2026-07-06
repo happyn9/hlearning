@@ -20,6 +20,15 @@
     "install":"Installer l'app",
     "update":"Mettre à jour"
   },
+  "notifications": {
+  "title": "Notifications",
+  "markAllRead": "Tout marquer comme lu",
+  "empty": "Aucune notification pour le moment",
+  "now": "à l'instant",
+  "minutesAgo": "il y a {{count}}min",
+  "hoursAgo": "il y a {{count}}h",
+  "daysAgo": "il y a {{count}}j"
+},
   "skeleton": {
     "loading": "Chargement de la page…"
   },
