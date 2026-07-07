@@ -309,14 +309,25 @@
       "t4Title": "Useful certificates",
       "t4Quote": "My certificate genuinely helped me in an interview."
     }
-  },
-  "otp": {
-    "title": "Verify OTP",
-    "subtitle": "Enter the 6 digit code sent to your email",
-    "verify": "Verify",
-    "verifying": "Verifying...",
-    "cancel": "Cancel"
-  },
+  },"otp": {
+  "title": "Check your inbox",
+  "subtitlePrefix": "We sent a 6-digit code to",
+  "subtitleSuffix": ". Enter it to continue.",
+  "expiresIn": "Expires in",
+  "expired": "Code expired",
+  "verify": "Verify",
+  "verifying": "Verifying...",
+  "cancel": "Cancel",
+  "back": "Back",
+  "resend": "Resend code",
+  "resending": "Sending...",
+  "resendAvailableIn": "Available in {{count}}s",
+  "resendAvailableInline": "Resend available in {{count}}s",
+  "noCode": "Didn't receive anything?",
+  "resendSuccess": "New code sent!",
+  "resendError": "Failed to resend.",
+  "spamNote": "Check your spam folder if the message doesn't show up within a few minutes."
+},
   "chatbot": {
     "welcome": "👋 Welcome to Avila AI.\nYour intelligent learning assistant.",
     "subtitle": "Smart Assistant",
