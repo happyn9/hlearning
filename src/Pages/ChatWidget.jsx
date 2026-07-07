@@ -50,9 +50,7 @@ const QUICK_QA = {
 };
 
 function ThinkingAvatar() {
-  const COLORS = {
-  pink: "#F472B6",
-};
+
   return (
     <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
       {[0, 1].map((i) => (
@@ -63,7 +61,7 @@ function ThinkingAvatar() {
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut", delay: i * 0.8 }}
         />
       ))}
-      <div style={{backgroundColor: COLORS.pink}} className="w-full h-full rounded-full flex items-center justify-center">
+      <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
         <Sparkles size={14} className="text-white" />
       </div>
     </div>
@@ -71,8 +69,11 @@ function ThinkingAvatar() {
 }
 
 function Avatar() {
+const COLORS = {
+  pink: "#F472B6",
+};
   return (
-    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shrink-0">
+    <div style={{backgroundColor:COLORS.pink}} className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shrink-0">
       <Sparkles size={14} className="text-white" />
     </div>
   );
