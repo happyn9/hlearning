@@ -41,12 +41,48 @@ const injectFonts = () => {
     .msg-member-row:hover { background:rgba(124,58,237,.08) !important; }
     .msg-menu-item:hover { background:rgba(124,58,237,.1) !important; }
     .msg-icon-btn:hover { background:rgba(255,255,255,.08) !important; }
+
+    /* ── Responsive Messages ── */
+    .msg-mobile-backdrop { display:none; }
+    .msg-chat-header-back { display:none; }
+    .msg-sidebar-close { display:none; }
+
+    @media (max-width: 860px) {
+      .msg-container { border-radius:0 !important; }
+
+      .msg-left-sidebar {
+        position:fixed; inset:0 20% 0 0; z-index:40;
+        transform:translateX(-100%);
+        transition:transform .25s ease;
+        height:100% !important;
+        width:auto !important;
+      }
+      .msg-left-sidebar.open { transform:translateX(0); }
+
+      .msg-members-sidebar {
+        position:fixed; inset:0 0 0 20%; z-index:40;
+        width:auto !important;
+        height:100% !important;
+      }
+
+      .msg-mobile-backdrop {
+        display:block;
+        position:fixed; inset:0;
+        background:rgba(0,0,0,.5);
+        z-index:39;
+      }
+
+      .msg-chat-header-back { display:flex !important; }
+      .msg-sidebar-close { display:flex !important; }
+
+      .msg-chat-header-actions .msg-hide-mobile { display:none !important; }
+    }
   `;
   document.head.appendChild(style);
 };
 
 /* ── Constants ──────────────────────────────────────────────── */
-const BASE_URL = "http://localhost:8000";
+const BASE_URL = "/api";
 const REACTIONS = ["👍","❤️","😂","😮","😢","🙏"];
 const PALETTES = [
   ["#7c3aed","#6366f1"],["#db2777","#f43f5e"],["#059669","#0891b2"],
@@ -132,7 +168,7 @@ function MessageBubble({ msg, isMine, members, onReply, onReact, onDelete, reply
   const bubbleStyle = {
     padding:"10px 14px",
     borderRadius: isMine ? "18px 4px 18px 18px" : "4px 18px 18px 18px",
-    maxWidth:340, position:"relative",
+    maxWidth:"min(340px, 78vw)", position:"relative",
     ...(isMine
       ? { background:"linear-gradient(135deg,rgba(124,58,237,.7),rgba(99,102,241,.7))", color:"#f1f5f9", boxShadow:"0 4px 20px rgba(124,58,237,.25)" }
       : { background:"rgba(255,255,255,.06)", color:"#e2e8f0", border:"1px solid rgba(255,255,255,.08)", boxShadow:"0 2px 12px rgba(0,0,0,.3)" }
@@ -157,7 +193,7 @@ function MessageBubble({ msg, isMine, members, onReply, onReact, onDelete, reply
     }}>
       {!isMine && <Avatar name={senderName} avatar={sender?.avatar} size={30} />}
 
-      <div style={{ display:"flex", flexDirection:"column", maxWidth:360, position:"relative" }} ref={menuRef}>
+      <div style={{ display:"flex", flexDirection:"column", maxWidth:"min(360px, 82vw)", position:"relative" }} ref={menuRef}>
         {!isMine && (
           <span style={{ fontSize:11, fontWeight:700, marginBottom:4, marginLeft:4, color:c1 }}>{senderName}</span>
         )}
@@ -357,7 +393,7 @@ function InviteModal({ workspaceId, onClose, onDone }) {
 /* ── MembersSidebar ─────────────────────────────────────────── */
 function MembersSidebar({ workspaceId, members, loading, isAdmin, onInvite, onClose }) {
   return (
-    <div style={{
+    <div className="msg-members-sidebar" style={{
       width:260, display:"flex", flexDirection:"column",
       background:"rgba(10,10,20,.95)", backdropFilter:"blur(20px)",
       borderLeft:"1px solid rgba(255,255,255,.08)",
@@ -448,6 +484,7 @@ export default function Messages({ workspaceId, workspace }) {
   const [members, setMembers] = useState([]);
   const [membersLoading, setMembersLoading] = useState(true);
   const [showMembers, setShowMembers] = useState(false);
+  const [showSidebar, setShowSidebar] = useState(false); // drawer mobile: liste membres à gauche
   const [showInvite, setShowInvite] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [replyingTo, setReplyingTo] = useState(null);
@@ -622,8 +659,8 @@ export default function Messages({ workspaceId, workspace }) {
   };
 
   return (
-    <div className="msg-root" style={{
-      display:"flex", height:"88vh",
+    <div className="msg-root msg-container" style={{
+      display:"flex", height:"calc(100dvh - 32px)",
       background:"#0a0a12",
       backgroundImage:"radial-gradient(ellipse 70% 60% at 10% 90%, rgba(124,58,237,.1) 0%, transparent 55%)",
       borderRadius:20, overflow:"hidden",
@@ -631,8 +668,16 @@ export default function Messages({ workspaceId, workspace }) {
       position:"relative",
     }}>
 
+      {/* Backdrop mobile pour fermer les drawers */}
+      {(showSidebar || showMembers) && (
+        <div
+          className="msg-mobile-backdrop"
+          onClick={() => { setShowSidebar(false); setShowMembers(false); }}
+        />
+      )}
+
       {/* ═══ LEFT SIDEBAR ═══ */}
-      <div style={{
+      <div className={`msg-left-sidebar ${showSidebar ? "open" : ""}`} style={{
         width:260, display:"flex", flexDirection:"column",
         background:"rgba(8,8,16,.95)",
         borderRight:"1px solid rgba(255,255,255,.06)",
@@ -650,7 +695,12 @@ export default function Messages({ workspaceId, workspace }) {
                 <Plus size={14}/>
               </button>
             )}
-            <button onClick={() => setShowMembers(p=>!p)} style={iconBtnStyle} className="msg-icon-btn" title="Membres"><Users size={14}/></button>
+            <button
+              onClick={() => setShowSidebar(false)}
+              className="msg-sidebar-close"
+              style={iconBtnStyle}
+              title="Fermer"
+            ><X size={14}/></button>
           </div>
         </div>
 
@@ -737,7 +787,7 @@ export default function Messages({ workspaceId, workspace }) {
       </div>
 
       {/* ═══ CHAT AREA ═══ */}
-      <div style={{ display:"flex", flexDirection:"column", flex:1, overflow:"hidden" }}>
+      <div style={{ display:"flex", flexDirection:"column", flex:1, overflow:"hidden", minWidth:0 }}>
 
         {/* Chat header */}
         <div style={{
@@ -745,27 +795,31 @@ export default function Messages({ workspaceId, workspace }) {
           background:"rgba(8,8,16,.9)", backdropFilter:"blur(12px)",
           borderBottom:"1px solid rgba(255,255,255,.06)", flexShrink:0,
         }}>
-          <div style={{ display:"flex", alignItems:"center", gap:12 }}>
+          <div style={{ display:"flex", alignItems:"center", gap:12, minWidth:0 }}>
+            <button
+              className="msg-chat-header-back"
+              style={iconBtnStyle}
+              onClick={() => setShowSidebar(true)}
+              title="Conversations"
+            ><Users size={16}/></button>
+
             <div style={{
-              width:34, height:34, borderRadius:10,
+              width:34, height:34, borderRadius:10, flexShrink:0,
               background:`linear-gradient(135deg,${wc1},${wc2})`,
               display:"flex", alignItems:"center", justifyContent:"center",
               color:"#fff", fontWeight:800, fontSize:14, fontFamily:"Syne,sans-serif",
               boxShadow:`0 4px 12px ${wc1}44`,
             }}>{(workspace||"W")[0].toUpperCase()}</div>
-            <div>
-              <p className="msg-title" style={{ fontSize:13, fontWeight:700, color:"#f1f5f9", margin:0 }}>Workspace Chat</p>
+            <div style={{ minWidth:0 }}>
+              <p className="msg-title" style={{ fontSize:13, fontWeight:700, color:"#f1f5f9", margin:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>Workspace Chat</p>
               <p style={{ fontSize:10, color:"rgba(255,255,255,.35)", margin:0 }}>{members.length} participants</p>
             </div>
           </div>
 
-          <div style={{ display:"flex", gap:4 }}>
-            {[Video, Phone, Info].map((Icon, i) => (
-              <button key={i} style={iconBtnStyle} className="msg-icon-btn"
-                onClick={i===2 ? ()=>setShowMembers(p=>!p) : undefined}>
-                <Icon size={16}/>
-              </button>
-            ))}
+          <div className="msg-chat-header-actions" style={{ display:"flex", gap:4, flexShrink:0 }}>
+            <button className="msg-hide-mobile" style={iconBtnStyle}><Video size={16}/></button>
+            <button className="msg-hide-mobile" style={iconBtnStyle}><Phone size={16}/></button>
+            <button style={iconBtnStyle} onClick={()=>setShowMembers(p=>!p)}><Info size={16}/></button>
           </div>
         </div>
 
@@ -853,7 +907,7 @@ export default function Messages({ workspaceId, workspace }) {
             padding:"10px 20px", display:"flex", alignItems:"center", gap:12,
             background:"rgba(8,8,16,.9)", borderTop:"1px solid rgba(255,255,255,.05)",
           }}>
-            <div style={{ flex:1, borderLeft:"3px solid #7c3aed", paddingLeft:10 }}>
+            <div style={{ flex:1, minWidth:0, borderLeft:"3px solid #7c3aed", paddingLeft:10 }}>
               <p style={{ fontSize:11, fontWeight:700, color:"#a78bfa", margin:0 }}>{replyingTo.senderName}</p>
               <p style={{ fontSize:11, color:"rgba(255,255,255,.35)", margin:0, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{replyingTo.text||"📎 Fichier"}</p>
             </div>
@@ -862,6 +916,7 @@ export default function Messages({ workspaceId, workspace }) {
               background:"rgba(255,255,255,.08)", border:"none",
               cursor:"pointer", color:"rgba(255,255,255,.5)",
               display:"flex", alignItems:"center", justifyContent:"center",
+              flexShrink:0,
             }}><X size={12}/></button>
           </div>
         )}
@@ -874,9 +929,9 @@ export default function Messages({ workspaceId, workspace }) {
         }}>
           {recording ? (
             <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <div style={{ flex:1, display:"flex", alignItems:"center", gap:10 }}>
-                <span style={{ width:8, height:8, borderRadius:"50%", background:"#f87171", animation:"msg-bounce 1s ease infinite", display:"block" }}/>
-                <span style={{ fontFamily:"monospace", fontSize:13, color:"#f1f5f9" }}>
+              <div style={{ flex:1, display:"flex", alignItems:"center", gap:10, minWidth:0 }}>
+                <span style={{ width:8, height:8, borderRadius:"50%", background:"#f87171", animation:"msg-bounce 1s ease infinite", display:"block", flexShrink:0 }}/>
+                <span style={{ fontFamily:"monospace", fontSize:13, color:"#f1f5f9", flexShrink:0 }}>
                   {String(Math.floor(timer/60)).padStart(2,"0")}:{String(timer%60).padStart(2,"0")}
                 </span>
                 <div style={{ flex:1, height:3, borderRadius:999, background:"rgba(255,255,255,.1)", overflow:"hidden" }}>
@@ -888,11 +943,12 @@ export default function Messages({ workspaceId, workspace }) {
                 width:34, height:34, borderRadius:"50%",
                 background:"#f87171", color:"#fff", border:"none", cursor:"pointer",
                 display:"flex", alignItems:"center", justifyContent:"center",
+                flexShrink:0,
               }}><Check size={14}/></button>
             </div>
           ) : audioPreview ? (
             <div style={{ display:"flex", alignItems:"center", gap:10 }}>
-              <audio controls src={audioPreview} style={{ flex:1, height:32 }}/>
+              <audio controls src={audioPreview} style={{ flex:1, height:32, minWidth:0 }}/>
               <button onClick={cancelVoice} style={{ ...iconBtnStyle, borderRadius:"50%" }}><Trash2 size={13}/></button>
               <button onClick={sendVoice} disabled={!!uploadProgress} style={{
                 width:34, height:34, borderRadius:"50%",
@@ -901,19 +957,20 @@ export default function Messages({ workspaceId, workspace }) {
                 display:"flex", alignItems:"center", justifyContent:"center",
                 opacity:uploadProgress?0.5:1,
                 boxShadow:"0 4px 16px rgba(124,58,237,.4)",
+                flexShrink:0,
               }}>
                 {uploadProgress ? <Loader2 size={14} style={{ animation:"msg-spin 1s linear infinite" }}/> : <Send size={14}/>}
               </button>
             </div>
           ) : (
             <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-              <label style={{ ...iconBtnStyle, cursor:"pointer", borderRadius:10 }}>
+              <label style={{ ...iconBtnStyle, cursor:"pointer", borderRadius:10, flexShrink:0 }}>
                 <Paperclip size={16}/>
                 <input type="file" hidden onChange={handleFile} accept="*/*"/>
               </label>
 
               <div style={{
-                flex:1, display:"flex", alignItems:"center", gap:8,
+                flex:1, display:"flex", alignItems:"center", gap:8, minWidth:0,
                 background:"rgba(255,255,255,.06)",
                 border:"1px solid rgba(255,255,255,.08)",
                 borderRadius:14, padding:"8px 14px",
@@ -928,7 +985,7 @@ export default function Messages({ workspaceId, workspace }) {
                   onKeyDown={e => e.key==="Enter" && !e.shiftKey && sendMessage()}
                   placeholder="Écrire un message…"
                   style={{
-                    flex:1, background:"none", border:"none", outline:"none",
+                    flex:1, minWidth:0, background:"none", border:"none", outline:"none",
                     fontSize:13, color:"#f1f5f9",
                     fontFamily:"DM Sans,sans-serif",
                   }}
@@ -937,7 +994,7 @@ export default function Messages({ workspaceId, workspace }) {
 
               {input.trim() ? (
                 <button onClick={sendMessage} style={{
-                  width:36, height:36, borderRadius:12,
+                  width:36, height:36, borderRadius:12, flexShrink:0,
                   background:"linear-gradient(135deg,#7c3aed,#6366f1)",
                   color:"#fff", border:"none", cursor:"pointer",
                   display:"flex", alignItems:"center", justifyContent:"center",
@@ -948,7 +1005,7 @@ export default function Messages({ workspaceId, workspace }) {
                 onMouseLeave={e=>{ e.currentTarget.style.transform="scale(1)"; e.currentTarget.style.boxShadow="0 4px 16px rgba(124,58,237,.45)"; }}
                 ><Send size={15}/></button>
               ) : (
-                <button onClick={startRecording} style={{ ...iconBtnStyle, borderRadius:12 }} className="msg-icon-btn">
+                <button onClick={startRecording} style={{ ...iconBtnStyle, borderRadius:12, flexShrink:0 }} className="msg-icon-btn">
                   <Mic size={16}/>
                 </button>
               )}
