@@ -4,9 +4,9 @@ import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowUpRight, BookOpen, GraduationCap, X, Sparkles,
-  Send, ChevronRight, RotateCcw, Copy, Check,
+  Send, ChevronRight, ChevronDown, RotateCcw, Copy, Check, Clock, Globe2,
 } from "lucide-react";
-import api from "../services/api";// adapte le chemin si besoin
+import api from "../services/api"; // adapte le chemin si besoin
 
 /* ─────────────────────────────────────────────────────────────
    INJECT STYLES
@@ -16,7 +16,7 @@ const injectStyles = () => {
   const s = document.createElement("style");
   s.id = "courses-light-styles";
   s.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700;800&display=swap');
     .csl-serif { font-family: 'Playfair Display', Georgia, serif; }
     .csl-sans  { font-family: 'Inter', system-ui, sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -27,6 +27,8 @@ const injectStyles = () => {
     .csl-dot:nth-child(2) { animation-delay: 0.18s; }
     .csl-dot:nth-child(3) { animation-delay: 0.36s; }
     @keyframes dotBounce { 0%,100%{transform:translateY(0);opacity:.35} 50%{transform:translateY(-4px);opacity:1} }
+    .csl-pulse { animation: pulseRing 1.8s ease-out infinite; }
+    @keyframes pulseRing { 0%{box-shadow:0 0 0 0 rgba(34,197,94,0.45)} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
   `;
   document.head.appendChild(s);
 };
@@ -68,12 +70,56 @@ function ThinkingDots() {
 }
 
 /* ─────────────────────────────────────────────────────────────
+   COURSE INFO CONTENT (partagé desktop/mobile)
+───────────────────────────────────────────────────────────── */
+function CourseInfoContent({ course, t }) {
+  const facts = [
+    { icon: GraduationCap, label: t("courses.modal.institution", "Institution"), value: course.school },
+    { icon: BookOpen,      label: t("courses.modal.level", "Level"),             value: t("courses.modal.levelValue", "Bachelor / Master") },
+    { icon: Clock,         label: t("courses.modal.duration", "Duration"),       value: t("courses.modal.durationValue", "12 – 24 months") },
+    { icon: Globe2,        label: t("courses.modal.format", "Format"),           value: t("courses.modal.formatValue", "100% Online") },
+  ];
+
+  return (
+    <>
+      <p className="text-[10px] font-bold tracking-[0.16em] uppercase text-indigo-500 mb-3">
+        {t("courses.modal.about", "About")}
+      </p>
+      <p className="text-[#4B5563] text-[13.5px] leading-relaxed mb-6">
+        {t("courses.modal.description", { program: course.program, school: course.school })}
+      </p>
+
+      <div className="grid grid-cols-2 md:grid-cols-1 gap-2.5 md:gap-0 md:space-y-0">
+        {facts.map(({ icon: Icon, label, value }) => (
+          <div
+            key={label}
+            className="flex items-center gap-2.5 md:gap-3 bg-[#F9FAFB] md:bg-transparent rounded-xl md:rounded-none px-3 py-2.5 md:px-0 md:py-3 md:border-b md:border-black/[0.06]"
+          >
+            <div
+              className="w-7 h-7 md:w-6 md:h-6 rounded-lg flex items-center justify-center shrink-0"
+              style={{ background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)" }}
+            >
+              <Icon size={13} className="text-indigo-500" />
+            </div>
+            <div className="min-w-0">
+              <p className="text-[10px] text-[#9CA3AF] leading-tight md:hidden">{label}</p>
+              <p className="text-[12.5px] md:text-sm font-semibold text-[#0F0F1A] truncate">{value}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+/* ─────────────────────────────────────────────────────────────
    COURSE MODAL
 ───────────────────────────────────────────────────────────── */
 function CourseModal({ course, onClose }) {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [phase, setPhase] = useState("intro");
+  const [mobileInfoOpen, setMobileInfoOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -103,6 +149,7 @@ function CourseModal({ course, onClose }) {
 
   const startChat = () => {
     setPhase("chat");
+    setMobileInfoOpen(false);
     setMessages([{
       id: "welcome",
       sender: "ai",
@@ -163,77 +210,90 @@ function CourseModal({ course, onClose }) {
 
   return (
     <motion.div
-      className="csl-sans fixed inset-0 z-9999 flex flex-col"
-      style={{ background: "#F7F6F3" }}
+      className="csl-sans fixed inset-0 z-[9999] flex flex-col bg-[#F7F6F3]"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.22 }}
     >
       {/* ── HERO BAND ── */}
-      <div className="relative h-70 md:h-75 shrink-0 overflow-hidden">
+      <div className="relative h-[220px] sm:h-[260px] md:h-[300px] shrink-0 overflow-hidden">
         <img
           src={`${course.image}?auto=format&w=1400&q=80`}
           alt={course.title}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.62) 100%)" }} />
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, rgba(15,15,26,0.15) 0%, rgba(15,15,26,0.35) 55%, rgba(15,15,26,0.82) 100%)" }}
+        />
 
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 w-10 h-10 rounded-full flex items-center justify-center border border-white/20 bg-black/30 text-white backdrop-blur-sm hover:bg-black/50 transition-colors"
+          className="absolute top-4 right-4 md:top-5 md:right-5 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border border-white/20 bg-black/30 text-white backdrop-blur-md hover:bg-black/50 active:scale-95 transition-all"
           aria-label={t("courses.modal.close", "Close")}
         >
-          <X size={18} />
+          <X size={17} />
         </button>
 
-        <div className="absolute bottom-0 left-0 right-0 px-6 md:px-10 pb-8">
-          <span className="inline-block text-[10px] font-bold tracking-[0.18em] uppercase text-indigo-300 mb-2">
+        <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-7 md:px-10 pb-5 md:pb-7">
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.16em] uppercase text-indigo-300 mb-2">
+            <span className="w-4 h-[1.5px] bg-indigo-300/70" />
             {course.program}
           </span>
-          <h2 className="csl-serif text-white text-3xl md:text-4xl font-bold leading-tight mb-1">
+          <h2 className="csl-serif text-white text-[22px] sm:text-3xl md:text-[38px] font-bold leading-[1.12] mb-1.5 max-w-[680px]">
             {course.title}
           </h2>
-          <div className="flex items-center gap-2 text-white/70 text-sm mt-2">
-            <GraduationCap size={14} />
+          <div className="flex items-center gap-2 text-white/75 text-[12px] md:text-sm">
+            <GraduationCap size={13} />
             <span>{course.school}</span>
             <span className="w-1 h-1 rounded-full bg-white/40" />
-            <BookOpen size={13} />
+            <BookOpen size={12} />
             <span>{t("courses.modal.online", "Online")}</span>
           </div>
         </div>
       </div>
 
-      {/* ── BODY ── */}
-      <div className="flex-1 absolute top-10 left-0 w-full overflow-hidden flex flex-col md:flex-row">
-
-        {/* LEFT — course info */}
-        <div className="hidden md:flex flex-col w-[320px] shrink-0 border-r border-black/[0.06] bg-white overflow-y-auto no-scrollbar p-8">
-          <p className="text-[10px] font-bold tracking-[0.16em] uppercase text-indigo-500 mb-4">
-            {t("courses.modal.about", "About")}
-          </p>
-          <p className="text-[#374151] text-sm leading-relaxed mb-6">
-            {t("courses.modal.description", { program: course.program, school: course.school })}
-          </p>
-
-          <div className="space-y-3 mb-8">
-            {[
-              { label: t("courses.modal.institution", "Institution"), value: course.school },
-              { label: t("courses.modal.level", "Level"),             value: t("courses.modal.levelValue", "Bachelor / Master") },
-              { label: t("courses.modal.duration", "Duration"),       value: t("courses.modal.durationValue", "12 – 24 months") },
-              { label: t("courses.modal.format", "Format"),           value: t("courses.modal.formatValue", "100% Online") },
-              { label: t("courses.modal.language", "Language"),       value: t("courses.modal.languageValue", "French / English") },
-            ].map(({ label, value }) => (
-              <div key={label} className="flex justify-between text-sm border-b border-black/5 pb-3">
-                <span className="text-[#9CA3AF]">{label}</span>
-                <span className="text-[#0F0F1A] font-semibold">{value}</span>
+      {/* ── MOBILE INFO ACCORDION ── */}
+      <div className="md:hidden shrink-0 border-b border-black/[0.06] bg-white">
+        <button
+          onClick={() => setMobileInfoOpen((v) => !v)}
+          className="w-full flex items-center justify-between px-5 py-3"
+        >
+          <span className="text-[12.5px] font-bold text-[#0F0F1A]">
+            {t("courses.modal.about", "About")} {t("courses.modal.thisProgram", "this program")}
+          </span>
+          <motion.span animate={{ rotate: mobileInfoOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+            <ChevronDown size={16} className="text-[#9CA3AF]" />
+          </motion.span>
+        </button>
+        <AnimatePresence initial={false}>
+          {mobileInfoOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.22, ease: "easeInOut" }}
+              className="overflow-hidden"
+            >
+              <div className="px-5 pb-5">
+                <CourseInfoContent course={course} t={t} />
               </div>
-            ))}
-          </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* ── BODY ── */}
+      <div className="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden">
+
+        {/* LEFT — course info (desktop only) */}
+        <div className="hidden md:flex flex-col w-[300px] lg:w-[330px] shrink-0 border-r border-black/[0.06] bg-white overflow-y-auto no-scrollbar p-7 lg:p-8">
+          <CourseInfoContent course={course} t={t} />
 
           <button
             onClick={startChat}
-            className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-opacity hover:opacity-90"
+            className="w-full mt-7 py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
             style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
           >
             <Sparkles size={14} /> {t("courses.modal.exploreWithAI", "Explore with AI")}
@@ -241,21 +301,21 @@ function CourseModal({ course, onClose }) {
         </div>
 
         {/* RIGHT — intro OR chat */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
           <AnimatePresence mode="wait">
 
             {/* ── INTRO PHASE ── */}
             {phase === "intro" && (
               <motion.div
                 key="intro"
-                className="flex-1 flex flex-col items-center justify-center px-6 py-10 overflow-y-auto no-scrollbar"
+                className="flex-1 min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-6 md:py-10 overflow-y-auto no-scrollbar"
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
                 transition={{ duration: 0.25 }}
               >
                 <div className="w-full max-w-[520px]">
-                  <div className="bg-white rounded-2xl border border-black/[0.06] p-8 shadow-[0_8px_40px_rgba(0,0,0,0.07)] mb-6">
+                  <div className="bg-white rounded-2xl border border-black/[0.06] p-6 sm:p-8 shadow-[0_8px_40px_rgba(0,0,0,0.07)] mb-6">
                     <div className="flex items-center gap-3 mb-5">
                       <div
                         className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
@@ -267,19 +327,20 @@ function CourseModal({ course, onClose }) {
                         <p className="text-[#0F0F1A] font-bold text-[14px]">
                           {t("courses.modal.learnWithAI", "Learn with AI")}
                         </p>
-                        <p className="text-[#9CA3AF] text-[12px]">
+                        <p className="text-[#9CA3AF] text-[12px] flex items-center gap-1.5">
+                          <span className="w-[6px] h-[6px] rounded-full bg-green-500 csl-pulse" />
                           {t("courses.modal.aiSubtitle", "Avila AI · Answers instantly")}
                         </p>
                       </div>
                     </div>
 
-                    <p className="text-[#374151] text-[14px] leading-relaxed mb-6">
+                    <p className="text-[#374151] text-[13.5px] sm:text-[14px] leading-relaxed mb-6">
                       {t("courses.modal.aiIntro", "I can help you explore this course, answer questions about career paths, prerequisites, enrollment, and much more.")}
                     </p>
 
                     <button
                       onClick={startChat}
-                      className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-opacity hover:opacity-90"
+                      className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
                       style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
                     >
                       <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
@@ -294,10 +355,10 @@ function CourseModal({ course, onClose }) {
                       <button
                         key={topic}
                         onClick={() => { startChat(); setTimeout(() => askAI(topic), 300); }}
-                        className="w-full text-left text-[13px] text-[#374151] bg-white border border-black/[0.06] rounded-xl px-4 py-3 flex items-center justify-between gap-3 hover:border-indigo-300 hover:text-indigo-700 transition-all group shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+                        className="w-full text-left text-[13px] text-[#374151] bg-white border border-black/[0.06] rounded-xl px-4 py-3 flex items-center justify-between gap-3 hover:border-indigo-300 hover:text-indigo-700 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)] transition-all group"
                       >
                         <span>{topic}</span>
-                        <ChevronRight size={14} className="text-[#D1D5DB] group-hover:text-indigo-400 shrink-0 transition-colors" />
+                        <ChevronRight size={14} className="text-[#D1D5DB] group-hover:text-indigo-400 group-hover:translate-x-0.5 shrink-0 transition-all" />
                       </button>
                     ))}
                   </div>
@@ -309,25 +370,25 @@ function CourseModal({ course, onClose }) {
             {phase === "chat" && (
               <motion.div
                 key="chat"
-                className="flex-1 flex flex-col overflow-hidden"
+                className="flex-1 min-h-0 flex flex-col overflow-hidden"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
                 {/* Chat header */}
-                <div className="flex items-center gap-3 px-5 py-3 border-b border-black/[0.06] bg-white shrink-0">
+                <div className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-black/[0.06] bg-white/90 backdrop-blur-sm shrink-0">
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
                     style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
                   >
                     <Sparkles size={13} color="#fff" />
                   </div>
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-[#0F0F1A] font-bold text-[13px]">Avila AI</p>
                     <p className="text-[#9CA3AF] text-[11px] flex items-center gap-1.5">
                       <span
-                        className="inline-block w-[6px] h-[6px] rounded-full"
+                        className={`inline-block w-[6px] h-[6px] rounded-full ${!loading ? "csl-pulse" : ""}`}
                         style={{ background: loading ? "#a78bfa" : "#22c55e" }}
                       />
                       {loading
@@ -337,20 +398,21 @@ function CourseModal({ course, onClose }) {
                   </div>
                   <button
                     onClick={() => setPhase("intro")}
-                    className="ml-auto text-[11px] text-[#9CA3AF] hover:text-[#6366f1] flex items-center gap-1 transition-colors"
+                    className="ml-auto shrink-0 text-[11px] font-medium text-[#6B7280] hover:text-[#6366f1] flex items-center gap-1 transition-colors px-2 py-1.5 rounded-lg hover:bg-indigo-50"
                   >
-                    <RotateCcw size={11} /> {t("courses.modal.newTopic", "New topic")}
+                    <RotateCcw size={11} />
+                    <span className="hidden sm:inline">{t("courses.modal.newTopic", "New topic")}</span>
                   </button>
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto no-scrollbar px-4 md:px-6 py-5 flex flex-col gap-4 bg-[#F7F6F3]">
+                <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3.5 sm:px-5 md:px-6 py-5 flex flex-col gap-4 bg-[#F7F6F3]">
                   {messages.map((msg) => (
                     <div
                       key={msg.id}
                       className={`csl-bubble-in flex flex-col gap-1 ${msg.sender === "user" ? "items-end" : "items-start"}`}
                     >
-                      <div className={`flex items-end gap-2 ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                      <div className={`flex items-end gap-2 w-full ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
                         {msg.sender === "ai" && (
                           <div
                             className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
@@ -360,7 +422,7 @@ function CourseModal({ course, onClose }) {
                           </div>
                         )}
                         <div
-                          className={`max-w-[78%] px-4 py-2.5 text-[13.5px] leading-relaxed rounded-2xl ${
+                          className={`max-w-[85%] sm:max-w-[78%] px-4 py-2.5 text-[13.5px] leading-relaxed rounded-2xl ${
                             msg.sender === "user"
                               ? "text-white rounded-br-[4px]"
                               : msg.isError
@@ -377,7 +439,7 @@ function CourseModal({ course, onClose }) {
                         <div className="pl-9 mt-1">
                           <button
                             onClick={goToSubscription}
-                            className="text-[12px] font-bold text-white rounded-lg px-3.5 py-2 shadow-md hover:opacity-90 transition-opacity"
+                            className="text-[12px] font-bold text-white rounded-lg px-3.5 py-2 shadow-md hover:opacity-90 active:scale-[0.98] transition-all"
                             style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
                           >
                             {t("courses.modal.subscribeCta", "See subscription plans")}
@@ -440,8 +502,8 @@ function CourseModal({ course, onClose }) {
                 </div>
 
                 {/* Input */}
-                <div className="shrink-0 px-4 md:px-6 py-3 border-t border-black/[0.06] bg-white">
-                  <div className="flex items-end gap-2 border border-black/[0.08] rounded-[18px] px-4 py-2.5 transition-colors focus-within:border-indigo-400/50 bg-[#F9FAFB]">
+                <div className="shrink-0 px-3.5 sm:px-5 md:px-6 py-3 border-t border-black/[0.06] bg-white pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                  <div className="flex items-end gap-2 border border-black/[0.08] rounded-[18px] px-3.5 sm:px-4 py-2.5 transition-colors focus-within:border-indigo-400/60 focus-within:ring-2 focus-within:ring-indigo-100 bg-[#F9FAFB]">
                     <textarea
                       ref={inputRef}
                       rows={1}
@@ -461,7 +523,7 @@ function CourseModal({ course, onClose }) {
                       whileTap={{ scale: 0.88 }}
                       onClick={() => askAI(input)}
                       disabled={!input.trim() || loading}
-                      className="w-9 h-9 rounded-full flex items-center justify-center border-none cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 transition-opacity hover:opacity-90"
+                      className="w-9 h-9 rounded-full flex items-center justify-center border-none cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 shadow-[0_4px_14px_rgba(99,102,241,0.35)] hover:opacity-90 transition-opacity"
                       style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
                       aria-label={t("courses.modal.send", "Send")}
                     >
@@ -475,12 +537,12 @@ function CourseModal({ course, onClose }) {
         </div>
       </div>
 
-      {/* Mobile CTA */}
+      {/* Mobile CTA (intro only) */}
       {phase === "intro" && (
-        <div className="md:hidden shrink-0 px-4 pb-6 pt-3 border-t border-black/[0.06] bg-white">
+        <div className="md:hidden shrink-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 border-t border-black/[0.06] bg-white">
           <button
             onClick={startChat}
-            className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 transition-opacity hover:opacity-90"
+            className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
             style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
           >
             <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
@@ -497,23 +559,26 @@ function CourseModal({ course, onClose }) {
 function CourseCard({ course, index, ctaLabel, t, onClick }) {
   return (
     <motion.div
-      className="csl-card bg-white rounded-2xl overflow-hidden border border-black/6 flex flex-col cursor-pointer group"
-      style={{ transition: "box-shadow 0.22s, transform 0.22s" }}
+      className="csl-card bg-white rounded-2xl overflow-hidden border border-black/[0.06] flex flex-col cursor-pointer group"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.07, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ delay: index * 0.06, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
-      whileHover={{ y: -4, boxShadow: "0 16px 48px rgba(0,0,0,0.1), 0 2px 8px rgba(0,0,0,0.06)" }}
+      whileHover={{ y: -5, boxShadow: "0 20px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)" }}
+      whileTap={{ scale: 0.98 }}
     >
-      <div className="relative h-43 overflow-hidden shrink-0">
+      <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden shrink-0">
         <img
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.06]"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.07]"
           src={`${course.image}?auto=format&w=600&q=80`}
           alt={course.title}
           loading="lazy"
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.25) 100%)" }} />
-        <span className="absolute bottom-2.5 left-2.5 bg-white/90 backdrop-blur-md border border-black/[0.07] px-2.5 py-1 rounded-full text-[11px] font-bold text-[#1A1A2E] tracking-[0.04em]">
+        <div
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to bottom, transparent 45%, rgba(0,0,0,0.28) 100%)" }}
+        />
+        <span className="absolute bottom-2.5 left-2.5 bg-white/90 backdrop-blur-md border border-black/[0.07] px-2.5 py-1 rounded-full text-[10.5px] sm:text-[11px] font-bold text-[#1A1A2E] tracking-[0.03em]">
           {course.school}
         </span>
         <div
@@ -524,24 +589,24 @@ function CourseCard({ course, index, ctaLabel, t, onClick }) {
         </div>
       </div>
 
-      <div className="px-4.5 pt-4.5 pb-3 flex-1 flex flex-col">
-        <p className="text-[10px] font-bold tracking-[0.12em] uppercase text-indigo-500 mb-1.5">
+      <div className="px-4 sm:px-[18px] pt-4 sm:pt-[18px] pb-3 flex-1 flex flex-col">
+        <p className="text-[9.5px] sm:text-[10px] font-bold tracking-[0.12em] uppercase text-indigo-500 mb-1.5">
           {course.program}
         </p>
-        <h3 className="csl-serif text-[15.5px] font-bold text-[#0F0F1A] leading-snug mb-auto">
+        <h3 className="csl-serif text-[14.5px] sm:text-[15.5px] font-bold text-[#0F0F1A] leading-snug mb-auto">
           {course.title}
         </h3>
-        <div className="flex items-center gap-1.5 mt-3.5 text-[12px] text-[#9CA3AF]">
+        <div className="flex items-center gap-1.5 mt-3.5 text-[11.5px] sm:text-[12px] text-[#9CA3AF]">
           <GraduationCap size={12} />
-          <span>{course.school}</span>
-          <span className="w-0.75 h-0.75 rounded-full bg-[#D1D5DB]" />
+          <span className="truncate">{course.school}</span>
+          <span className="w-[3px] h-[3px] rounded-full bg-[#D1D5DB] shrink-0" />
           <BookOpen size={11} />
-          <span>{t("courses.modal.online", "Online")}</span>
+          <span className="shrink-0">{t("courses.modal.online", "Online")}</span>
         </div>
       </div>
 
       <button
-        className="mx-4.5 mb-4.5 mt-3 py-2.75 rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] text-[#374151] text-[13px] font-semibold font-[inherit] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 group-hover:bg-indigo-500 group-hover:border-indigo-500 group-hover:text-white"
+        className="mx-4 sm:mx-[18px] mb-4 sm:mb-[18px] mt-3 py-[11px] rounded-[10px] border border-[#E5E7EB] bg-[#F9FAFB] text-[#374151] text-[12.5px] sm:text-[13px] font-semibold font-[inherit] cursor-pointer flex items-center justify-center gap-1.5 transition-all duration-150 group-hover:bg-indigo-500 group-hover:border-indigo-500 group-hover:text-white"
         tabIndex={-1}
       >
         {ctaLabel} <ArrowUpRight size={13} />
@@ -608,37 +673,43 @@ export default function CoursesSection() {
     <>
       <section
         className="csl-sans"
-        style={{ background: "#F7F6F3", color: "#1A1A2E", padding: "88px 24px 100px" }}
+        style={{ background: "#F7F6F3", color: "#1A1A2E", padding: "56px 20px 64px" }}
       >
+        <style>{`
+          @media (min-width: 768px) {
+            .csl-section-pad { padding: 88px 24px 100px !important; }
+          }
+        `}</style>
+
         <div style={{ maxWidth: 1180, margin: "0 auto" }}>
 
           {/* Header */}
-          <div className="flex items-end justify-between gap-6 mb-9 flex-wrap">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 sm:gap-6 mb-7 sm:mb-9">
             <div>
-              <p className="flex items-center gap-2 text-[11px] font-bold tracking-[0.18em] uppercase text-indigo-500 mb-3">
+              <p className="flex items-center gap-2 text-[10.5px] sm:text-[11px] font-bold tracking-[0.18em] uppercase text-indigo-500 mb-2.5 sm:mb-3">
                 <span className="inline-block w-5 h-[1.5px] bg-indigo-500" />
                 {t("courses.catalogue", "Catalogue")}
               </p>
-              <h2 className="csl-serif text-[clamp(30px,4vw,48px)] font-bold leading-[1.1] tracking-[-0.02em] text-[#0F0F1A] m-0">
+              <h2 className="csl-serif text-[28px] sm:text-[clamp(30px,4vw,48px)] font-bold leading-[1.1] tracking-[-0.02em] text-[#0F0F1A] m-0">
                 {t("courses.headingPrefix", "Our")}{" "}
                 <em className="italic text-indigo-500">{t("courses.headingHighlight", "programs")}</em>
               </h2>
-              <p className="text-[15px] text-[#6B7280] leading-[1.65] mt-3 max-w-[420px]">
+              <p className="text-[13.5px] sm:text-[15px] text-[#6B7280] leading-[1.65] mt-2.5 sm:mt-3 max-w-[420px]">
                 {t("courses.subtitle", "Recognized programs, accessible online, to advance your career.")}
               </p>
             </div>
-            <span className="text-[13px] text-[#9CA3AF] font-medium self-end whitespace-nowrap">
+            <span className="text-[12.5px] sm:text-[13px] text-[#9CA3AF] font-medium sm:self-end whitespace-nowrap">
               {t("courses.courseCount", { count: active.length })}
             </span>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-[2px] bg-[#EDECE8] rounded-xl p-1 w-fit flex-wrap mb-9 overflow-x-auto no-scrollbar">
+          <div className="flex gap-[2px] bg-[#EDECE8] rounded-xl p-1 w-max flex-nowrap mb-7 sm:mb-9 overflow-x-auto no-scrollbar max-w-full">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-[18px] py-[9px] rounded-[9px] border-none text-[13px] font-[inherit] cursor-pointer whitespace-nowrap transition-all duration-150 ${
+                className={`px-3.5 sm:px-[18px] py-2 sm:py-[9px] rounded-[9px] border-none text-[12.5px] sm:text-[13px] font-[inherit] cursor-pointer whitespace-nowrap transition-all duration-150 ${
                   activeTab === tab.id
                     ? "bg-white text-[#0F0F1A] font-semibold shadow-[0_1px_4px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.04)]"
                     : "bg-transparent text-[#6B7280] font-medium hover:text-[#1A1A2E]"
@@ -653,8 +724,8 @@ export default function CoursesSection() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              className="grid gap-4"
-              style={{ gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))" }}
+              className="grid gap-3.5 sm:gap-4"
+              style={{ gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))" }}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
