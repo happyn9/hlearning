@@ -177,7 +177,7 @@ export default function Form() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0f0f0f] text-white flex flex-col lg:flex-row">
+    <div className="min-h-screen lg:p-20 w-full bg-[#0f0f0f] text-white flex flex-col lg:flex-row">
       {/* ================= LEFT — MARKETING PANEL (desktop only) ================= */}
       <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col items-center justify-center px-10 xl:px-14 py-16 border-r border-white/[0.06]">
         {/* Dotted grid, top-left corner accent — matches reference */}
