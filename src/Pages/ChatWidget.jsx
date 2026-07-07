@@ -162,7 +162,7 @@ export default function ChatWidget() {
           <motion.button
             key="fab"
             onClick={() => setOpen(true)}
-            className="fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 shadow-lg flex items-center justify-center"
+            className="fixed bottom-15 lg:bottom-6 right-6 z-40 w-14 h-14 rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 shadow-lg flex items-center justify-center"
             style={{ boxShadow: "0 8px 24px rgba(99,102,241,0.4)" }}
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
@@ -182,7 +182,7 @@ export default function ChatWidget() {
         {open && (
           <motion.div
             key="panel"
-            className="fixed bottom-6 right-6 z-40 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)]
+            className="fixed bottom-20 lg:bottom-6 right-6 z-40 w-[360px] max-w-[calc(100vw-2rem)] h-[520px] max-h-[calc(100vh-3rem)]
                        bg-[#1a1c1f] border border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden"
             initial={{ opacity: 0, y: 24, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}

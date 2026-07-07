@@ -29,6 +29,17 @@ const injectStyles = () => {
     @keyframes dotBounce { 0%,100%{transform:translateY(0);opacity:.35} 50%{transform:translateY(-4px);opacity:1} }
     .csl-pulse { animation: pulseRing 1.8s ease-out infinite; }
     @keyframes pulseRing { 0%{box-shadow:0 0 0 0 rgba(34,197,94,0.45)} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
+    .csl-shimmer {
+      background: linear-gradient(110deg, #EEF2FF 8%, #F5F3FF 18%, #EEF2FF 33%);
+      background-size: 200% 100%;
+      animation: shimmer 2.2s linear infinite;
+    }
+    @keyframes shimmer { to { background-position-x: -200%; } }
+    .csl-mesh {
+      background:
+        radial-gradient(600px circle at 0% 0%, rgba(99,102,241,0.08), transparent 45%),
+        radial-gradient(500px circle at 100% 0%, rgba(168,85,247,0.06), transparent 45%);
+    }
   `;
   document.head.appendChild(s);
 };
@@ -89,20 +100,20 @@ function CourseInfoContent({ course, t }) {
         {t("courses.modal.description", { program: course.program, school: course.school })}
       </p>
 
-      <div className="grid grid-cols-2 md:grid-cols-1 gap-2.5 md:gap-0 md:space-y-0">
+      <div className="grid grid-cols-2 md:grid-cols-1 gap-2.5 md:gap-2.5">
         {facts.map(({ icon: Icon, label, value }) => (
           <div
             key={label}
-            className="flex items-center gap-2.5 md:gap-3 bg-[#F9FAFB] md:bg-transparent rounded-xl md:rounded-none px-3 py-2.5 md:px-0 md:py-3 md:border-b md:border-black/[0.06]"
+            className="flex items-center gap-2.5 md:gap-3 bg-[#F9FAFB] rounded-xl px-3 py-2.5 md:py-3 border border-black/[0.04]"
           >
             <div
-              className="w-7 h-7 md:w-6 md:h-6 rounded-lg flex items-center justify-center shrink-0"
+              className="w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shrink-0"
               style={{ background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)" }}
             >
               <Icon size={13} className="text-indigo-500" />
             </div>
             <div className="min-w-0">
-              <p className="text-[10px] text-[#9CA3AF] leading-tight md:hidden">{label}</p>
+              <p className="text-[10px] text-[#9CA3AF] leading-tight">{label}</p>
               <p className="text-[12.5px] md:text-sm font-semibold text-[#0F0F1A] truncate">{value}</p>
             </div>
           </div>
@@ -113,7 +124,7 @@ function CourseInfoContent({ course, t }) {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   COURSE MODAL
+   COURSE MODAL — centered card on desktop, full sheet on mobile
 ───────────────────────────────────────────────────────────── */
 function CourseModal({ course, onClose }) {
   const { t, i18n } = useTranslation();
@@ -146,6 +157,12 @@ function CourseModal({ course, onClose }) {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, loading]);
+
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
 
   const startChat = () => {
     setPhase("chat");
@@ -210,345 +227,375 @@ function CourseModal({ course, onClose }) {
 
   return (
     <motion.div
-      className="csl-sans fixed inset-0 z-[9999] flex flex-col bg-[#F7F6F3]"
+      className="csl-sans fixed inset-0 z-[9999] flex items-end sm:items-center justify-center sm:p-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.22 }}
+      transition={{ duration: 0.2 }}
     >
-      {/* ── HERO BAND ── */}
-      <div className="relative h-[220px] sm:h-[260px] md:h-[300px] shrink-0 overflow-hidden">
-        <img
-          src={`${course.image}?auto=format&w=1400&q=80`}
-          alt={course.title}
-          className="w-full h-full object-cover"
-        />
-        <div
-          className="absolute inset-0"
-          style={{ background: "linear-gradient(to bottom, rgba(15,15,26,0.15) 0%, rgba(15,15,26,0.35) 55%, rgba(15,15,26,0.82) 100%)" }}
-        />
+      {/* Overlay */}
+      <motion.div
+        className="absolute inset-0 bg-[#0F0F1A]/70 backdrop-blur-md"
+        onClick={onClose}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+      />
 
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 md:top-5 md:right-5 w-9 h-9 md:w-10 md:h-10 rounded-full flex items-center justify-center border border-white/20 bg-black/30 text-white backdrop-blur-md hover:bg-black/50 active:scale-95 transition-all"
-          aria-label={t("courses.modal.close", "Close")}
-        >
-          <X size={17} />
-        </button>
-
-        <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-7 md:px-10 pb-5 md:pb-7">
-          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.16em] uppercase text-indigo-300 mb-2">
-            <span className="w-4 h-[1.5px] bg-indigo-300/70" />
-            {course.program}
-          </span>
-          <h2 className="csl-serif text-white text-[22px] sm:text-3xl md:text-[38px] font-bold leading-[1.12] mb-1.5 max-w-[680px]">
-            {course.title}
-          </h2>
-          <div className="flex items-center gap-2 text-white/75 text-[12px] md:text-sm">
-            <GraduationCap size={13} />
-            <span>{course.school}</span>
-            <span className="w-1 h-1 rounded-full bg-white/40" />
-            <BookOpen size={12} />
-            <span>{t("courses.modal.online", "Online")}</span>
-          </div>
+      {/* Card */}
+      <motion.div
+        className="csl-mesh relative w-full sm:max-w-[960px] h-[94vh] sm:h-[86vh] max-h-[860px] bg-[#F7F6F3] sm:rounded-[28px] rounded-t-[28px] border border-black/[0.06] shadow-[0_40px_100px_rgba(0,0,0,0.35)] flex flex-col overflow-hidden"
+        initial={{ y: 40, opacity: 0, scale: 0.98 }}
+        animate={{ y: 0, opacity: 1, scale: 1 }}
+        exit={{ y: 24, opacity: 0, scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 300, damping: 28 }}
+      >
+        {/* Mobile drag handle */}
+        <div className="sm:hidden flex justify-center pt-2.5 pb-0 shrink-0 relative z-20">
+          <div className="w-10 h-1 rounded-full bg-black/15" />
         </div>
-      </div>
 
-      {/* ── MOBILE INFO ACCORDION ── */}
-      <div className="md:hidden shrink-0 border-b border-black/[0.06] bg-white">
-        <button
-          onClick={() => setMobileInfoOpen((v) => !v)}
-          className="w-full flex items-center justify-between px-5 py-3"
-        >
-          <span className="text-[12.5px] font-bold text-[#0F0F1A]">
-            {t("courses.modal.about", "About")} {t("courses.modal.thisProgram", "this program")}
-          </span>
-          <motion.span animate={{ rotate: mobileInfoOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-            <ChevronDown size={16} className="text-[#9CA3AF]" />
-          </motion.span>
-        </button>
-        <AnimatePresence initial={false}>
-          {mobileInfoOpen && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.22, ease: "easeInOut" }}
-              className="overflow-hidden"
-            >
-              <div className="px-5 pb-5">
-                <CourseInfoContent course={course} t={t} />
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ── BODY ── */}
-      <div className="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden">
-
-        {/* LEFT — course info (desktop only) */}
-        <div className="hidden md:flex flex-col w-[300px] lg:w-[330px] shrink-0 border-r border-black/[0.06] bg-white overflow-y-auto no-scrollbar p-7 lg:p-8">
-          <CourseInfoContent course={course} t={t} />
+        {/* ── HERO BAND ── */}
+        <div className="relative h-[150px] sm:h-[190px] shrink-0 overflow-hidden">
+          <img
+            src={`${course.image}?auto=format&w=1400&q=80`}
+            alt={course.title}
+            className="w-full h-full object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "linear-gradient(to bottom, rgba(15,15,26,0.1) 0%, rgba(15,15,26,0.35) 55%, rgba(15,15,26,0.88) 100%)" }}
+          />
 
           <button
-            onClick={startChat}
-            className="w-full mt-7 py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
-            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+            onClick={onClose}
+            className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center border border-white/20 bg-black/30 text-white backdrop-blur-md hover:bg-black/50 active:scale-95 transition-all z-10"
+            aria-label={t("courses.modal.close", "Close")}
           >
-            <Sparkles size={14} /> {t("courses.modal.exploreWithAI", "Explore with AI")}
+            <X size={16} />
           </button>
+
+          <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-8 pb-4 sm:pb-5">
+            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.16em] uppercase text-indigo-300 mb-1.5">
+              <span className="w-4 h-[1.5px] bg-indigo-300/70" />
+              {course.program}
+            </span>
+            <h2 className="csl-serif text-white text-[19px] sm:text-[26px] font-bold leading-[1.15] mb-1 max-w-[560px]">
+              {course.title}
+            </h2>
+            <div className="flex items-center gap-2 text-white/75 text-[11.5px] sm:text-[12.5px]">
+              <GraduationCap size={12} />
+              <span>{course.school}</span>
+              <span className="w-1 h-1 rounded-full bg-white/40" />
+              <BookOpen size={11} />
+              <span>{t("courses.modal.online", "Online")}</span>
+            </div>
+          </div>
         </div>
 
-        {/* RIGHT — intro OR chat */}
-        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          <AnimatePresence mode="wait">
-
-            {/* ── INTRO PHASE ── */}
-            {phase === "intro" && (
+        {/* ── MOBILE INFO ACCORDION ── */}
+        <div className="md:hidden shrink-0 border-b border-black/[0.06] bg-white">
+          <button
+            onClick={() => setMobileInfoOpen((v) => !v)}
+            className="w-full flex items-center justify-between px-5 py-3"
+          >
+            <span className="text-[12.5px] font-bold text-[#0F0F1A]">
+              {t("courses.modal.about", "About")} {t("courses.modal.thisProgram", "this program")}
+            </span>
+            <motion.span animate={{ rotate: mobileInfoOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
+              <ChevronDown size={16} className="text-[#9CA3AF]" />
+            </motion.span>
+          </button>
+          <AnimatePresence initial={false}>
+            {mobileInfoOpen && (
               <motion.div
-                key="intro"
-                className="flex-1 min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-6 md:py-10 overflow-y-auto no-scrollbar"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.25 }}
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.22, ease: "easeInOut" }}
+                className="overflow-hidden"
               >
-                <div className="w-full max-w-[520px]">
-                  <div className="bg-white rounded-2xl border border-black/[0.06] p-6 sm:p-8 shadow-[0_8px_40px_rgba(0,0,0,0.07)] mb-6">
-                    <div className="flex items-center gap-3 mb-5">
-                      <div
-                        className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
-                        style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
-                      >
-                        <Sparkles size={16} color="#fff" />
-                      </div>
-                      <div>
-                        <p className="text-[#0F0F1A] font-bold text-[14px]">
-                          {t("courses.modal.learnWithAI", "Learn with AI")}
-                        </p>
-                        <p className="text-[#9CA3AF] text-[12px] flex items-center gap-1.5">
-                          <span className="w-[6px] h-[6px] rounded-full bg-green-500 csl-pulse" />
-                          {t("courses.modal.aiSubtitle", "Avila AI · Answers instantly")}
-                        </p>
-                      </div>
-                    </div>
-
-                    <p className="text-[#374151] text-[13.5px] sm:text-[14px] leading-relaxed mb-6">
-                      {t("courses.modal.aiIntro", "I can help you explore this course, answer questions about career paths, prerequisites, enrollment, and much more.")}
-                    </p>
-
-                    <button
-                      onClick={startChat}
-                      className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
-                      style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
-                    >
-                      <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
-                    </button>
-                  </div>
-
-                  <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[#9CA3AF] mb-3 pl-1">
-                    {t("courses.modal.popularQuestions", "Popular questions")}
-                  </p>
-                  <div className="flex flex-col gap-2">
-                    {topics.slice(0, 4).map((topic) => (
-                      <button
-                        key={topic}
-                        onClick={() => { startChat(); setTimeout(() => askAI(topic), 300); }}
-                        className="w-full text-left text-[13px] text-[#374151] bg-white border border-black/[0.06] rounded-xl px-4 py-3 flex items-center justify-between gap-3 hover:border-indigo-300 hover:text-indigo-700 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)] transition-all group"
-                      >
-                        <span>{topic}</span>
-                        <ChevronRight size={14} className="text-[#D1D5DB] group-hover:text-indigo-400 group-hover:translate-x-0.5 shrink-0 transition-all" />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* ── CHAT PHASE ── */}
-            {phase === "chat" && (
-              <motion.div
-                key="chat"
-                className="flex-1 min-h-0 flex flex-col overflow-hidden"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {/* Chat header */}
-                <div className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-black/[0.06] bg-white/90 backdrop-blur-sm shrink-0">
-                  <div
-                    className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
-                    style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
-                  >
-                    <Sparkles size={13} color="#fff" />
-                  </div>
-                  <div className="min-w-0">
-                    <p className="text-[#0F0F1A] font-bold text-[13px]">Avila AI</p>
-                    <p className="text-[#9CA3AF] text-[11px] flex items-center gap-1.5">
-                      <span
-                        className={`inline-block w-[6px] h-[6px] rounded-full ${!loading ? "csl-pulse" : ""}`}
-                        style={{ background: loading ? "#a78bfa" : "#22c55e" }}
-                      />
-                      {loading
-                        ? t("courses.modal.thinking", "Thinking…")
-                        : t("courses.modal.online", "Online")}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setPhase("intro")}
-                    className="ml-auto shrink-0 text-[11px] font-medium text-[#6B7280] hover:text-[#6366f1] flex items-center gap-1 transition-colors px-2 py-1.5 rounded-lg hover:bg-indigo-50"
-                  >
-                    <RotateCcw size={11} />
-                    <span className="hidden sm:inline">{t("courses.modal.newTopic", "New topic")}</span>
-                  </button>
-                </div>
-
-                {/* Messages */}
-                <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3.5 sm:px-5 md:px-6 py-5 flex flex-col gap-4 bg-[#F7F6F3]">
-                  {messages.map((msg) => (
-                    <div
-                      key={msg.id}
-                      className={`csl-bubble-in flex flex-col gap-1 ${msg.sender === "user" ? "items-end" : "items-start"}`}
-                    >
-                      <div className={`flex items-end gap-2 w-full ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
-                        {msg.sender === "ai" && (
-                          <div
-                            className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-                            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
-                          >
-                            <Sparkles size={11} color="#fff" />
-                          </div>
-                        )}
-                        <div
-                          className={`max-w-[85%] sm:max-w-[78%] px-4 py-2.5 text-[13.5px] leading-relaxed rounded-2xl ${
-                            msg.sender === "user"
-                              ? "text-white rounded-br-[4px]"
-                              : msg.isError
-                              ? "bg-red-500/10 border border-red-500/30 text-red-600 rounded-bl-[4px]"
-                              : "bg-white border border-black/[0.06] text-[#1A1A2E] rounded-bl-[4px] shadow-[0_1px_6px_rgba(0,0,0,0.05)]"
-                          }`}
-                          style={msg.sender === "user" ? { background: "linear-gradient(135deg,#4f46e5,#7c3aed)" } : {}}
-                        >
-                          <span className="whitespace-pre-wrap">{renderText(msg.text)}</span>
-                        </div>
-                      </div>
-
-                      {msg.needsSubscription && (
-                        <div className="pl-9 mt-1">
-                          <button
-                            onClick={goToSubscription}
-                            className="text-[12px] font-bold text-white rounded-lg px-3.5 py-2 shadow-md hover:opacity-90 active:scale-[0.98] transition-all"
-                            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
-                          >
-                            {t("courses.modal.subscribeCta", "See subscription plans")}
-                          </button>
-                        </div>
-                      )}
-
-                      {msg.sender === "ai" && msg.id !== "welcome" && !msg.isError && (
-                        <div className="flex items-center gap-1 pl-9">
-                          <button
-                            onClick={() => handleCopy(msg.id, msg.text)}
-                            className={`flex items-center gap-1 text-[10.5px] px-2 py-[3px] rounded-md cursor-pointer transition-colors border-none bg-transparent ${
-                              copiedId === msg.id ? "text-indigo-500" : "text-[#9CA3AF] hover:text-[#6B7280]"
-                            }`}
-                          >
-                            {copiedId === msg.id ? <Check size={10} /> : <Copy size={10} />}
-                            {copiedId === msg.id
-                              ? t("courses.modal.copied", "Copied!")
-                              : t("courses.modal.copy", "Copy")}
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-
-                  {loading && (
-                    <div className="csl-bubble-in flex items-center gap-2">
-                      <div
-                        className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
-                        style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
-                      >
-                        <Sparkles size={11} color="#fff" />
-                      </div>
-                      <div className="bg-white border border-black/[0.06] rounded-2xl rounded-bl-[4px] shadow-[0_1px_6px_rgba(0,0,0,0.05)]">
-                        <ThinkingDots />
-                      </div>
-                    </div>
-                  )}
-
-                  {messages.length === 1 && !loading && (
-                    <div className="csl-bubble-in flex flex-col gap-2 pl-9">
-                      <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#9CA3AF]">
-                        {t("courses.modal.suggestedTopics", "Suggested topics")}
-                      </p>
-                      <div className="flex flex-wrap gap-2">
-                        {topics.map((topic) => (
-                          <button
-                            key={topic}
-                            onClick={() => askAI(topic)}
-                            className="text-[12px] text-[#374151] bg-white border border-black/[0.06] rounded-full px-3.5 py-1.5 hover:border-indigo-300 hover:text-indigo-700 transition-all cursor-pointer font-[inherit] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
-                          >
-                            {topic}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  <div ref={scrollRef} />
-                </div>
-
-                {/* Input */}
-                <div className="shrink-0 px-3.5 sm:px-5 md:px-6 py-3 border-t border-black/[0.06] bg-white pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-                  <div className="flex items-end gap-2 border border-black/[0.08] rounded-[18px] px-3.5 sm:px-4 py-2.5 transition-colors focus-within:border-indigo-400/60 focus-within:ring-2 focus-within:ring-indigo-100 bg-[#F9FAFB]">
-                    <textarea
-                      ref={inputRef}
-                      rows={1}
-                      value={input}
-                      onChange={(e) => {
-                        setInput(e.target.value.slice(0, 800));
-                        e.target.style.height = "auto";
-                        e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
-                      }}
-                      onKeyDown={handleKey}
-                      placeholder={t("courses.modal.inputPlaceholder", "Ask your question…")}
-                      disabled={loading}
-                      className="flex-1 resize-none outline-none border-none bg-transparent text-[13.5px] leading-[1.5] font-[inherit] text-[#1A1A2E] placeholder:text-[#9CA3AF] max-h-[120px] overflow-y-auto disabled:opacity-50"
-                      style={{ scrollbarWidth: "none" }}
-                    />
-                    <motion.button
-                      whileTap={{ scale: 0.88 }}
-                      onClick={() => askAI(input)}
-                      disabled={!input.trim() || loading}
-                      className="w-9 h-9 rounded-full flex items-center justify-center border-none cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 shadow-[0_4px_14px_rgba(99,102,241,0.35)] hover:opacity-90 transition-opacity"
-                      style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
-                      aria-label={t("courses.modal.send", "Send")}
-                    >
-                      <Send size={13} color="#fff" />
-                    </motion.button>
-                  </div>
+                <div className="px-5 pb-5">
+                  <CourseInfoContent course={course} t={t} />
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
-      </div>
 
-      {/* Mobile CTA (intro only) */}
-      {phase === "intro" && (
-        <div className="md:hidden shrink-0 px-4 pb-[max(1.25rem,env(safe-area-inset-bottom))] pt-3 border-t border-black/[0.06] bg-white">
-          <button
-            onClick={startChat}
-            className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
-            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
-          >
-            <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
-          </button>
+        {/* ── BODY ── */}
+        <div className="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden relative z-10">
+
+          {/* LEFT — course info (desktop only) */}
+          <div className="hidden md:flex flex-col w-[290px] lg:w-[310px] shrink-0 border-r border-black/[0.06] bg-white/70 backdrop-blur-sm overflow-y-auto no-scrollbar p-6 lg:p-7">
+            <CourseInfoContent course={course} t={t} />
+
+            <button
+              onClick={startChat}
+              className="w-full mt-6 py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
+              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+            >
+              <Sparkles size={14} /> {t("courses.modal.exploreWithAI", "Explore with AI")}
+            </button>
+
+            <div className="mt-auto pt-6 hidden lg:block">
+              <div className="flex items-center gap-2 text-[11px] text-[#9CA3AF]">
+                <Check size={12} className="text-green-500" />
+                {t("courses.modal.certAvailable", "Certificate available")}
+              </div>
+            </div>
+          </div>
+
+          {/* RIGHT — intro OR chat */}
+          <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+            <AnimatePresence mode="wait">
+
+              {/* ── INTRO PHASE ── */}
+              {phase === "intro" && (
+                <motion.div
+                  key="intro"
+                  className="flex-1 min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-5 sm:py-8 overflow-y-auto no-scrollbar"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <div className="w-full max-w-[480px]">
+                    <div className="bg-white rounded-2xl border border-black/[0.06] p-5 sm:p-7 shadow-[0_8px_40px_rgba(0,0,0,0.06)] mb-5">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div
+                          className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                          style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
+                        >
+                          <Sparkles size={16} color="#fff" />
+                        </div>
+                        <div>
+                          <p className="text-[#0F0F1A] font-bold text-[13.5px]">
+                            {t("courses.modal.learnWithAI", "Learn with AI")}
+                          </p>
+                          <p className="text-[#9CA3AF] text-[11.5px] flex items-center gap-1.5">
+                            <span className="w-[6px] h-[6px] rounded-full bg-green-500 csl-pulse" />
+                            {t("courses.modal.aiSubtitle", "Avila AI · Answers instantly")}
+                          </p>
+                        </div>
+                      </div>
+
+                      <p className="text-[#374151] text-[13px] sm:text-[13.5px] leading-relaxed mb-5">
+                        {t("courses.modal.aiIntro", "I can help you explore this course, answer questions about career paths, prerequisites, enrollment, and much more.")}
+                      </p>
+
+                      <button
+                        onClick={startChat}
+                        className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
+                        style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+                      >
+                        <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
+                      </button>
+                    </div>
+
+                    <p className="text-[10.5px] font-bold tracking-[0.14em] uppercase text-[#9CA3AF] mb-2.5 pl-1">
+                      {t("courses.modal.popularQuestions", "Popular questions")}
+                    </p>
+                    <div className="flex flex-col gap-2">
+                      {topics.slice(0, 4).map((topic) => (
+                        <button
+                          key={topic}
+                          onClick={() => { startChat(); setTimeout(() => askAI(topic), 300); }}
+                          className="w-full text-left text-[12.5px] text-[#374151] bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-3 hover:border-indigo-300 hover:text-indigo-700 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)] transition-all group"
+                        >
+                          <span>{topic}</span>
+                          <ChevronRight size={13} className="text-[#D1D5DB] group-hover:text-indigo-400 group-hover:translate-x-0.5 shrink-0 transition-all" />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* ── CHAT PHASE ── */}
+              {phase === "chat" && (
+                <motion.div
+                  key="chat"
+                  className="flex-1 min-h-0 flex flex-col overflow-hidden"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {/* Chat header */}
+                  <div className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-black/[0.06] bg-white/90 backdrop-blur-sm shrink-0">
+                    <div
+                      className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                      style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
+                    >
+                      <Sparkles size={13} color="#fff" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-[#0F0F1A] font-bold text-[13px]">Avila AI</p>
+                      <p className="text-[#9CA3AF] text-[11px] flex items-center gap-1.5">
+                        <span
+                          className={`inline-block w-[6px] h-[6px] rounded-full ${!loading ? "csl-pulse" : ""}`}
+                          style={{ background: loading ? "#a78bfa" : "#22c55e" }}
+                        />
+                        {loading
+                          ? t("courses.modal.thinking", "Thinking…")
+                          : t("courses.modal.online", "Online")}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => setPhase("intro")}
+                      className="ml-auto shrink-0 text-[11px] font-medium text-[#6B7280] hover:text-[#6366f1] flex items-center gap-1 transition-colors px-2 py-1.5 rounded-lg hover:bg-indigo-50"
+                    >
+                      <RotateCcw size={11} />
+                      <span className="hidden sm:inline">{t("courses.modal.newTopic", "New topic")}</span>
+                    </button>
+                  </div>
+
+                  {/* Messages */}
+                  <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3.5 sm:px-5 py-4 sm:py-5 flex flex-col gap-3.5 sm:gap-4 bg-transparent">
+                    {messages.map((msg) => (
+                      <div
+                        key={msg.id}
+                        className={`csl-bubble-in flex flex-col gap-1 ${msg.sender === "user" ? "items-end" : "items-start"}`}
+                      >
+                        <div className={`flex items-end gap-2 w-full ${msg.sender === "user" ? "flex-row-reverse" : "flex-row"}`}>
+                          {msg.sender === "ai" && (
+                            <div
+                              className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
+                            >
+                              <Sparkles size={11} color="#fff" />
+                            </div>
+                          )}
+                          <div
+                            className={`max-w-[85%] sm:max-w-[75%] px-4 py-2.5 text-[13px] sm:text-[13.5px] leading-relaxed rounded-2xl ${
+                              msg.sender === "user"
+                                ? "text-white rounded-br-[4px]"
+                                : msg.isError
+                                ? "bg-red-500/10 border border-red-500/30 text-red-600 rounded-bl-[4px]"
+                                : "bg-white border border-black/[0.06] text-[#1A1A2E] rounded-bl-[4px] shadow-[0_1px_6px_rgba(0,0,0,0.05)]"
+                            }`}
+                            style={msg.sender === "user" ? { background: "linear-gradient(135deg,#4f46e5,#7c3aed)" } : {}}
+                          >
+                            <span className="whitespace-pre-wrap">{renderText(msg.text)}</span>
+                          </div>
+                        </div>
+
+                        {msg.needsSubscription && (
+                          <div className="pl-9 mt-1">
+                            <button
+                              onClick={goToSubscription}
+                              className="text-[12px] font-bold text-white rounded-lg px-3.5 py-2 shadow-md hover:opacity-90 active:scale-[0.98] transition-all"
+                              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+                            >
+                              {t("courses.modal.subscribeCta", "See subscription plans")}
+                            </button>
+                          </div>
+                        )}
+
+                        {msg.sender === "ai" && msg.id !== "welcome" && !msg.isError && (
+                          <div className="flex items-center gap-1 pl-9">
+                            <button
+                              onClick={() => handleCopy(msg.id, msg.text)}
+                              className={`flex items-center gap-1 text-[10.5px] px-2 py-[3px] rounded-md cursor-pointer transition-colors border-none bg-transparent ${
+                                copiedId === msg.id ? "text-indigo-500" : "text-[#9CA3AF] hover:text-[#6B7280]"
+                              }`}
+                            >
+                              {copiedId === msg.id ? <Check size={10} /> : <Copy size={10} />}
+                              {copiedId === msg.id
+                                ? t("courses.modal.copied", "Copied!")
+                                : t("courses.modal.copy", "Copy")}
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+
+                    {loading && (
+                      <div className="csl-bubble-in flex items-center gap-2">
+                        <div
+                          className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                          style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
+                        >
+                          <Sparkles size={11} color="#fff" />
+                        </div>
+                        <div className="bg-white border border-black/[0.06] rounded-2xl rounded-bl-[4px] shadow-[0_1px_6px_rgba(0,0,0,0.05)]">
+                          <ThinkingDots />
+                        </div>
+                      </div>
+                    )}
+
+                    {messages.length === 1 && !loading && (
+                      <div className="csl-bubble-in flex flex-col gap-2 pl-9">
+                        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#9CA3AF]">
+                          {t("courses.modal.suggestedTopics", "Suggested topics")}
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {topics.map((topic) => (
+                            <button
+                              key={topic}
+                              onClick={() => askAI(topic)}
+                              className="text-[11.5px] sm:text-[12px] text-[#374151] bg-white border border-black/[0.06] rounded-full px-3.5 py-1.5 hover:border-indigo-300 hover:text-indigo-700 transition-all cursor-pointer font-[inherit] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+                            >
+                              {topic}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div ref={scrollRef} />
+                  </div>
+
+                  {/* Input */}
+                  <div className="shrink-0 px-3.5 sm:px-5 py-3 border-t border-black/[0.06] bg-white pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+                    <div className="flex items-end gap-2 border border-black/[0.08] rounded-[18px] px-3.5 sm:px-4 py-2.5 transition-colors focus-within:border-indigo-400/60 focus-within:ring-2 focus-within:ring-indigo-100 bg-[#F9FAFB]">
+                      <textarea
+                        ref={inputRef}
+                        rows={1}
+                        value={input}
+                        onChange={(e) => {
+                          setInput(e.target.value.slice(0, 800));
+                          e.target.style.height = "auto";
+                          e.target.style.height = Math.min(e.target.scrollHeight, 120) + "px";
+                        }}
+                        onKeyDown={handleKey}
+                        placeholder={t("courses.modal.inputPlaceholder", "Ask your question…")}
+                        disabled={loading}
+                        className="flex-1 resize-none outline-none border-none bg-transparent text-[13px] sm:text-[13.5px] leading-[1.5] font-[inherit] text-[#1A1A2E] placeholder:text-[#9CA3AF] max-h-[120px] overflow-y-auto disabled:opacity-50"
+                        style={{ scrollbarWidth: "none" }}
+                      />
+                      <motion.button
+                        whileTap={{ scale: 0.88 }}
+                        onClick={() => askAI(input)}
+                        disabled={!input.trim() || loading}
+                        className="w-9 h-9 rounded-full flex items-center justify-center border-none cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 shadow-[0_4px_14px_rgba(99,102,241,0.35)] hover:opacity-90 transition-opacity"
+                        style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+                        aria-label={t("courses.modal.send", "Send")}
+                      >
+                        <Send size={13} color="#fff" />
+                      </motion.button>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      )}
+
+        {/* Mobile CTA (intro only) */}
+        {phase === "intro" && (
+          <div className="md:hidden shrink-0 px-4 pb-[max(1.1rem,env(safe-area-inset-bottom))] pt-3 border-t border-black/[0.06] bg-white relative z-10">
+            <button
+              onClick={startChat}
+              className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
+              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+            >
+              <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
+            </button>
+          </div>
+        )}
+      </motion.div>
     </motion.div>
   );
 }
