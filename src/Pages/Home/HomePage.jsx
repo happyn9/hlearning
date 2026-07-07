@@ -18,6 +18,7 @@ import Usermodal from '../../Components/Home/Usermodal';
 import CertificateSection from '../../Components/Certificatesection';
 import VisaSection from '../../Components/VisaSection';
 import VisaRenewalSection from '../../Components/VisaRenewalSection';
+import ChatWidget from '../ChatWidget';
 
 
 export default function HomePage() {
@@ -94,6 +95,8 @@ export default function HomePage() {
       {chatbot &&
       <ChatBot onClose={()=>setChatbot(false)} />
       }
+
+      <ChatWidget />
 
       <Tuition />
 

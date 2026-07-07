@@ -20,6 +20,13 @@
     "install":"Installer l'app",
     "update":"Mettre à jour"
   },
+  "ai_chat": {
+  "title": "Avila AI",
+  "subtitle": "Votre assistant",
+  "empty_state": "Pose-moi n'importe quelle question sur ton cours — je suis là pour t'aider à comprendre.",
+  "placeholder": "Écris ta question…",
+  "generic_error": "Une erreur est survenue. Réessaie."
+},
   "notifications": {
   "title": "Notifications",
   "markAllRead": "Tout marquer comme lu",

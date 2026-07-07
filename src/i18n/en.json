@@ -28,6 +28,13 @@
   "hoursAgo": "{{count}} hour(s) ago",
   "daysAgo": "{{count}} days ago"
 },
+"ai_chat": {
+  "title": "Avila AI",
+  "subtitle": "Your course assistant",
+  "empty_state": "Ask me anything about your course — I'm here to help you understand it.",
+  "placeholder": "Type your question…",
+  "generic_error": "Something went wrong. Please try again."
+},
   "skeleton": {
     "loading": " Loading ..."
   },
