@@ -167,11 +167,8 @@ export default function Form() {
           <div className="pointer-events-none absolute bottom-[-120px] right-[-60px] w-[380px] h-[380px] rounded-full bg-[#1D9E75]/[0.08] blur-3xl" />
 
           <div className="relative z-10 w-full max-w-lg flex flex-col items-center text-center">
-            <p className="text-xs font-semibold mb-3 tracking-wide uppercase" style={{ color: "rgba(255,255,255,0.4)" }}>
-              {t("auth.marketing.eyebrow", "Approuvé par")}
-            </p>
             <div
-              className="inline-flex items-center gap-1 px-4 py-2 rounded-full mb-9"
+              className="inline-flex items-center gap-1 px-4 py-2 rounded-full mb-2"
               style={{ background: "rgba(255,255,255,0.05)", border: "0.5px solid rgba(255,255,255,0.08)" }}
             >
               {[
@@ -190,10 +187,10 @@ export default function Form() {
               ))}
             </div>
 
-            <h2 className="text-4xl xl:text-5xl font-bold leading-[1.05] tracking-tight">
+            <h2 className="text-3xl xl:text-4xl font-bold leading-[1.05] tracking-tight">
               {t("auth.marketing.title", "Votre studio d'apprentissage tout-en-un")}
             </h2>
-            <p className="mt-5 text-[15px] leading-relaxed max-w-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+            <p className="mt-4 text-[14px] leading-relaxed max-w-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
               {t(
                 "auth.marketing.subtitle",
                 "Suivez vos cours, vos exercices et votre progression au même endroit. Décrivez ce que vous voulez apprendre, H-learning s'occupe du reste."
@@ -201,7 +198,7 @@ export default function Form() {
             </p>
 
             <div
-              className="mt-8 inline-flex items-center gap-3 px-3 py-2 rounded-full"
+              className="mt-6 inline-flex items-center gap-3 px-3 py-2 rounded-full"
               style={{ background: "rgba(255,255,255,0.04)", border: "0.5px solid rgba(255,255,255,0.08)" }}
             >
               <div className="flex -space-x-1.5">
