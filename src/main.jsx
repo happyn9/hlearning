@@ -5,12 +5,23 @@ import App from './App.jsx'
 import { BrowserRouter } from 'react-router-dom'
 import UserProvider from './context/UserContext.jsx'
 import { GoogleOAuthProvider } from "@react-oauth/google";
-import { i18nReady } from './i18n/i18n.js'; // ✅ importer la Promise, plus l'import side-effect
+import { i18nReady } from './i18n/i18n.js';
 import initLanguage from './utils/initLanguage.js'
+import { registerSW } from 'virtual:pwa-register' 
 
 initLanguage();
 
-// ✅ React ne monte qu'après que i18n soit prêt
+
+const updateSW = registerSW({
+  immediate: true,
+  onNeedRefresh() {
+    
+  },
+  onOfflineReady() {
+    console.log('App prête pour le mode hors-ligne')
+  },
+})
+
 i18nReady.then(() => {
   createRoot(document.getElementById('root')).render(
     <StrictMode>
