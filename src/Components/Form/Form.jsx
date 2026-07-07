@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../../services/api";
 import { useUser } from "../../context/UserContext";
 import OTPModal from "./OTPModal";
@@ -179,77 +179,111 @@ export default function Form() {
   return (
     <div className="min-h-screen w-full bg-[#0f0f0f] text-white flex flex-col lg:flex-row">
       {/* ================= LEFT — MARKETING PANEL (desktop only) ================= */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col justify-center px-14 xl:px-20 py-16 border-r border-white/[0.06]">
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col items-center justify-center px-10 xl:px-14 py-16 border-r border-white/[0.06]">
+        {/* Dotted grid, top-left corner accent — matches reference */}
+        <div
+          className="pointer-events-none absolute top-10 left-10 w-40 h-24 opacity-40"
+          style={{
+            backgroundImage: "radial-gradient(rgba(255,255,255,0.35) 1px, transparent 1px)",
+            backgroundSize: "10px 10px",
+            maskImage: "radial-gradient(ellipse at top left, black 40%, transparent 75%)",
+          }}
+        />
         {/* Ambient glow accents, quiet and off to the side */}
         <div className="pointer-events-none absolute -top-32 -left-24 w-[420px] h-[420px] rounded-full bg-[#378ADD]/[0.10] blur-3xl" />
         <div className="pointer-events-none absolute bottom-[-120px] right-[-60px] w-[380px] h-[380px] rounded-full bg-[#1D9E75]/[0.08] blur-3xl" />
 
-        <div className="relative z-10 max-w-md">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-8"
-            style={{ background: "rgba(55,138,221,0.10)", border: "0.5px solid rgba(55,138,221,0.25)", color: "#7FB6EE" }}>
-            <span className="w-1.5 h-1.5 rounded-full bg-[#378ADD]" />
-            {t("auth.marketing.eyebrow", "Apprendre autrement")}
-          </div>
-
-          <h2 className="text-3xl xl:text-4xl font-semibold leading-tight tracking-tight">
-            {t("auth.marketing.title", "Vos cours, votre rythme, vos résultats.")}
-          </h2>
-          <p className="mt-4 text-[15px] leading-relaxed" style={{ color: "rgba(255,255,255,0.5)" }}>
-            {t(
-              "auth.marketing.subtitle",
-              "H-learning réunit vos cours, vos exercices et votre progression au même endroit — accessible depuis n'importe quel appareil."
-            )}
+        <div className="relative z-10 w-full max-w-md flex flex-col items-center text-center">
+          {/* "Powered by" style eyebrow */}
+          <p className="text-xs font-semibold mb-3" style={{ color: "rgba(255,255,255,0.4)" }}>
+            {t("auth.marketing.eyebrow", "Approuvé par")}
           </p>
-
-          {/* Feature strip */}
-          <div className="mt-9 flex flex-wrap gap-2">
+          <div className="inline-flex items-center gap-1 px-4 py-2 rounded-full mb-8"
+            style={{ background: "rgba(255,255,255,0.05)", border: "0.5px solid rgba(255,255,255,0.08)" }}>
             {[
-              t("auth.marketing.f1", "Cours illimités"),
-              t("auth.marketing.f2", "Suivi en temps réel"),
-              t("auth.marketing.f3", "Certificats reconnus"),
-            ].map((label) => (
-              <span
-                key={label}
-                className="px-3 py-1.5 rounded-full text-xs font-medium"
-                style={{ background: "rgba(255,255,255,0.05)", border: "0.5px solid rgba(255,255,255,0.08)", color: "rgba(255,255,255,0.7)" }}
-              >
-                {label}
+              { icon: "🎓", label: t("auth.marketing.badge1", "50+ écoles") },
+              { icon: "👩‍💻", label: t("auth.marketing.badge2", "10k+ apprenants") },
+              { icon: "📜", label: t("auth.marketing.badge3", "Certifié") },
+            ].map((b, i) => (
+              <span key={b.label} className={`flex items-center gap-1.5 text-xs font-medium px-2 ${i > 0 ? "border-l border-white/10" : ""}`} style={{ color: "rgba(255,255,255,0.75)" }}>
+                <span aria-hidden="true">{b.icon}</span>
+                {b.label}
               </span>
             ))}
           </div>
 
-          {/* Testimonial cards, quietly stacked */}
-          <div className="mt-10 grid grid-cols-2 gap-3">
-            <TestimonialCard
-              title={t("auth.marketing.t1Title", "Progrès visible")}
-              quote={t("auth.marketing.t1Quote", "Je vois enfin où j'en suis chaque semaine.")}
-            />
-            <TestimonialCard
-              title={t("auth.marketing.t2Title", "Cours clairs")}
-              quote={t("auth.marketing.t2Quote", "Les leçons sont bien structurées et faciles à suivre.")}
-            />
+          <h2 className="text-3xl xl:text-4xl font-semibold leading-tight tracking-tight">
+            {t("auth.marketing.title", "Votre studio d'apprentissage tout-en-un")}
+          </h2>
+          <p className="mt-4 text-[15px] leading-relaxed max-w-sm" style={{ color: "rgba(255,255,255,0.5)" }}>
+            {t(
+              "auth.marketing.subtitle",
+              "Suivez vos cours, vos exercices et votre progression au même endroit. Décrivez ce que vous voulez apprendre, H-learning s'occupe du reste."
+            )}
+          </p>
+
+          {/* Small pill, "+30 more" style */}
+          <div className="mt-7 inline-flex items-center gap-3 px-3 py-2 rounded-full"
+            style={{ background: "rgba(255,255,255,0.04)", border: "0.5px solid rgba(255,255,255,0.08)" }}>
+            <div className="flex -space-x-1.5">
+              {["#378ADD", "#1D9E75", "#E2A93A", "#B15CDE"].map((c) => (
+                <span key={c} className="w-5 h-5 rounded-full border-2 border-[#0f0f0f]" style={{ background: c }} />
+              ))}
+            </div>
+            <span className="text-xs font-medium" style={{ color: "rgba(255,255,255,0.7)" }}>
+              {t("auth.marketing.moreCourses", "+30 formations ce trimestre")}
+            </span>
+          </div>
+
+          {/* Testimonial carousel — bleeds past panel edges, cropped by overflow-hidden */}
+          <div className="mt-12 w-full -mx-10 xl:-mx-14 overflow-hidden">
+            <div className="flex gap-3 px-10 xl:px-14">
+              {[
+                { title: t("auth.marketing.t0Title", "Pédagogie claire"), quote: t("auth.marketing.t0Quote", "Chaque module est découpé de façon logique, facile à suivre.") },
+                { title: t("auth.marketing.t1Title", "Progrès visible"), quote: t("auth.marketing.t1Quote", "Je vois enfin où j'en suis chaque semaine.") },
+                { title: t("auth.marketing.t2Title", "Cours clairs"), quote: t("auth.marketing.t2Quote", "Les leçons sont bien structurées et faciles à suivre.") },
+                { title: t("auth.marketing.t3Title", "Support réactif"), quote: t("auth.marketing.t3Quote", "Une question, une réponse en quelques minutes, jamais bloqué.") },
+                { title: t("auth.marketing.t4Title", "Certificats utiles"), quote: t("auth.marketing.t4Quote", "Mon certificat m'a vraiment aidé en entretien.") },
+              ].map((c, i) => (
+                <TestimonialCard key={i} title={c.title} quote={c.quote} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
 
       {/* ================= RIGHT — AUTH PANEL ================= */}
       <div className="flex-1 flex flex-col min-h-screen">
-        <header className="p-4 sm:p-6">
+        <header className="p-4 sm:p-6 lg:hidden">
           <h1 className="text-xl sm:text-2xl font-bold">H-learning</h1>
         </header>
 
         <div className="flex flex-1 items-center justify-center px-4 sm:px-6 pb-10">
           <div className="w-full max-w-md space-y-6">
-            <div className="text-center">
-              <h2 className="text-2xl sm:text-3xl font-semibold">
-                {mode === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}
-              </h2>
-              <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
-                {mode === "login"
-                  ? t("auth.subtitleLogin", "Connectez-vous pour continuer votre apprentissage.")
-                  : t("auth.subtitleRegister", "Créez votre compte en quelques secondes.")}
-              </p>
-            </div>
+            {step === "social" && !showSkeleton ? (
+              <div className="text-center">
+                <h2 className="text-2xl sm:text-3xl font-semibold">
+                  {t("auth.headline", "Inscrivez-vous ou connectez-vous")}
+                </h2>
+                <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+                  {t("auth.headlineSubtitle", "Commencez à apprendre en quelques secondes.")}
+                </p>
+              </div>
+            ) : (
+              step === "email" &&
+              !showSkeleton && (
+                <div className="text-center">
+                  <h2 className="text-2xl sm:text-3xl font-semibold">
+                    {mode === "login" ? t("auth.welcomeBack") : t("auth.createAccount")}
+                  </h2>
+                  <p className="mt-2 text-sm" style={{ color: "rgba(255,255,255,0.45)" }}>
+                    {mode === "login"
+                      ? t("auth.subtitleLogin", "Connectez-vous pour continuer votre apprentissage.")
+                      : t("auth.subtitleRegister", "Créez votre compte en quelques secondes.")}
+                  </p>
+                </div>
+              )
+            )}
 
             {showSkeleton ? (
               <SkeletonBlock />
@@ -262,51 +296,65 @@ export default function Form() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.18 }}
-                    className="space-y-3"
+                    className="space-y-6"
                   >
-                    {error && (
-                      <p role="alert" className="text-red-400 text-sm text-center">
-                        {error}
-                      </p>
-                    )}
+                    <div className="space-y-3">
+                      {error && (
+                        <p role="alert" className="text-red-400 text-sm text-center">
+                          {error}
+                        </p>
+                      )}
 
-                    <SocialButton
-                      label={t("auth.continueWithGoogle")}
-                      icon={<GoogleGlyph size={15} />}
-                      onClick={() => googleLogin()}
-                      disabled={loading}
-                    />
+                      <SocialButton
+                        variant="light"
+                        label={t("auth.continueWithGoogle")}
+                        icon={<GoogleGlyph size={16} />}
+                        onClick={() => googleLogin()}
+                        disabled={loading}
+                      />
 
-                    <SocialButton
-                      label={t("auth.continueWithApple", "Continuer avec Apple")}
-                      icon={<AppleGlyph size={15} />}
-                      disabled
-                      comingSoon={t("auth.comingSoon", "Bientôt")}
-                    />
+                      <SocialButton
+                        variant="dark"
+                        label={t("auth.continueWithApple", "Continuer avec Apple")}
+                        icon={<AppleGlyph size={16} light />}
+                        disabled
+                        comingSoon={t("auth.comingSoon", "Bientôt")}
+                      />
 
-                    <SocialButton
-                      label={t("auth.continueWithMicrosoft", "Continuer avec Microsoft")}
-                      icon={<MicrosoftGlyph size={15} />}
-                      disabled
-                      comingSoon={t("auth.comingSoon", "Bientôt")}
-                    />
+                      <SocialButton
+                        variant="dark"
+                        label={t("auth.continueWithMicrosoft", "Continuer avec Microsoft")}
+                        icon={<MicrosoftGlyph size={16} />}
+                        disabled
+                        comingSoon={t("auth.comingSoon", "Bientôt")}
+                      />
 
-                    <div className="flex items-center gap-3 py-1">
-                      <span className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
-                      <span className="text-xs" style={{ color: "rgba(255,255,255,0.35)" }}>
-                        {t("auth.or", "ou")}
-                      </span>
-                      <span className="h-px flex-1" style={{ background: "rgba(255,255,255,0.08)" }} />
+                      <SocialButton
+                        variant="dark"
+                        label={t("auth.continueWithEmail", "Continuer avec un e-mail")}
+                        icon={<MailGlyph size={16} />}
+                        onClick={() => setStep("email")}
+                      />
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setStep("email")}
-                      className="w-full py-3 rounded-full bg-white text-black font-semibold active:scale-95 transition flex items-center justify-center gap-2"
-                    >
-                      <MailGlyph size={15} />
-                      {t("auth.continueWithEmail", "Continuer avec un e-mail")}
-                    </button>
+                    {/* Trust line */}
+                    <p className="flex items-center justify-center gap-1.5 text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
+                      <LockGlyph size={12} />
+                      {t("auth.dataSecure", "Vos données sont en sécurité, sécurisées et totalement privées.")}
+                    </p>
+
+                    {/* Terms / privacy */}
+                    <p className="text-center text-xs leading-relaxed px-2" style={{ color: "rgba(255,255,255,0.35)" }}>
+                      {t("auth.agreePrefix", "En continuant, vous acceptez nos")}{" "}
+                      <Link to="/terms" className="underline" style={{ color: "rgba(255,255,255,0.55)" }}>
+                        {t("auth.termsOfUse", "Conditions d'utilisation")}
+                      </Link>{" "}
+                      {t("auth.and", "et notre")}{" "}
+                      <Link to="/privacy" className="underline" style={{ color: "rgba(255,255,255,0.55)" }}>
+                        {t("auth.privacyPolicy", "Politique de confidentialité")}
+                      </Link>
+                      {t("auth.agreeSuffix", ", et à recevoir des mises à jour produit et des offres.")}
+                    </p>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -412,23 +460,20 @@ export default function Form() {
                           : t("auth.create")}
                       </button>
                     </form>
+
+                    <p className="mt-6 text-center text-sm text-neutral-400">
+                      {mode === "login" ? t("auth.noAccount") : t("auth.alreadyAccount")}
+                      <button
+                        type="button"
+                        onClick={switchMode}
+                        className="ml-2 underline py-1 px-0.5 inline-block"
+                      >
+                        {mode === "login" ? t("auth.signup") : t("auth.signin")}
+                      </button>
+                    </p>
                   </motion.div>
                 )}
               </AnimatePresence>
-            )}
-
-            {/* SWITCH login / register */}
-            {!showSkeleton && (
-              <p className="text-center text-sm text-neutral-400">
-                {mode === "login" ? t("auth.noAccount") : t("auth.alreadyAccount")}
-                <button
-                  type="button"
-                  onClick={switchMode}
-                  className="ml-2 underline py-1 px-0.5 inline-block"
-                >
-                  {mode === "login" ? t("auth.signup") : t("auth.signin")}
-                </button>
-              </p>
             )}
           </div>
         </div>
@@ -454,36 +499,27 @@ export default function Form() {
 
 /* ================= SOCIAL BUTTON ================= */
 
-function SocialButton({ label, icon, onClick, disabled, comingSoon }) {
+function SocialButton({ label, icon, onClick, disabled, comingSoon, variant = "dark" }) {
+  const isLight = variant === "light";
+
   return (
     <button
       type="button"
       onClick={onClick}
       disabled={disabled}
       title={comingSoon ? comingSoon : undefined}
-      className={`group relative w-full h-11 flex items-center justify-center gap-3 rounded-full font-semibold text-[14px] transition-all duration-200 ease-out ${
+      className={`group relative w-full h-12 flex items-center justify-center gap-2.5 rounded-2xl font-medium text-[14px] transition-all duration-150 ${
         disabled
-          ? "cursor-not-allowed opacity-45"
-          : "hover:-translate-y-0.5 active:translate-y-[1px] active:scale-[0.99]"
+          ? "cursor-not-allowed opacity-40"
+          : "active:scale-[0.99]"
       }`}
-      style={{
-        background: "linear-gradient(180deg, #2a2a2a 0%, #1c1c1c 55%, #141414 100%)",
-        boxShadow: `
-          0 1px 0 0 rgba(255,255,255,0.08) inset,
-          0 -1px 0 0 rgba(0,0,0,0.6) inset,
-          0 10px 24px -8px rgba(0,0,0,0.65),
-          0 2px 6px rgba(0,0,0,0.4),
-          0 0 0 1px rgba(255,255,255,0.06)
-        `,
-        color: "#F5F5F5",
-      }}
+      style={
+        isLight
+          ? { background: "#ffffff", color: "#0c0c0e" }
+          : { background: "#1c1c1e", color: "#F5F5F5", border: "1px solid rgba(255,255,255,0.06)" }
+      }
     >
-      <span
-        className="flex items-center justify-center w-6 h-6 rounded-full bg-white shrink-0"
-        style={{ boxShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
-      >
-        {icon}
-      </span>
+      <span className="flex items-center justify-center shrink-0">{icon}</span>
       {label}
 
       {comingSoon && (
@@ -523,11 +559,11 @@ function GoogleGlyph({ size = 16 }) {
   );
 }
 
-function AppleGlyph({ size = 16 }) {
+function AppleGlyph({ size = 16, light }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden="true">
       <path
-        fill="#111"
+        fill={light ? "#F5F5F5" : "#111"}
         d="M16.365 1.43c0 1.14-.417 2.06-1.25 2.76-.87.75-1.9 1.15-3.06 1.06-.05-1.1.42-2.13 1.24-2.85.83-.73 2-1.2 3.07-.97zM20.7 17.19c-.44 1.02-.97 2-1.6 2.93-.86 1.28-1.56 2.16-2.1 2.65-.83.79-1.72 1.19-2.68 1.21-.69.01-1.51-.2-2.47-.62-.96-.42-1.85-.62-2.66-.62-.85 0-1.76.2-2.73.62-.97.42-1.75.64-2.36.66-.92.04-1.83-.36-2.72-1.21-.58-.53-1.31-1.44-2.19-2.75-.94-1.4-1.71-3.03-2.31-4.9-.64-2.02-.96-3.98-.96-5.87 0-2.17.47-4.04 1.4-5.6.73-1.25 1.7-2.24 2.92-2.97 1.21-.72 2.53-1.1 3.94-1.13.73 0 1.68.23 2.86.68 1.17.45 1.93.68 2.26.68.25 0 1.09-.26 2.51-.79 1.35-.49 2.49-.69 3.42-.62 2.53.2 4.43 1.2 5.7 3-.6.36-1.12.8-1.56 1.32-1.04 1.19-1.55 2.51-1.55 3.96 0 1.61.55 2.95 1.65 4.01.49.48 1.05.85 1.66 1.11-.13.39-.28.77-.44 1.15z"
       />
     </svg>
@@ -554,12 +590,21 @@ function MailGlyph({ size = 16 }) {
   );
 }
 
+function LockGlyph({ size = 12 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </svg>
+  );
+}
+
 /* ================= TESTIMONIAL ================= */
 
 function TestimonialCard({ title, quote }) {
   return (
     <div
-      className="rounded-2xl p-4"
+      className="rounded-2xl p-4 w-44 shrink-0 text-left"
       style={{ background: "rgba(255,255,255,0.035)", border: "0.5px solid rgba(255,255,255,0.07)" }}
     >
       <div className="flex gap-0.5 mb-2" aria-hidden="true">
@@ -593,7 +638,7 @@ function SkeletonBlock() {
 function SkeletonPill({ emphasis }) {
   return (
     <div
-      className={`h-11 w-full rounded-full relative overflow-hidden border border-white/10 ${
+      className={`h-12 w-full rounded-2xl relative overflow-hidden border border-white/10 ${
         emphasis ? "bg-white/10" : "bg-white/5"
       }`}
     >
