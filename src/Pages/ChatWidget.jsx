@@ -1,19 +1,54 @@
 import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { Sparkles, X, Send } from "lucide-react";
-
-// ⚠️ Hypothèse sur la forme de ton client API existant (celui utilisé dans
-// CourseInfo.jsx : `api(\`/courses/${id}\`)`). Je suppose qu'il accepte un
-// objet d'options fetch-like en 2e argument pour le POST. Partage-moi
-// `services/api.js` si la signature est différente, j'ajuste l'appel.
 import api from "../services/api";
 
 /* ============================================================
-   Un rond avec anneaux qui pulsent — même langage visuel que
-   CourseLoader et la page offline, réutilisé ici comme "avatar"
-   de l'assistant pendant qu'il réfléchit.
+   Questions/réponses prédéfinies — pas d'appel API, ne consomment
+   pas de quota. Servent aussi de "mode d'emploi" pour le nouvel
+   utilisateur qui ouvre le chat pour la première fois.
    ============================================================ */
+const QUICK_QA = {
+  en: [
+    {
+      q: "How does the AI assistant work?",
+      a: "I'm here to help you understand concepts from your courses. You get 10 free questions per month — subscribing to a plan with AI access unlocks more.",
+    },
+    {
+      q: "How do I subscribe to a course?",
+      a: "Open any course page and tap \"Subscribe\" — choose a plan (Standard or Premium) and pay via mobile money.",
+    },
+    {
+      q: "What languages are supported?",
+      a: "H-Learning works in English and French. You can switch anytime from the footer.",
+    },
+    {
+      q: "I forgot my password, what do I do?",
+      a: "Go to the login page and tap \"Forgot password\" — you'll get a reset code by email.",
+    },
+  ],
+  fr: [
+    {
+      q: "Comment fonctionne l'assistant IA ?",
+      a: "Je suis là pour t'aider à comprendre les concepts de tes cours. Tu as 10 questions gratuites par mois — un abonnement avec accès IA en débloque plus.",
+    },
+    {
+      q: "Comment m'abonner à un cours ?",
+      a: "Ouvre la page d'un cours et clique sur \"S'abonner\" — choisis un plan (Standard ou Premium) et paye via mobile money.",
+    },
+    {
+      q: "Quelles langues sont supportées ?",
+      a: "H-Learning fonctionne en français et en anglais. Tu peux changer à tout moment depuis le footer.",
+    },
+    {
+      q: "J'ai oublié mon mot de passe, que faire ?",
+      a: "Va sur la page de connexion et clique sur \"Mot de passe oublié\" — tu recevras un code de réinitialisation par email.",
+    },
+  ],
+};
+
 function ThinkingAvatar() {
   return (
     <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
@@ -56,16 +91,28 @@ function TypingDots() {
 }
 
 export default function ChatWidget() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef(null);
 
+  const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
+  const quickQA = QUICK_QA[lang];
+
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, loading]);
+
+  const handleQuickReply = (qa) => {
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: qa.q },
+      { role: "assistant", content: qa.a },
+    ]);
+  };
 
   const handleSend = async () => {
     const message = input.trim();
@@ -84,7 +131,11 @@ export default function ChatWidget() {
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
     } catch (err) {
       const detail = err?.message || t("ai_chat.generic_error", "Something went wrong. Please try again.");
-      setMessages((prev) => [...prev, { role: "assistant", content: detail, isError: true }]);
+      const needsSubscription = err?.status === 402;
+      setMessages((prev) => [
+        ...prev,
+        { role: "assistant", content: detail, isError: true, needsSubscription },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -95,6 +146,12 @@ export default function ChatWidget() {
       e.preventDefault();
       handleSend();
     }
+  };
+
+  const goToSubscription = () => {
+    setOpen(false);
+    // ⚠️ Adapte cette route à ta vraie page d'abonnement/plans.
+    navigate("/premium");
   };
 
   return (
@@ -157,35 +214,59 @@ export default function ChatWidget() {
             {/* Messages */}
             <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
               {messages.length === 0 && !loading && (
-                <div className="h-full flex flex-col items-center justify-center text-center px-4">
+                <div className="flex flex-col items-center text-center px-2 py-4">
                   <Avatar />
-                  <p className="text-sm text-slate-400 mt-4 leading-relaxed">
+                  <p className="text-sm text-slate-400 mt-4 mb-5 leading-relaxed">
                     {t(
                       "ai_chat.empty_state",
-                      "Ask me anything about your course — I'm here to help you understand it."
+                      "Ask me anything about your course — or try one of these:"
                     )}
                   </p>
+
+                  <div className="flex flex-col gap-2 w-full">
+                    {quickQA.map((qa, i) => (
+                      <button
+                        key={i}
+                        onClick={() => handleQuickReply(qa)}
+                        className="text-left text-xs text-slate-300 bg-[#232529] border border-slate-800
+                                   hover:border-indigo-500/60 hover:text-white rounded-xl px-3.5 py-2.5 transition"
+                      >
+                        {qa.q}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {messages.map((msg, i) => (
-                <div
-                  key={i}
-                  className={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : ""}`}
-                >
-                  {msg.role === "assistant" && <Avatar />}
-                  <div
-                    className={`max-w-[75%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed
-                      ${
-                        msg.role === "user"
-                          ? "bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-br-md"
-                          : msg.isError
-                          ? "bg-red-500/10 border border-red-500/30 text-red-300 rounded-bl-md"
-                          : "bg-[#232529] border border-slate-800 text-slate-200 rounded-bl-md"
-                      }`}
-                  >
-                    {msg.content}
+                <div key={i}>
+                  <div className={`flex gap-2.5 ${msg.role === "user" ? "flex-row-reverse" : ""}`}>
+                    {msg.role === "assistant" && <Avatar />}
+                    <div
+                      className={`max-w-[75%] rounded-2xl px-3.5 py-2.5 text-sm leading-relaxed
+                        ${
+                          msg.role === "user"
+                            ? "bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-br-md"
+                            : msg.isError
+                            ? "bg-red-500/10 border border-red-500/30 text-red-300 rounded-bl-md"
+                            : "bg-[#232529] border border-slate-800 text-slate-200 rounded-bl-md"
+                        }`}
+                    >
+                      {msg.content}
+                    </div>
                   </div>
+
+                  {msg.needsSubscription && (
+                    <div className="flex justify-start mt-2 ml-[42px]">
+                      <button
+                        onClick={goToSubscription}
+                        className="text-xs font-semibold text-white bg-gradient-to-br from-indigo-600 to-purple-600
+                                   rounded-lg px-3.5 py-2 shadow-md hover:opacity-90 transition"
+                      >
+                        {t("ai_chat.subscribe_cta", "See subscription plans")}
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))}
 

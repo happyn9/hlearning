@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "/api", 
+  baseURL: "/api",
   withCredentials: true,
 });
 
@@ -23,7 +23,10 @@ api.interceptors.response.use(
       error.response?.data?.message ||
       error.message ||
       "Request failed";
-    return Promise.reject(new Error(message));
+
+    const err = new Error(message);
+    err.status = error.response?.status;
+    return Promise.reject(err);
   }
 );
 
