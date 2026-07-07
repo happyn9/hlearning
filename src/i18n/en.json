@@ -328,6 +328,13 @@
   "resendError": "Failed to resend.",
   "spamNote": "Check your spam folder if the message doesn't show up within a few minutes."
 },
+"offline": {
+  "title": "No connection",
+  "description": "Check your internet connection and try again. Some pages remain available offline.",
+  "retry": "Try again",
+  "checking": "Checking...",
+  "searching": "Looking for a connection…"
+},
   "chatbot": {
     "welcome": "👋 Welcome to Avila AI.\nYour intelligent learning assistant.",
     "subtitle": "Smart Assistant",

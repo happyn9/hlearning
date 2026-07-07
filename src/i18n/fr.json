@@ -311,6 +311,13 @@
       "t4Quote": "Mon certificat m'a vraiment aidé en entretien."
     }
   },
+"offline": {
+  "title": "Pas de connexion",
+  "description": "Vérifie ta connexion internet et réessaie. Certaines pages restent disponibles hors ligne.",
+  "retry": "Réessayer",
+  "checking": "Vérification...",
+  "searching": "Recherche de connexion…"
+},
 "otp": {
   "title": "Vérifiez votre boîte mail",
   "subtitlePrefix": "Nous avons envoyé un code à 6 chiffres à",

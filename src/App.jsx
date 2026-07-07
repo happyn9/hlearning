@@ -19,80 +19,71 @@ import PaymentCallback from "./Pages/PaymentCallback";
 import Dashboardtuition from "./Pages/Tuition/dash/Dashboardtuition";
 import Hblog from "./Pages/Hblog";
 import PwaBanner from "./Components/PwaBanner";
+import OfflineScreen from "./Components/OfflineScreen";
 
 function App() {
-
-
   return (
-    <div>
-      <Toaster position="top-right" />
-      <PwaBanner />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/hblog" element={<Hblog />} />
-        <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
+    <OfflineScreen>
+      <div>
+        <Toaster position="top-right" />
+        <PwaBanner />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/hblog" element={<Hblog />} />
+          <Route path="/teacher/dashboard" element={<TeacherDashboard />} />
 
-        <Route path="/auth" element={<Form />} />
-        <Route path="/workspace/onboarding" element={<WorkspaceOnboarding />} />
+          <Route path="/auth" element={<Form />} />
+          <Route path="/workspace/onboarding" element={<WorkspaceOnboarding />} />
 
-        <Route path="/workspace/:id" element={<WorkspaceLayout />} />
-        <Route path="/workspace" element={<WorkspaceGate />} />
-        <Route path="/tuition_dashboard/:label/hlearning" element={<Dashboardtuition />} />
-        <Route path="/payment/callback" element={<PaymentCallback />} />
-        <Route path="/myprofile" element={<ProfilePage />} />
+          <Route path="/workspace/:id" element={<WorkspaceLayout />} />
+          <Route path="/workspace" element={<WorkspaceGate />} />
+          <Route path="/tuition_dashboard/:label/hlearning" element={<Dashboardtuition />} />
+          <Route path="/payment/callback" element={<PaymentCallback />} />
+          <Route path="/myprofile" element={<ProfilePage />} />
 
-        <Route
-          path="/admin/dashboard"
-          element={
-           <ProtectedRoute role="admin">
-            <AdminDashboard />
-           </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/mydashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/mydashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/onboarding"
-          element={
-            <ProtectedRoute>
-              <Onboarding />
-            </ProtectedRoute>
-          }
-        />
+          <Route
+            path="/onboarding"
+            element={
+              <ProtectedRoute>
+                <Onboarding />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/course/info/:id"
-          element={
-              <CourseInfo />
-          }
-        />
+          <Route path="/course/info/:id" element={<CourseInfo />} />
 
-        <Route
-          path="/tuition/learning"
-          element={
-              <TuitionDash />
-          }
-        />
+          <Route path="/tuition/learning" element={<TuitionDash />} />
 
-        <Route
-          path="/course/:id"
-          element={
-            <ProtectedRoute>
-              <Course />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </div>
+          <Route
+            path="/course/:id"
+            element={
+              <ProtectedRoute>
+                <Course />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </OfflineScreen>
   );
 }
 
