@@ -6,6 +6,7 @@ import { useUser } from "../../context/UserContext";
 import OTPModal from "./OTPModal";
 import { useGoogleLogin } from "@react-oauth/google";
 import { useTranslation } from "react-i18next";
+import HLearningMark from "../Home/HLearningMark";
 
 const INITIAL_SKELETON_DURATION = 800;
 
@@ -224,7 +225,8 @@ export default function Form() {
 
         {/* ================= RIGHT — AUTH PANEL ================= */}
         <div className="flex-1 flex flex-col min-h-full bg-[#141414]">
-          <header className="p-4 sm:p-6 lg:hidden">
+          <header className="p-4 flex items-center gap-2 sm:p-6 lg:hidden">
+            <HLearningMark />
             <h1 className="text-xl sm:text-2xl font-bold text-white">H-learning</h1>
           </header>
 
