@@ -136,7 +136,7 @@ export default function Form() {
   ];
 
   return (
-    <div className="min-h-screen w-full bg-black flex items-center justify-center p-3 sm:p-6 lg:p-10">
+    <div className="min-h-screen lg:min-h-[90%] w-full bg-black flex items-center justify-center p-3 sm:p-6 lg:p-10">
       {/* injecte le keyframe marquee une seule fois */}
       <style>{`
         @keyframes hlearning-marquee {
