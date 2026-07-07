@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, color } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { Sparkles, X, Send } from "lucide-react";
@@ -50,6 +50,9 @@ const QUICK_QA = {
 };
 
 function ThinkingAvatar() {
+  const COLORS = {
+  pink: "#F472B6",
+};
   return (
     <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
       {[0, 1].map((i) => (
@@ -60,7 +63,7 @@ function ThinkingAvatar() {
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut", delay: i * 0.8 }}
         />
       ))}
-      <div className="w-full h-full rounded-full bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center">
+      <div style={{backgroundColor:color.pink}} className="w-full h-full rounded-full flex items-center justify-center">
         <Sparkles size={14} className="text-white" />
       </div>
     </div>
