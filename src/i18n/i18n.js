@@ -34,13 +34,12 @@ const i18nReady = i18n.use(initReactI18next).init({
 });
 
 /* ================= SYNC BACKEND (langue -> emails/push) ================= */
-// N'envoie la requête que si l'utilisateur est connecté (sinon 401 inutile).
-// L'échec de la synchro ne doit jamais casser le changement de langue côté
-// UI : on log juste un warning.
+// L'auth se fait via un cookie httponly (access_token), pas via
+// localStorage — donc pas de check de token ici, JS ne peut de toute façon
+// pas le lire. Le cookie part automatiquement grâce à withCredentials.
+// Si l'utilisateur n'est pas connecté, le backend renverra un 401, géré
+// silencieusement ci-dessous sans casser le changement de langue côté UI.
 export const syncLanguageWithBackend = async (lang) => {
-  const token = localStorage.getItem("token");
-  if (!token) return;
-
   try {
     await api.patch("/api/users/me/language", { language: lang });
   } catch (err) {
