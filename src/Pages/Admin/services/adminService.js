@@ -1,6 +1,5 @@
 import api from "../../../services/api";
 
-
 export const adminService = {
 
   /* ================= PROGRAM ================= */
@@ -12,10 +11,19 @@ export const adminService = {
   /* ================= CENTER ================= */
   getCenters: () => api.get("/admin/centers"),
   createCenter: (data) => api.post("/admin/centers", data),
+  updateCenter: (centerId, data) => api.put(`/admin/centers/${centerId}`, data),
+  deleteCenter: (centerId) => api.delete(`/admin/centers/${centerId}`),
 
   /* ================= TEACHER ================= */
   getTeachers: () => api.get("/admin/teachers"),
   createTeacher: (data) => api.post("/admin/teachers", data),
+  updateTeacher: (teacherId, data) => api.put(`/admin/teachers/${teacherId}`, data),
+  deleteTeacher: (teacherId) => api.delete(`/admin/teachers/${teacherId}`),
+
+  /* ================= STUDENTS ================= */
+  getStudents: () => api.get("/admin/students"),
+  changeStudentCenter: (studentId, centerId) =>
+    api.put(`/admin/students/${studentId}/center`, { center_id: centerId }),
 
   /* ================= COURSE ================= */
   createCourse: async (courseData, pin) =>
@@ -32,6 +40,9 @@ export const adminService = {
   /* ================= LESSON ================= */
   createLesson: (chapterId, data) =>
     api.post(`/admin/chapters/${chapterId}/lessons`, data),
+
+  /* ================= NOTIFICATIONS ================= */
+  broadcastNotification: (data) => api.post("/api/notifications/broadcast", data),
 
   /* ================= PIN ================= */
   updatePin: (data) => api.put("/admin/update-pin", data),

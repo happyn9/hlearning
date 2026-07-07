@@ -10,6 +10,8 @@ import ContentSection from "./sections/ContentSection";
 import SettingsSection from "./sections/SettingsSection";
 import CenterSection from "./sections/CenterSection";
 import TeacherSection from "./sections/TeacherSection";
+import StudentSection from "./sections/StudentSection";
+import NotificationSection from "./sections/NotificationSection";
 import toast from "react-hot-toast";
 import useAdminPin from "./hooks/useAdminPin";
 
@@ -24,6 +26,7 @@ export default function AdminDashboard() {
   const [chapters, setChapters] = useState([]);
   const [centers, setCenters] = useState([]);
   const [teachers, setTeachers] = useState([]);
+  const [students, setStudents] = useState([]);
 
   const [programData, setProgramData] = useState({});
   const [courseData, setCourseData] = useState({});
@@ -93,7 +96,6 @@ export default function AdminDashboard() {
   }
 
   async function createChapter() {
-    // ✅ Validation minimale avant submit pour éviter un 422 muet
     if (!chapterData.course_id || !chapterData.title) {
       return toast.error("Sélectionnez un cours et donnez un titre au chapitre");
     }
@@ -109,9 +111,6 @@ export default function AdminDashboard() {
   }
 
   async function createLesson() {
-    // ✅ FIX: LessonCreate exige title + type (chapter_id vient de l'URL).
-    // video_url est désormais optionnel côté backend (voir lesson.py),
-    // donc seuls title/type/chapter_id sont bloquants ici.
     if (!lessonData.chapter_id) {
       return toast.error("Sélectionnez un chapitre");
     }
@@ -178,12 +177,25 @@ export default function AdminDashboard() {
         )}
 
         {active === "centers" && (
-  <CenterSection setCenters={setCenters} />
-)}
+          <CenterSection setCenters={setCenters} />
+        )}
 
-{active === "teachers" && (
-  <TeacherSection setTeachers={setTeachers} />
-)}
+        {active === "teachers" && (
+          <TeacherSection setTeachers={setTeachers} />
+        )}
+
+        {active === "students" && (
+          <StudentSection
+            students={students}
+            setStudents={setStudents}
+            centers={centers}
+            setCenters={setCenters}
+          />
+        )}
+
+        {active === "notifications" && (
+          <NotificationSection centers={centers} setCenters={setCenters} />
+        )}
       </main>
 
       <PinModal

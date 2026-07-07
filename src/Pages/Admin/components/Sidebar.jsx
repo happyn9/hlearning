@@ -6,7 +6,9 @@ import {
   Users,
   Shield,
   Settings,
-  Building2
+  Building2,
+  GraduationCap,
+  Bell
 } from "lucide-react";
 
 import NavIcon from "./NavIcon";
@@ -38,8 +40,16 @@ export default function Sidebar({
       icon: <Users size={18} />
     },
     {
+      id: "students",
+      icon: <GraduationCap size={18} />
+    },
+    {
       id: "centers",
       icon: <Building2 size={18} />
+    },
+    {
+      id: "notifications",
+      icon: <Bell size={18} />
     },
   ];
 
