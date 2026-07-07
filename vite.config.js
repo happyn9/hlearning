@@ -33,6 +33,12 @@ export default defineConfig({
         ],
       },
       workbox: {
+        // Filet de secours pour TOUTE navigation qui échoue :
+        // on sert l'app shell, pas une page dédiée.
+        // C'est ça qui permet à React Router de reprendre la main
+        // après un redirect, même hors ligne ou en cache froid.
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'image',
@@ -73,12 +79,12 @@ export default defineConfig({
             handler: 'NetworkFirst',
             options: {
               cacheName: 'pages-cache',
-              networkTimeoutSeconds: 3,
+              // 3s était trop court — un cold start Render ou un
+              // réseau moyen suffit à déclencher le fallback à tort.
+              networkTimeoutSeconds: 8,
             },
           },
         ],
-        navigateFallback: '/offline.html',
-        navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
       },
       devOptions: {
