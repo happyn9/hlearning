@@ -4,7 +4,7 @@ import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowUpRight, BookOpen, GraduationCap, X, Sparkles,
-  Send, ChevronRight, ChevronDown, RotateCcw, Copy, Check, Clock, Globe2,
+  Send, ChevronRight, ChevronDown, RotateCcw, Copy, Check, Clock, Globe2, Award,
 } from "lucide-react";
 import api from "../services/api"; // adapte le chemin si besoin
 
@@ -16,7 +16,7 @@ const injectStyles = () => {
   const s = document.createElement("style");
   s.id = "courses-light-styles";
   s.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Inter:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Inter:wght@400;500;600;700;800&display=swap');
     .csl-serif { font-family: 'Playfair Display', Georgia, serif; }
     .csl-sans  { font-family: 'Inter', system-ui, sans-serif; }
     .no-scrollbar::-webkit-scrollbar { display: none; }
@@ -29,16 +29,11 @@ const injectStyles = () => {
     @keyframes dotBounce { 0%,100%{transform:translateY(0);opacity:.35} 50%{transform:translateY(-4px);opacity:1} }
     .csl-pulse { animation: pulseRing 1.8s ease-out infinite; }
     @keyframes pulseRing { 0%{box-shadow:0 0 0 0 rgba(34,197,94,0.45)} 100%{box-shadow:0 0 0 8px rgba(34,197,94,0)} }
-    .csl-shimmer {
-      background: linear-gradient(110deg, #EEF2FF 8%, #F5F3FF 18%, #EEF2FF 33%);
-      background-size: 200% 100%;
-      animation: shimmer 2.2s linear infinite;
-    }
-    @keyframes shimmer { to { background-position-x: -200%; } }
-    .csl-mesh {
-      background:
-        radial-gradient(600px circle at 0% 0%, rgba(99,102,241,0.08), transparent 45%),
-        radial-gradient(500px circle at 100% 0%, rgba(168,85,247,0.06), transparent 45%);
+    .csl-float { animation: floaty 6s ease-in-out infinite; }
+    @keyframes floaty { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    .csl-grain::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
     }
   `;
   document.head.appendChild(s);
@@ -81,50 +76,7 @@ function ThinkingDots() {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   COURSE INFO CONTENT (partagé desktop/mobile)
-───────────────────────────────────────────────────────────── */
-function CourseInfoContent({ course, t }) {
-  const facts = [
-    { icon: GraduationCap, label: t("courses.modal.institution", "Institution"), value: course.school },
-    { icon: BookOpen,      label: t("courses.modal.level", "Level"),             value: t("courses.modal.levelValue", "Bachelor / Master") },
-    { icon: Clock,         label: t("courses.modal.duration", "Duration"),       value: t("courses.modal.durationValue", "12 – 24 months") },
-    { icon: Globe2,        label: t("courses.modal.format", "Format"),           value: t("courses.modal.formatValue", "100% Online") },
-  ];
-
-  return (
-    <>
-      <p className="text-[10px] font-bold tracking-[0.16em] uppercase text-indigo-500 mb-3">
-        {t("courses.modal.about", "About")}
-      </p>
-      <p className="text-[#4B5563] text-[13.5px] leading-relaxed mb-6">
-        {t("courses.modal.description", { program: course.program, school: course.school })}
-      </p>
-
-      <div className="grid grid-cols-2 md:grid-cols-1 gap-2.5 md:gap-2.5">
-        {facts.map(({ icon: Icon, label, value }) => (
-          <div
-            key={label}
-            className="flex items-center gap-2.5 md:gap-3 bg-[#F9FAFB] rounded-xl px-3 py-2.5 md:py-3 border border-black/[0.04]"
-          >
-            <div
-              className="w-7 h-7 md:w-8 md:h-8 rounded-lg flex items-center justify-center shrink-0"
-              style={{ background: "linear-gradient(135deg,#EEF2FF,#F5F3FF)" }}
-            >
-              <Icon size={13} className="text-indigo-500" />
-            </div>
-            <div className="min-w-0">
-              <p className="text-[10px] text-[#9CA3AF] leading-tight">{label}</p>
-              <p className="text-[12.5px] md:text-sm font-semibold text-[#0F0F1A] truncate">{value}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-    </>
-  );
-}
-
-/* ─────────────────────────────────────────────────────────────
-   COURSE MODAL — centered card on desktop, full sheet on mobile
+   COURSE MODAL — FULL SCREEN, XXL DESIGN
 ───────────────────────────────────────────────────────────── */
 function CourseModal({ course, onClose }) {
   const { t, i18n } = useTranslation();
@@ -135,8 +87,10 @@ function CourseModal({ course, onClose }) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [copiedId, setCopiedId] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
   const scrollRef = useRef(null);
   const inputRef = useRef(null);
+  const bodyRef = useRef(null);
 
   const lang = i18n.language?.startsWith("fr") ? "fr" : "en";
 
@@ -147,6 +101,13 @@ function CourseModal({ course, onClose }) {
     t("courses.modal.topic4"),
     t("courses.modal.topic5", { school: course.school }),
     t("courses.modal.topic6"),
+  ];
+
+  const facts = [
+    { icon: GraduationCap, label: t("courses.modal.institution", "Institution"), value: course.school },
+    { icon: BookOpen,      label: t("courses.modal.level", "Level"),             value: t("courses.modal.levelValue", "Bachelor / Master") },
+    { icon: Clock,         label: t("courses.modal.duration", "Duration"),       value: t("courses.modal.durationValue", "12 – 24 months") },
+    { icon: Globe2,        label: t("courses.modal.format", "Format"),           value: t("courses.modal.formatValue", "100% Online") },
   ];
 
   useEffect(() => {
@@ -163,6 +124,8 @@ function CourseModal({ course, onClose }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [onClose]);
+
+  const handleScroll = (e) => setScrolled(e.target.scrollTop > 20);
 
   const startChat = () => {
     setPhase("chat");
@@ -227,83 +190,91 @@ function CourseModal({ course, onClose }) {
 
   return (
     <motion.div
-      className="csl-sans fixed inset-0 z-[9999] flex items-end sm:items-center justify-center sm:p-6"
+      className="csl-sans fixed inset-0 z-[9999] bg-[#0B0C10] flex flex-col overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
+      transition={{ duration: 0.25 }}
     >
-      {/* Overlay */}
+      {/* ── FLOATING TOP BAR ── */}
       <motion.div
-        className="absolute inset-0 bg-[#0F0F1A]/70 backdrop-blur-md"
-        onClick={onClose}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-      />
-
-      {/* Card */}
-      <motion.div
-        className="csl-mesh relative w-full sm:max-w-[960px] h-[94vh] sm:h-[86vh] max-h-[860px] bg-[#F7F6F3] sm:rounded-[28px] rounded-t-[28px] border border-black/[0.06] shadow-[0_40px_100px_rgba(0,0,0,0.35)] flex flex-col overflow-hidden"
-        initial={{ y: 40, opacity: 0, scale: 0.98 }}
-        animate={{ y: 0, opacity: 1, scale: 1 }}
-        exit={{ y: 24, opacity: 0, scale: 0.98 }}
-        transition={{ type: "spring", stiffness: 300, damping: 28 }}
+        className="absolute top-0 left-0 right-0 z-30 flex items-center justify-between px-5 sm:px-8 lg:px-12 pt-5 sm:pt-6 transition-all duration-300"
+        style={{
+          background: scrolled ? "linear-gradient(to bottom, rgba(11,12,16,0.85), transparent)" : "transparent",
+          paddingBottom: scrolled ? "20px" : "0px",
+        }}
       >
-        {/* Mobile drag handle */}
-        <div className="sm:hidden flex justify-center pt-2.5 pb-0 shrink-0 relative z-20">
-          <div className="w-10 h-1 rounded-full bg-black/15" />
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.2em] uppercase text-white/70 bg-white/10 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full">
+            <span className="w-3.5 h-[1.5px] bg-indigo-300" />
+            {course.program}
+          </span>
         </div>
+        <button
+          onClick={onClose}
+          className="w-10 h-10 sm:w-11 sm:h-11 rounded-full flex items-center justify-center border border-white/15 bg-white/10 text-white backdrop-blur-md hover:bg-white/20 active:scale-95 transition-all"
+          aria-label={t("courses.modal.close", "Close")}
+        >
+          <X size={18} />
+        </button>
+      </motion.div>
 
-        {/* ── HERO BAND ── */}
-        <div className="relative h-[150px] sm:h-[190px] shrink-0 overflow-hidden">
-          <img
-            src={`${course.image}?auto=format&w=1400&q=80`}
+      {/* ── SCROLLABLE BODY ── */}
+      <div
+        ref={bodyRef}
+        onScroll={handleScroll}
+        className="flex-1 min-h-0 overflow-y-auto no-scrollbar"
+      >
+        {/* ── XXL HERO ── */}
+        <div className="relative h-[46vh] sm:h-[52vh] lg:h-[58vh] min-h-[340px] w-full overflow-hidden csl-grain">
+          <motion.img
+            src={`${course.image}?auto=format&w=1800&q=85`}
             alt={course.title}
             className="w-full h-full object-cover"
+            initial={{ scale: 1.15 }}
+            animate={{ scale: 1.05 }}
+            transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
           />
           <div
             className="absolute inset-0"
-            style={{ background: "linear-gradient(to bottom, rgba(15,15,26,0.1) 0%, rgba(15,15,26,0.35) 55%, rgba(15,15,26,0.88) 100%)" }}
+            style={{ background: "linear-gradient(to bottom, rgba(11,12,16,0.15) 0%, rgba(11,12,16,0.25) 40%, rgba(11,12,16,0.75) 78%, #0B0C10 100%)" }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{ background: "radial-gradient(ellipse 900px 500px at 15% 100%, rgba(99,102,241,0.35), transparent 70%)" }}
           />
 
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full flex items-center justify-center border border-white/20 bg-black/30 text-white backdrop-blur-md hover:bg-black/50 active:scale-95 transition-all z-10"
-            aria-label={t("courses.modal.close", "Close")}
-          >
-            <X size={16} />
-          </button>
-
-          <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-8 pb-4 sm:pb-5">
-            <span className="inline-flex items-center gap-1.5 text-[10px] font-bold tracking-[0.16em] uppercase text-indigo-300 mb-1.5">
-              <span className="w-4 h-[1.5px] bg-indigo-300/70" />
-              {course.program}
-            </span>
-            <h2 className="csl-serif text-white text-[19px] sm:text-[26px] font-bold leading-[1.15] mb-1 max-w-[560px]">
-              {course.title}
-            </h2>
-            <div className="flex items-center gap-2 text-white/75 text-[11.5px] sm:text-[12.5px]">
-              <GraduationCap size={12} />
-              <span>{course.school}</span>
-              <span className="w-1 h-1 rounded-full bg-white/40" />
-              <BookOpen size={11} />
-              <span>{t("courses.modal.online", "Online")}</span>
-            </div>
+          <div className="absolute bottom-0 left-0 right-0 px-5 sm:px-8 lg:px-12 pb-8 sm:pb-10 lg:pb-14">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.15, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+            >
+              <div className="flex items-center gap-2 text-white/60 text-[11px] sm:text-[12px] font-semibold tracking-[0.1em] uppercase mb-3 sm:mb-4">
+                <GraduationCap size={13} />
+                <span>{course.school}</span>
+                <span className="w-1 h-1 rounded-full bg-white/40" />
+                <BookOpen size={12} />
+                <span>{t("courses.modal.online", "Online")}</span>
+              </div>
+              <h2 className="csl-serif text-white text-[34px] sm:text-[48px] lg:text-[64px] font-black leading-[0.98] tracking-[-0.02em] max-w-[900px]">
+                {course.title}
+              </h2>
+            </motion.div>
           </div>
         </div>
 
         {/* ── MOBILE INFO ACCORDION ── */}
-        <div className="md:hidden shrink-0 border-b border-black/[0.06] bg-white">
+        <div className="lg:hidden border-b border-white/[0.06] bg-[#0B0C10]">
           <button
             onClick={() => setMobileInfoOpen((v) => !v)}
-            className="w-full flex items-center justify-between px-5 py-3"
+            className="w-full flex items-center justify-between px-5 sm:px-8 py-4"
           >
-            <span className="text-[12.5px] font-bold text-[#0F0F1A]">
+            <span className="text-[12.5px] font-bold text-white/90 tracking-wide uppercase">
               {t("courses.modal.about", "About")} {t("courses.modal.thisProgram", "this program")}
             </span>
             <motion.span animate={{ rotate: mobileInfoOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              <ChevronDown size={16} className="text-[#9CA3AF]" />
+              <ChevronDown size={17} className="text-white/40" />
             </motion.span>
           </button>
           <AnimatePresence initial={false}>
@@ -312,99 +283,144 @@ function CourseModal({ course, onClose }) {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: "auto", opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.22, ease: "easeInOut" }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <div className="px-5 pb-5">
-                  <CourseInfoContent course={course} t={t} />
+                <div className="px-5 sm:px-8 pb-6">
+                  <p className="text-white/50 text-[13.5px] leading-relaxed mb-5">
+                    {t("courses.modal.description", { program: course.program, school: course.school })}
+                  </p>
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {facts.map(({ icon: Icon, label, value }) => (
+                      <div key={label} className="flex items-center gap-2.5 bg-white/[0.04] border border-white/[0.06] rounded-xl px-3 py-2.5">
+                        <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0 bg-indigo-500/15">
+                          <Icon size={13} className="text-indigo-300" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-[9.5px] text-white/35 leading-tight">{label}</p>
+                          <p className="text-[12px] font-semibold text-white truncate">{value}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </motion.div>
             )}
           </AnimatePresence>
         </div>
 
-        {/* ── BODY ── */}
-        <div className="flex-1 min-h-0 flex flex-col md:flex-row overflow-hidden relative z-10">
+        {/* ── MAIN GRID ── */}
+        <div className="max-w-[1400px] mx-auto px-5 sm:px-8 lg:px-12 py-8 sm:py-12 grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-8 lg:gap-14">
 
-          {/* LEFT — course info (desktop only) */}
-          <div className="hidden md:flex flex-col w-[290px] lg:w-[310px] shrink-0 border-r border-black/[0.06] bg-white/70 backdrop-blur-sm overflow-y-auto no-scrollbar p-6 lg:p-7">
-            <CourseInfoContent course={course} t={t} />
-
-            <button
-              onClick={startChat}
-              className="w-full mt-6 py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
-              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
-            >
-              <Sparkles size={14} /> {t("courses.modal.exploreWithAI", "Explore with AI")}
-            </button>
-
-            <div className="mt-auto pt-6 hidden lg:block">
-              <div className="flex items-center gap-2 text-[11px] text-[#9CA3AF]">
-                <Check size={12} className="text-green-500" />
-                {t("courses.modal.certAvailable", "Certificate available")}
+          {/* LEFT — sticky sidebar (desktop) */}
+          <div className="hidden lg:block">
+            <div className="sticky top-8 space-y-6">
+              <div>
+                <p className="text-[10px] font-bold tracking-[0.22em] uppercase text-indigo-400 mb-3">
+                  {t("courses.modal.about", "About this program")}
+                </p>
+                <p className="text-white/55 text-[15px] leading-relaxed">
+                  {t("courses.modal.description", { program: course.program, school: course.school })}
+                </p>
               </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                {facts.map(({ icon: Icon, label, value }) => (
+                  <div
+                    key={label}
+                    className="bg-white/[0.04] border border-white/[0.07] rounded-2xl p-4 hover:bg-white/[0.06] transition-colors"
+                  >
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 bg-gradient-to-br from-indigo-500/20 to-purple-500/15">
+                      <Icon size={16} className="text-indigo-300" />
+                    </div>
+                    <p className="text-[10px] text-white/35 uppercase tracking-wide mb-1">{label}</p>
+                    <p className="text-[13.5px] font-bold text-white leading-snug">{value}</p>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center gap-2.5 text-white/40 text-[12px] pt-1">
+                <Award size={14} className="text-amber-400/80" />
+                {t("courses.modal.certAvailable", "Certificate of completion available")}
+              </div>
+
+              <button
+                onClick={startChat}
+                className="w-full py-3.5 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(99,102,241,0.4)] hover:opacity-90 active:scale-[0.98] transition-all"
+                style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+              >
+                <Sparkles size={15} /> {t("courses.modal.exploreWithAI", "Explore with AI")}
+              </button>
             </div>
           </div>
 
           {/* RIGHT — intro OR chat */}
-          <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+          <div className="min-h-[70vh] lg:min-h-[75vh] flex flex-col">
             <AnimatePresence mode="wait">
 
               {/* ── INTRO PHASE ── */}
               {phase === "intro" && (
                 <motion.div
                   key="intro"
-                  className="flex-1 min-h-0 flex flex-col items-center justify-center px-4 sm:px-6 py-5 sm:py-8 overflow-y-auto no-scrollbar"
-                  initial={{ opacity: 0, y: 12 }}
+                  className="flex-1 flex flex-col justify-center"
+                  initial={{ opacity: 0, y: 16 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.25 }}
+                  exit={{ opacity: 0, y: -12 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  <div className="w-full max-w-[480px]">
-                    <div className="bg-white rounded-2xl border border-black/[0.06] p-5 sm:p-7 shadow-[0_8px_40px_rgba(0,0,0,0.06)] mb-5">
-                      <div className="flex items-center gap-3 mb-4">
+                  <div className="w-full max-w-[640px]">
+                    <div
+                      className="relative rounded-3xl p-7 sm:p-10 mb-7 overflow-hidden"
+                      style={{
+                        background: "linear-gradient(135deg, rgba(99,102,241,0.14), rgba(168,85,247,0.08))",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                      }}
+                    >
+                      <div className="csl-float absolute -top-10 -right-10 w-40 h-40 rounded-full bg-indigo-500/10 blur-3xl" />
+
+                      <div className="relative flex items-center gap-4 mb-6">
                         <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center shrink-0"
+                          className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center shrink-0 shadow-lg"
                           style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
                         >
-                          <Sparkles size={16} color="#fff" />
+                          <Sparkles size={20} color="#fff" />
                         </div>
                         <div>
-                          <p className="text-[#0F0F1A] font-bold text-[13.5px]">
+                          <p className="text-white font-bold text-[17px] sm:text-[19px]">
                             {t("courses.modal.learnWithAI", "Learn with AI")}
                           </p>
-                          <p className="text-[#9CA3AF] text-[11.5px] flex items-center gap-1.5">
-                            <span className="w-[6px] h-[6px] rounded-full bg-green-500 csl-pulse" />
+                          <p className="text-white/45 text-[12.5px] sm:text-[13px] flex items-center gap-1.5">
+                            <span className="w-[6px] h-[6px] rounded-full bg-green-400 csl-pulse" />
                             {t("courses.modal.aiSubtitle", "Avila AI · Answers instantly")}
                           </p>
                         </div>
                       </div>
 
-                      <p className="text-[#374151] text-[13px] sm:text-[13.5px] leading-relaxed mb-5">
+                      <p className="relative text-white/65 text-[14.5px] sm:text-[15.5px] leading-relaxed mb-7 max-w-[480px]">
                         {t("courses.modal.aiIntro", "I can help you explore this course, answer questions about career paths, prerequisites, enrollment, and much more.")}
                       </p>
 
                       <button
                         onClick={startChat}
-                        className="w-full py-3 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
+                        className="relative w-full sm:w-auto px-8 py-3.5 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(99,102,241,0.4)] hover:opacity-90 active:scale-[0.98] transition-all"
                         style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
                       >
-                        <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
+                        <Sparkles size={15} /> {t("courses.modal.startWithAI", "Start with AI")}
                       </button>
                     </div>
 
-                    <p className="text-[10.5px] font-bold tracking-[0.14em] uppercase text-[#9CA3AF] mb-2.5 pl-1">
+                    <p className="text-[11px] font-bold tracking-[0.18em] uppercase text-white/35 mb-3.5 pl-1">
                       {t("courses.modal.popularQuestions", "Popular questions")}
                     </p>
-                    <div className="flex flex-col gap-2">
-                      {topics.slice(0, 4).map((topic) => (
+                    <div className="grid sm:grid-cols-2 gap-2.5">
+                      {topics.map((topic) => (
                         <button
                           key={topic}
                           onClick={() => { startChat(); setTimeout(() => askAI(topic), 300); }}
-                          className="w-full text-left text-[12.5px] text-[#374151] bg-white border border-black/[0.06] rounded-xl px-3.5 py-2.5 flex items-center justify-between gap-3 hover:border-indigo-300 hover:text-indigo-700 hover:shadow-[0_4px_16px_rgba(99,102,241,0.1)] transition-all group"
+                          className="text-left text-[13px] text-white/70 bg-white/[0.04] border border-white/[0.07] rounded-2xl px-4 py-3.5 flex items-center justify-between gap-3 hover:border-indigo-400/40 hover:bg-white/[0.07] hover:text-white transition-all group"
                         >
-                          <span>{topic}</span>
-                          <ChevronRight size={13} className="text-[#D1D5DB] group-hover:text-indigo-400 group-hover:translate-x-0.5 shrink-0 transition-all" />
+                          <span className="leading-snug">{topic}</span>
+                          <ChevronRight size={14} className="text-white/25 group-hover:text-indigo-300 group-hover:translate-x-0.5 shrink-0 transition-all" />
                         </button>
                       ))}
                     </div>
@@ -416,23 +432,24 @@ function CourseModal({ course, onClose }) {
               {phase === "chat" && (
                 <motion.div
                   key="chat"
-                  className="flex-1 min-h-0 flex flex-col overflow-hidden"
+                  className="flex-1 flex flex-col rounded-3xl overflow-hidden border border-white/[0.07]"
+                  style={{ background: "rgba(255,255,255,0.02)" }}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
+                  transition={{ duration: 0.25 }}
                 >
                   {/* Chat header */}
-                  <div className="flex items-center gap-3 px-4 sm:px-5 py-3 border-b border-black/[0.06] bg-white/90 backdrop-blur-sm shrink-0">
+                  <div className="flex items-center gap-3 px-5 sm:px-6 py-4 border-b border-white/[0.06] bg-white/[0.02] shrink-0">
                     <div
-                      className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                      className="w-9 h-9 rounded-full flex items-center justify-center shrink-0"
                       style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6,#a855f7)" }}
                     >
-                      <Sparkles size={13} color="#fff" />
+                      <Sparkles size={14} color="#fff" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[#0F0F1A] font-bold text-[13px]">Avila AI</p>
-                      <p className="text-[#9CA3AF] text-[11px] flex items-center gap-1.5">
+                      <p className="text-white font-bold text-[13.5px]">Avila AI</p>
+                      <p className="text-white/40 text-[11px] flex items-center gap-1.5">
                         <span
                           className={`inline-block w-[6px] h-[6px] rounded-full ${!loading ? "csl-pulse" : ""}`}
                           style={{ background: loading ? "#a78bfa" : "#22c55e" }}
@@ -444,15 +461,15 @@ function CourseModal({ course, onClose }) {
                     </div>
                     <button
                       onClick={() => setPhase("intro")}
-                      className="ml-auto shrink-0 text-[11px] font-medium text-[#6B7280] hover:text-[#6366f1] flex items-center gap-1 transition-colors px-2 py-1.5 rounded-lg hover:bg-indigo-50"
+                      className="ml-auto shrink-0 text-[11.5px] font-medium text-white/45 hover:text-white flex items-center gap-1.5 transition-colors px-3 py-1.5 rounded-lg hover:bg-white/[0.06]"
                     >
-                      <RotateCcw size={11} />
+                      <RotateCcw size={12} />
                       <span className="hidden sm:inline">{t("courses.modal.newTopic", "New topic")}</span>
                     </button>
                   </div>
 
                   {/* Messages */}
-                  <div className="flex-1 min-h-0 overflow-y-auto no-scrollbar px-3.5 sm:px-5 py-4 sm:py-5 flex flex-col gap-3.5 sm:gap-4 bg-transparent">
+                  <div className="flex-1 overflow-y-auto no-scrollbar px-4 sm:px-6 py-6 flex flex-col gap-4 min-h-[400px]">
                     {messages.map((msg) => (
                       <div
                         key={msg.id}
@@ -468,12 +485,12 @@ function CourseModal({ course, onClose }) {
                             </div>
                           )}
                           <div
-                            className={`max-w-[85%] sm:max-w-[75%] px-4 py-2.5 text-[13px] sm:text-[13.5px] leading-relaxed rounded-2xl ${
+                            className={`max-w-[85%] sm:max-w-[70%] px-4 py-3 text-[13.5px] leading-relaxed rounded-2xl ${
                               msg.sender === "user"
                                 ? "text-white rounded-br-[4px]"
                                 : msg.isError
-                                ? "bg-red-500/10 border border-red-500/30 text-red-600 rounded-bl-[4px]"
-                                : "bg-white border border-black/[0.06] text-[#1A1A2E] rounded-bl-[4px] shadow-[0_1px_6px_rgba(0,0,0,0.05)]"
+                                ? "bg-red-500/10 border border-red-500/25 text-red-300 rounded-bl-[4px]"
+                                : "bg-white/[0.05] border border-white/[0.08] text-white/85 rounded-bl-[4px]"
                             }`}
                             style={msg.sender === "user" ? { background: "linear-gradient(135deg,#4f46e5,#7c3aed)" } : {}}
                           >
@@ -485,7 +502,7 @@ function CourseModal({ course, onClose }) {
                           <div className="pl-9 mt-1">
                             <button
                               onClick={goToSubscription}
-                              className="text-[12px] font-bold text-white rounded-lg px-3.5 py-2 shadow-md hover:opacity-90 active:scale-[0.98] transition-all"
+                              className="text-[12px] font-bold text-white rounded-xl px-4 py-2.5 shadow-lg hover:opacity-90 active:scale-[0.98] transition-all"
                               style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
                             >
                               {t("courses.modal.subscribeCta", "See subscription plans")}
@@ -498,7 +515,7 @@ function CourseModal({ course, onClose }) {
                             <button
                               onClick={() => handleCopy(msg.id, msg.text)}
                               className={`flex items-center gap-1 text-[10.5px] px-2 py-[3px] rounded-md cursor-pointer transition-colors border-none bg-transparent ${
-                                copiedId === msg.id ? "text-indigo-500" : "text-[#9CA3AF] hover:text-[#6B7280]"
+                                copiedId === msg.id ? "text-indigo-300" : "text-white/30 hover:text-white/55"
                               }`}
                             >
                               {copiedId === msg.id ? <Check size={10} /> : <Copy size={10} />}
@@ -519,7 +536,7 @@ function CourseModal({ course, onClose }) {
                         >
                           <Sparkles size={11} color="#fff" />
                         </div>
-                        <div className="bg-white border border-black/[0.06] rounded-2xl rounded-bl-[4px] shadow-[0_1px_6px_rgba(0,0,0,0.05)]">
+                        <div className="bg-white/[0.05] border border-white/[0.08] rounded-2xl rounded-bl-[4px]">
                           <ThinkingDots />
                         </div>
                       </div>
@@ -527,7 +544,7 @@ function CourseModal({ course, onClose }) {
 
                     {messages.length === 1 && !loading && (
                       <div className="csl-bubble-in flex flex-col gap-2 pl-9">
-                        <p className="text-[10px] font-bold tracking-[0.14em] uppercase text-[#9CA3AF]">
+                        <p className="text-[10px] font-bold tracking-[0.16em] uppercase text-white/30">
                           {t("courses.modal.suggestedTopics", "Suggested topics")}
                         </p>
                         <div className="flex flex-wrap gap-2">
@@ -535,7 +552,7 @@ function CourseModal({ course, onClose }) {
                             <button
                               key={topic}
                               onClick={() => askAI(topic)}
-                              className="text-[11.5px] sm:text-[12px] text-[#374151] bg-white border border-black/[0.06] rounded-full px-3.5 py-1.5 hover:border-indigo-300 hover:text-indigo-700 transition-all cursor-pointer font-[inherit] shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+                              className="text-[12px] text-white/65 bg-white/[0.05] border border-white/[0.08] rounded-full px-3.5 py-1.5 hover:border-indigo-400/40 hover:text-white transition-all cursor-pointer font-[inherit]"
                             >
                               {topic}
                             </button>
@@ -548,8 +565,8 @@ function CourseModal({ course, onClose }) {
                   </div>
 
                   {/* Input */}
-                  <div className="shrink-0 px-3.5 sm:px-5 py-3 border-t border-black/[0.06] bg-white pb-[max(0.75rem,env(safe-area-inset-bottom))]">
-                    <div className="flex items-end gap-2 border border-black/[0.08] rounded-[18px] px-3.5 sm:px-4 py-2.5 transition-colors focus-within:border-indigo-400/60 focus-within:ring-2 focus-within:ring-indigo-100 bg-[#F9FAFB]">
+                  <div className="shrink-0 px-4 sm:px-6 py-4 border-t border-white/[0.06] bg-white/[0.02]">
+                    <div className="flex items-end gap-2 border border-white/[0.1] rounded-2xl px-4 py-3 transition-colors focus-within:border-indigo-400/50 bg-white/[0.03]">
                       <textarea
                         ref={inputRef}
                         rows={1}
@@ -562,14 +579,14 @@ function CourseModal({ course, onClose }) {
                         onKeyDown={handleKey}
                         placeholder={t("courses.modal.inputPlaceholder", "Ask your question…")}
                         disabled={loading}
-                        className="flex-1 resize-none outline-none border-none bg-transparent text-[13px] sm:text-[13.5px] leading-[1.5] font-[inherit] text-[#1A1A2E] placeholder:text-[#9CA3AF] max-h-[120px] overflow-y-auto disabled:opacity-50"
+                        className="flex-1 resize-none outline-none border-none bg-transparent text-[13.5px] leading-[1.5] font-[inherit] text-white placeholder:text-white/30 max-h-[120px] overflow-y-auto disabled:opacity-50"
                         style={{ scrollbarWidth: "none" }}
                       />
                       <motion.button
                         whileTap={{ scale: 0.88 }}
                         onClick={() => askAI(input)}
                         disabled={!input.trim() || loading}
-                        className="w-9 h-9 rounded-full flex items-center justify-center border-none cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 shadow-[0_4px_14px_rgba(99,102,241,0.35)] hover:opacity-90 transition-opacity"
+                        className="w-9 h-9 rounded-full flex items-center justify-center border-none cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed shrink-0 shadow-[0_4px_14px_rgba(99,102,241,0.4)] hover:opacity-90 transition-opacity"
                         style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
                         aria-label={t("courses.modal.send", "Send")}
                       >
@@ -582,20 +599,20 @@ function CourseModal({ course, onClose }) {
             </AnimatePresence>
           </div>
         </div>
+      </div>
 
-        {/* Mobile CTA (intro only) */}
-        {phase === "intro" && (
-          <div className="md:hidden shrink-0 px-4 pb-[max(1.1rem,env(safe-area-inset-bottom))] pt-3 border-t border-black/[0.06] bg-white relative z-10">
-            <button
-              onClick={startChat}
-              className="w-full py-3.5 rounded-xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_8px_24px_rgba(99,102,241,0.35)] hover:opacity-90 active:scale-[0.98] transition-all"
-              style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
-            >
-              <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
-            </button>
-          </div>
-        )}
-      </motion.div>
+      {/* Mobile CTA (intro only, fixed bottom) */}
+      {phase === "intro" && (
+        <div className="lg:hidden shrink-0 px-5 pb-[max(1.1rem,env(safe-area-inset-bottom))] pt-3 border-t border-white/[0.06] bg-[#0B0C10]/95 backdrop-blur-md">
+          <button
+            onClick={startChat}
+            className="w-full py-3.5 rounded-2xl text-sm font-bold text-white flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(99,102,241,0.4)] hover:opacity-90 active:scale-[0.98] transition-all"
+            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+          >
+            <Sparkles size={14} /> {t("courses.modal.startWithAI", "Start with AI")}
+          </button>
+        </div>
+      )}
     </motion.div>
   );
 }
@@ -722,12 +739,6 @@ export default function CoursesSection() {
         className="csl-sans"
         style={{ background: "#F7F6F3", color: "#1A1A2E", padding: "56px 20px 64px" }}
       >
-        <style>{`
-          @media (min-width: 768px) {
-            .csl-section-pad { padding: 88px 24px 100px !important; }
-          }
-        `}</style>
-
         <div style={{ maxWidth: 1180, margin: "0 auto" }}>
 
           {/* Header */}
