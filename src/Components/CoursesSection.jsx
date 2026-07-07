@@ -1,10 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowUpRight, BookOpen, GraduationCap, X, Sparkles,
   Send, ChevronRight, RotateCcw, Copy, Check,
 } from "lucide-react";
+import api from "../services/api";// adapte le chemin si besoin
 
 /* ─────────────────────────────────────────────────────────────
    INJECT STYLES
@@ -30,32 +32,22 @@ const injectStyles = () => {
 };
 
 /* ─────────────────────────────────────────────────────────────
-   REAL AI CALL — Anthropic API
+   REAL AI CALL — via ton backend (qui gère la clé Anthropic + le quota)
 ───────────────────────────────────────────────────────────── */
 async function callAI(question, course, language) {
-  const langInstruction = language === "fr"
-    ? "Réponds toujours en français."
-    : "Always reply in English.";
-
-  const systemPrompt = `You are Avila AI, an educational assistant for the h-Learning platform. 
-You help students learn about courses and programs.
-The student is asking about the course: "${course.title}" (${course.program}) at ${course.school}.
-${langInstruction}
-Be concise, helpful, and encouraging. Max 3 short paragraphs.`;
-
-  const response = await fetch("https://api.anthropic.com/v1/messages", {
+  const data = await api("/ai/chat", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-6",
-      max_tokens: 1000,
-      system: systemPrompt,
-      messages: [{ role: "user", content: question }],
-    }),
+    data: {
+      message: question,
+      context: {
+        courseTitle: course.title,
+        program: course.program,
+        school: course.school,
+        language,
+      },
+    },
   });
-
-  const data = await response.json();
-  return data.content?.[0]?.text || "Sorry, I could not get a response.";
+  return data.reply;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -80,6 +72,7 @@ function ThinkingDots() {
 ───────────────────────────────────────────────────────────── */
 function CourseModal({ course, onClose }) {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [phase, setPhase] = useState("intro");
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
@@ -125,13 +118,22 @@ function CourseModal({ course, onClose }) {
     try {
       const reply = await callAI(q, course, lang);
       setMessages((prev) => [...prev, { id: crypto.randomUUID(), sender: "ai", text: reply }]);
-    } catch {
+    } catch (err) {
+      const needsSubscription = err?.status === 402;
+      const text = needsSubscription
+        ? (lang === "fr"
+            ? "Tu as atteint ta limite de questions gratuites ce mois-ci."
+            : "You've reached your free question limit for this month.")
+        : (lang === "fr"
+            ? "Désolé, une erreur s'est produite. Veuillez réessayer."
+            : "Sorry, an error occurred. Please try again.");
+
       setMessages((prev) => [...prev, {
         id: crypto.randomUUID(),
         sender: "ai",
-        text: lang === "fr"
-          ? "Désolé, une erreur s'est produite. Veuillez réessayer."
-          : "Sorry, an error occurred. Please try again.",
+        text,
+        isError: true,
+        needsSubscription,
       }]);
     }
     setLoading(false);
@@ -145,6 +147,11 @@ function CourseModal({ course, onClose }) {
     navigator.clipboard.writeText(text).catch(() => {});
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 1800);
+  };
+
+  const goToSubscription = () => {
+    onClose();
+    navigate("/premium"); // adapte à ta vraie route
   };
 
   const renderText = (text) =>
@@ -356,6 +363,8 @@ function CourseModal({ course, onClose }) {
                           className={`max-w-[78%] px-4 py-2.5 text-[13.5px] leading-relaxed rounded-2xl ${
                             msg.sender === "user"
                               ? "text-white rounded-br-[4px]"
+                              : msg.isError
+                              ? "bg-red-500/10 border border-red-500/30 text-red-600 rounded-bl-[4px]"
                               : "bg-white border border-black/[0.06] text-[#1A1A2E] rounded-bl-[4px] shadow-[0_1px_6px_rgba(0,0,0,0.05)]"
                           }`}
                           style={msg.sender === "user" ? { background: "linear-gradient(135deg,#4f46e5,#7c3aed)" } : {}}
@@ -364,7 +373,19 @@ function CourseModal({ course, onClose }) {
                         </div>
                       </div>
 
-                      {msg.sender === "ai" && msg.id !== "welcome" && (
+                      {msg.needsSubscription && (
+                        <div className="pl-9 mt-1">
+                          <button
+                            onClick={goToSubscription}
+                            className="text-[12px] font-bold text-white rounded-lg px-3.5 py-2 shadow-md hover:opacity-90 transition-opacity"
+                            style={{ background: "linear-gradient(135deg,#6366f1,#8b5cf6)" }}
+                          >
+                            {t("courses.modal.subscribeCta", "See subscription plans")}
+                          </button>
+                        </div>
+                      )}
+
+                      {msg.sender === "ai" && msg.id !== "welcome" && !msg.isError && (
                         <div className="flex items-center gap-1 pl-9">
                           <button
                             onClick={() => handleCopy(msg.id, msg.text)}
