@@ -1,7 +1,48 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Mic, Send, Plus, Paperclip, X, FileText, Image as ImageIcon, Stamp } from "lucide-react";
 import logo from "/src/assets/logo1.png";
-import { generateAIResponse } from "../../Components/ai/aiEngine";
+import api from "../../services/api"; // adapte le chemin si besoin
+
+/* ─────────────────────────────────────────────────────────────
+   Helpers fichiers
+───────────────────────────────────────────────────────────── */
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(",")[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+
+const MAX_FILE_SIZE = 8 * 1024 * 1024; // 8MB, adapte selon ton backend
+
+/* ─────────────────────────────────────────────────────────────
+   Appel réel au backend (qui gère la clé Anthropic + le quota)
+───────────────────────────────────────────────────────────── */
+async function callAvila(message, attachments) {
+  // Encode uniquement les images en base64 pour envoi multimodal.
+  // Les autres fichiers ne sont envoyés qu'en métadonnées (nom/taille) —
+  // à toi d'ajouter l'extraction texte côté backend si besoin (pdf, docx...).
+  const filesPayload = await Promise.all(
+    attachments.map(async (f) => {
+      if (f.isImage && f.raw && f.raw.size <= MAX_FILE_SIZE) {
+        const base64 = await fileToBase64(f.raw);
+        return { name: f.name, type: f.raw.type, isImage: true, data: base64 };
+      }
+      return { name: f.name, size: f.size, isImage: f.isImage };
+    })
+  );
+
+  const data = await api("/ai/chat", {
+    method: "POST",
+    data: {
+      message,
+      attachments: filesPayload,
+    },
+  });
+
+  return data.reply;
+}
 
 export default function ChatPage({ onClose }) {
   const [message, setMessage] = useState("");
@@ -25,6 +66,7 @@ export default function ChatPage({ onClose }) {
       size: f.size,
       isImage: f.type.startsWith("image/"),
       url: f.type.startsWith("image/") ? URL.createObjectURL(f) : null,
+      raw: f,
     }));
     setAttachments((prev) => [...prev, ...mapped]);
     e.target.value = "";
@@ -34,34 +76,35 @@ export default function ChatPage({ onClose }) {
     setAttachments((prev) => prev.filter((a) => a.name !== name));
   };
 
-  const handleSend = () => {
-    if (!message.trim() && attachments.length === 0) return;
+  const handleSend = useCallback(async () => {
+    if ((!message.trim() && attachments.length === 0) || loading) return;
 
     const userText = message;
     const userFiles = attachments;
 
     setStarted(true);
     setLoading(true);
-
-    setMessages((prev) => [
-      ...prev,
-      { role: "user", text: userText, files: userFiles },
-    ]);
-
+    setMessages((prev) => [...prev, { role: "user", text: userText, files: userFiles }]);
     setMessage("");
     setAttachments([]);
 
-    setTimeout(() => {
-      const aiReply = generateAIResponse(userText);
+    try {
+      const reply = await callAvila(userText, userFiles);
+      setMessages((prev) => [...prev, { role: "bot", text: reply }]);
+    } catch (err) {
+      const needsSubscription = err?.status === 402;
+      const text = needsSubscription
+        ? "You've reached your free question limit for this month."
+        : (err?.message || "Sorry, something went wrong. Please try again.");
 
       setMessages((prev) => [
         ...prev,
-        { role: "bot", text: aiReply },
+        { role: "bot", text, isError: true, needsSubscription },
       ]);
-
+    } finally {
       setLoading(false);
-    }, 700);
-  };
+    }
+  }, [message, attachments, loading]);
 
   return (
     <div
@@ -75,7 +118,7 @@ export default function ChatPage({ onClose }) {
     >
       {/* HEADER */}
       <header
-        className="flex items-center justify-between px-6 py-4"
+        className="flex items-center justify-between px-4 sm:px-6 py-4"
         style={{ borderBottom: "1px solid var(--td-border, rgba(245,241,230,0.12))" }}
       >
         <div className="flex items-center gap-3">
@@ -163,10 +206,17 @@ export default function ChatPage({ onClose }) {
                 )}
                 {msg.text && (
                   <div
-                    className="px-4 py-3 rounded-2xl max-w-[80%] text-[14px] leading-relaxed"
+                    className="px-4 py-3 rounded-2xl max-w-[85%] sm:max-w-[80%] text-[14px] leading-relaxed"
                     style={
                       msg.role === "user"
                         ? { background: "var(--td-coral, #ff6b4a)", color: "#11152a", borderBottomRightRadius: 4 }
+                        : msg.isError
+                        ? {
+                            background: "rgba(255,107,74,0.08)",
+                            border: "1px solid rgba(255,107,74,0.3)",
+                            color: "var(--td-coral, #ff6b4a)",
+                            borderBottomLeftRadius: 4,
+                          }
                         : {
                             background: "var(--td-surface, rgba(245,241,230,0.05))",
                             border: "1px solid var(--td-border, rgba(245,241,230,0.12))",
@@ -177,6 +227,19 @@ export default function ChatPage({ onClose }) {
                   >
                     {msg.text}
                   </div>
+                )}
+
+                {msg.needsSubscription && (
+                  <button
+                    onClick={() => {
+                      onClose?.();
+                      window.location.href = "/premium"; // adapte à ta vraie route/router
+                    }}
+                    className="mt-2 px-4 py-2 rounded-full text-[12.5px] font-bold transition-opacity hover:opacity-85"
+                    style={{ background: "var(--td-coral, #ff6b4a)", color: "#11152a" }}
+                  >
+                    See subscription plans
+                  </button>
                 )}
               </div>
             ))}
@@ -243,15 +306,17 @@ export default function ChatPage({ onClose }) {
             <input
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleSend()}
+              onKeyDown={(e) => e.key === "Enter" && !loading && handleSend()}
               placeholder="Ask Avila"
-              className="flex-1 bg-transparent outline-none text-[14px]"
+              disabled={loading}
+              className="flex-1 bg-transparent outline-none text-[14px] disabled:opacity-60"
               style={{ color: "var(--td-text, #f3efe2)" }}
             />
 
             <button
               onClick={handleSend}
-              className="w-8 h-8 rounded-full flex items-center justify-center transition-opacity hover:opacity-85"
+              disabled={loading || (!message.trim() && attachments.length === 0)}
+              className="w-8 h-8 rounded-full flex items-center justify-center transition-opacity hover:opacity-85 disabled:opacity-40 disabled:cursor-not-allowed"
               style={{ background: "var(--td-coral, #ff6b4a)", color: "#11152a" }}
             >
               <Send size={14} />
