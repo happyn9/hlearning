@@ -136,7 +136,7 @@ export default function Form() {
   ];
 
   return (
-    <div className="min-h-screen lg:min-h-[90%] w-full bg-black flex items-center justify-center p-3 sm:p-6 lg:p-10">
+    <div className="h-screen w-full bg-black flex items-center justify-center overflow-hidden p-3 sm:p-6 lg:p-10">
       {/* injecte le keyframe marquee une seule fois */}
       <style>{`
         @keyframes hlearning-marquee {
@@ -152,7 +152,7 @@ export default function Form() {
       `}</style>
 
       {/* ================= CARTE CENTRÉE ================= */}
-      <div className="relative w-full max-w-[1400px] mx-auto rounded-[28px] sm:rounded-[36px] lg:rounded-[40px] overflow-hidden border border-white/[0.07] bg-[#121212] shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)] flex flex-col lg:flex-row min-h-[92vh] lg:min-h-[760px]">
+      <div className="relative w-full max-w-[1400px] mx-auto rounded-[28px] sm:rounded-[36px] lg:rounded-[40px] overflow-hidden border border-white/[0.07] bg-[#121212] shadow-[0_40px_120px_-20px_rgba(0,0,0,0.9)] flex flex-col lg:flex-row h-[90vh] lg:h-[92vh]">
         {/* ================= LEFT — MARKETING PANEL (desktop only) ================= */}
         <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden flex-col items-center justify-center px-10 xl:px-16 py-16 border-r border-white/[0.06]">
           <div
