@@ -8,11 +8,10 @@ import CoursesSection from '../../Components/CoursesSection';
 import WhyChooseSection from '../../Components/WhyChooseSection';
 import Premium from '../../Components/Premium';
 import Footer from '../../Components/Footer';
-import { DollarSign, MessageSquare } from 'lucide-react';
+import { DollarSign } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { Toaster } from 'react-hot-toast';
 import HomeSkeleton from '../../Components/HomeSkeleton';
-import ChatBot from '../../Components/ChatBot';
 import { motion, AnimatePresence } from "framer-motion";
 import Usermodal from '../../Components/Home/Usermodal';
 import CertificateSection from '../../Components/Certificatesection';
@@ -25,8 +24,7 @@ export default function HomePage() {
   const { user, loading } = useUser();
   const connected = Boolean(user);
   const navigate = useNavigate();
-  const [chatbot,setChatbot] =useState(false);
-  const [usermodal,setUsermodal] = useState(false);
+  const [usermodal, setUsermodal] = useState(false);
 
   const premiumRef = useRef(null);
   const watchRef = useRef(null)
@@ -72,30 +70,19 @@ export default function HomePage() {
           },
         }}
       />
-      
+
       {usermodal &&
       <Usermodal  />
       }
 
-      {!chatbot &&
-      <div onClick={()=>setChatbot(true)} className="fixed bottom-6 cursor-pointer right-6 z-50 w-14 h-14 rounded-full
-                   bg-linear-to-tr from-slate-600 to-slate-600
-                   shadow-xl flex items-center justify-center text-white">
-        <MessageSquare className="w-6 h-6" />
-      </div>
-      }
-
       {/* Hero reçoit le handler pour Get Started */}
-      <Hero onModalUser={()=>{setUsermodal(!usermodal)}} onFeedback={()=>setChatbot(true)} onGetStarted={handleGetStarted} onWatch={onWatch} />
+      <Hero onModalUser={()=>{setUsermodal(!usermodal)}} onGetStarted={handleGetStarted} onWatch={onWatch} />
 
       <div ref={watchRef} className="max-w-6xl mx-auto">
         <HowItWorks />
       </div>
 
-      {chatbot &&
-      <ChatBot onClose={()=>setChatbot(false)} />
-      }
-
+      {/* Assistant IA — remplace l'ancien ChatBot */}
       <ChatWidget />
 
       <Tuition />

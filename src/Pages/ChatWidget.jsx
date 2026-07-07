@@ -2,8 +2,18 @@ import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Sparkles, X, Send } from "lucide-react";
+
+// ⚠️ Hypothèse sur la forme de ton client API existant (celui utilisé dans
+// CourseInfo.jsx : `api(\`/courses/${id}\`)`). Je suppose qu'il accepte un
+// objet d'options fetch-like en 2e argument pour le POST. Partage-moi
+// `services/api.js` si la signature est différente, j'ajuste l'appel.
 import api from "../services/api";
 
+/* ============================================================
+   Un rond avec anneaux qui pulsent — même langage visuel que
+   CourseLoader et la page offline, réutilisé ici comme "avatar"
+   de l'assistant pendant qu'il réfléchit.
+   ============================================================ */
 function ThinkingAvatar() {
   return (
     <div className="relative w-8 h-8 flex items-center justify-center shrink-0">
@@ -68,16 +78,12 @@ export default function ChatWidget() {
     try {
       const data = await api("/ai/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message }),
+        data: { message },
       });
 
       setMessages((prev) => [...prev, { role: "assistant", content: data.reply }]);
     } catch (err) {
-      const detail =
-        err?.response?.detail ||
-        err?.message ||
-        t("ai_chat.generic_error", "Something went wrong. Please try again.");
+      const detail = err?.message || t("ai_chat.generic_error", "Something went wrong. Please try again.");
       setMessages((prev) => [...prev, { role: "assistant", content: detail, isError: true }]);
     } finally {
       setLoading(false);
