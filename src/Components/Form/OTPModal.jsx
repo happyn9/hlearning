@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 import api from "../../services/api";
 
 export default function OTPModal({ otp, setOtp, verify, close, error, loading, email }) {
+  const { t } = useTranslation();
   const [countdown, setCountdown] = useState(300);
   const [resendCd, setResendCd] = useState(60);
   const [resendMsg, setResendMsg] = useState("");
@@ -33,9 +35,9 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
       await api.post("/auth/resend-otp", { email });
       setCountdown(300);
       setResendCd(60);
-      setResendMsg("Nouveau code envoyé !");
+      setResendMsg(t("otp.resendSuccess"));
     } catch {
-      setResendMsg("Échec de l'envoi.");
+      setResendMsg(t("otp.resendError"));
     } finally {
       setResendLoading(false);
     }
@@ -82,13 +84,12 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
               </svg>
             </div>
 
-            {/* Petit champ OTP compact, grille 3x2 */}
             <div className="relative">
               <div className="grid grid-cols-3 gap-2" onClick={() => inputRef.current?.focus()}>
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div
                     key={i}
-                    className="w-11 h-13 rounded-xl flex items-center justify-center text-lg font-semibold text-white cursor-text transition-colors"
+                    className="w-11 h-14 rounded-xl flex items-center justify-center text-lg font-semibold text-white cursor-text transition-colors"
                     style={{
                       background: "rgba(255,255,255,0.02)",
                       border:
@@ -115,11 +116,10 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
               />
             </div>
 
-            {/* Timer compact */}
             <div className="w-[190px] mt-6">
               <div className="flex justify-center items-center gap-1.5 mb-2">
                 <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.4)" }}>
-                  {expired ? "Code expiré" : "Expire dans"}
+                  {expired ? t("otp.expired") : t("otp.expiresIn")}
                 </span>
                 {!expired && (
                   <span
@@ -152,7 +152,7 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <path d="M15 18l-6-6 6-6" />
               </svg>
-              Retour
+              {t("otp.back")}
             </button>
           </header>
 
@@ -167,16 +167,17 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <path d="M15 18l-6-6 6-6" />
                 </svg>
-                Retour
+                {t("otp.back")}
               </button>
 
               <div>
                 <h2 className="text-3xl sm:text-4xl xl:text-5xl font-bold tracking-tight text-white">
-                  Vérifiez votre boîte mail
+                  {t("otp.title")}
                 </h2>
                 <p className="mt-3 text-sm sm:text-base" style={{ color: "rgba(255,255,255,0.45)" }}>
-                  Nous avons envoyé un code à 6 chiffres à{" "}
-                  <span style={{ color: "rgba(255,255,255,0.75)" }}>{email}</span>. Entrez-le pour continuer.
+                  {t("otp.subtitlePrefix")}{" "}
+                  <span style={{ color: "rgba(255,255,255,0.75)" }}>{email}</span>
+                  {t("otp.subtitleSuffix")}
                 </p>
               </div>
 
@@ -203,7 +204,7 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
                 </div>
                 <div className="mt-4 flex justify-center items-center gap-1.5">
                   <span className="text-xs" style={{ color: "rgba(255,255,255,0.4)" }}>
-                    {expired ? "Code expiré" : "Expire dans"}
+                    {expired ? t("otp.expired") : t("otp.expiresIn")}
                   </span>
                   {!expired && (
                     <span
@@ -232,12 +233,12 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
                 disabled={loading || otp.length !== 6 || expired}
                 className="w-full py-3.5 rounded-full bg-white text-black font-semibold active:scale-95 transition disabled:opacity-40"
               >
-                {loading ? "Vérification..." : "Vérifier"}
+                {loading ? t("otp.verifying") : t("otp.verify")}
               </button>
 
               <div className="flex items-center justify-between text-sm">
                 <span style={{ color: "rgba(255,255,255,0.35)" }}>
-                  {resendCd > 0 ? `Renvoyer disponible dans ${resendCd}s` : "Vous n'avez rien reçu ?"}
+                  {resendCd > 0 ? t("otp.resendAvailableInline", { count: resendCd }) : t("otp.noCode")}
                 </span>
                 <button
                   type="button"
@@ -251,12 +252,12 @@ export default function OTPModal({ otp, setOtp, verify, close, error, loading, e
                     cursor: resendCd > 0 ? "default" : "pointer",
                   }}
                 >
-                  {resendLoading ? "Envoi..." : "Renvoyer le code"}
+                  {resendLoading ? t("otp.resending") : t("otp.resend")}
                 </button>
               </div>
 
               <p className="text-xs leading-relaxed" style={{ color: "rgba(255,255,255,0.3)" }}>
-                Vérifiez aussi vos spams si le message n'apparaît pas d'ici quelques minutes.
+                {t("otp.spamNote")}
               </p>
             </div>
           </div>
