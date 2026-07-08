@@ -202,55 +202,42 @@ function SearchOverlay({ open, onClose, navigate }) {
 }
 
 /* ══════════════════════════════════════════════════════════
-   BOTTOM NAV — façon "vraie app" native, avec retour haptique
+   BOTTOM NAV — même logique que WorkspaceLayout : barre pleine
+   largeur collée en bas, bordure haute, pas de flottant/blur,
+   label toujours visible, pastille de fond sur l'item actif.
 ═══════════════════════════════════════════════════════════ */
 function AppBottomNav({ items }) {
   return (
     <nav
-      className="md:hidden fixed left-1/2 -translate-x-1/2 z-50 flex items-center gap-0.5 px-1.5 py-1.5 rounded-[26px]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around border-t"
       style={{
-        bottom: "calc(env(safe-area-inset-bottom, 0px) + 14px)",
-        background: COLORS.surface,
-        backdropFilter: "saturate(200%) blur(24px)",
-        WebkitBackdropFilter: "saturate(200%) blur(24px)",
-        border: `1px solid ${COLORS.hairline}`,
-        boxShadow: `
-          0 1px 0 rgba(255,255,255,0.6) inset,
-          0 18px 40px -12px rgba(0,0,0,0.18),
-          0 4px 10px rgba(0,0,0,0.06)
-        `,
+        background: COLORS.surfaceSolid,
+        borderColor: COLORS.hairline,
+        paddingTop: 8,
+        paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 8px)",
       }}
     >
       {items.map(({ icon: Icon, label, action, active }) => (
-        <motion.button
+        <button
           key={label}
           onClick={() => { hapticTap(); action(); }}
-          whileTap={{ scale: 0.88 }}
-          transition={{ type: "spring", stiffness: 500, damping: 30 }}
-          className="relative flex flex-col items-center gap-0.5 px-4 py-2 rounded-[18px] active:scale-95"
+          aria-label={label}
+          aria-current={active ? "page" : undefined}
+          className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg transition-colors active:scale-95"
+          style={{ background: active ? COLORS.blueTint : "transparent" }}
         >
-          {active && (
-            <motion.span
-              layoutId="bottomNavPill"
-              className="absolute inset-0 rounded-[18px]"
-              style={{ background: COLORS.blueTint }}
-              transition={{ type: "spring", stiffness: 480, damping: 38 }}
-            />
-          )}
-          <div className="relative w-5 h-5 flex items-center justify-center z-10">
-            <Icon
-              size={19}
-              style={{ color: active ? COLORS.blue : COLORS.ink }}
-              strokeWidth={active ? 2.1 : 1.75}
-            />
-          </div>
+          <Icon
+            size={20}
+            style={{ color: active ? COLORS.blue : COLORS.ink }}
+            strokeWidth={active ? 2.1 : 1.75}
+          />
           <span
-            className="relative z-10 text-[9px] transition-colors"
+            className="text-[10px] leading-none"
             style={{ ...sf, color: active ? COLORS.blue : COLORS.gray, fontWeight: active ? 600 : 400 }}
           >
             {label}
           </span>
-        </motion.button>
+        </button>
       ))}
     </nav>
   );
