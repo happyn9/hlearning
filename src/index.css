@@ -26,6 +26,9 @@ html {
   scrollbar-width: none;     /* Firefox */
 }
 
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* Default body font */
 body {
   font-family: "Inter", "Lato", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;

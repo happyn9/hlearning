@@ -52,8 +52,6 @@ export default function AdminDashboard() {
     loadData();
   }, []);
 
-  // Charge TOUT en une passe au montage. Chaque section consomme
-  // ensuite le state central au lieu de refetcher ses propres données.
   async function loadData() {
     setDataLoading(true);
     try {
@@ -207,7 +205,7 @@ export default function AdminDashboard() {
         setActive={setActive}
       />
 
-      <main className="flex-1 md:ml-20 p-10 space-y-8">
+      <main className="flex-1 md:ml-20 p-10 pb-28 md:pb-10 space-y-8">
 
         <h1 className="text-3xl font-bold capitalize">
           {active}

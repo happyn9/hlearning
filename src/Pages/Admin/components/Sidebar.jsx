@@ -8,107 +8,115 @@ import {
   Settings,
   Building2,
   GraduationCap,
-  Bell
+  Bell,
+  Sparkles,
 } from "lucide-react";
 
 import NavIcon from "./NavIcon";
 
-export default function Sidebar({
-  active,
-  setActive
-}) {
-
+export default function Sidebar({ active, setActive, notifCount = 0 }) {
   const navItems = [
-    {
-      id: "dashboard",
-      icon: <LayoutDashboard size={18} />
-    },
-    {
-      id: "programs",
-      icon: <Layers size={18} />
-    },
-    {
-      id: "courses",
-      icon: <Book size={18} />
-    },
-    {
-      id: "content",
-      icon: <FileText size={18} />
-    },
-    {
-      id: "teachers",
-      icon: <Users size={18} />
-    },
-    {
-      id: "students",
-      icon: <GraduationCap size={18} />
-    },
-    {
-      id: "centers",
-      icon: <Building2 size={18} />
-    },
+    { id: "dashboard", label: "Tableau de bord", icon: <LayoutDashboard size={18} /> },
+    { id: "programs", label: "Programmes", icon: <Layers size={18} /> },
+    { id: "courses", label: "Cours", icon: <Book size={18} /> },
+    { id: "content", label: "Contenu", icon: <FileText size={18} /> },
+    { id: "teachers", label: "Enseignants", icon: <Users size={18} /> },
+    { id: "students", label: "Étudiants", icon: <GraduationCap size={18} /> },
+    { id: "centers", label: "Centres", icon: <Building2 size={18} /> },
     {
       id: "notifications",
-      icon: <Bell size={18} />
+      label: "Notifications",
+      icon: <Bell size={18} />,
+      badge: notifCount > 0 ? notifCount : null,
     },
   ];
 
   const bottomItems = [
-    {
-      id: "security",
-      icon: <Shield size={18} />
-    },
-    {
-      id: "settings",
-      icon: <Settings size={18} />
-    },
+    { id: "security", label: "Sécurité", icon: <Shield size={18} /> },
+    { id: "settings", label: "Paramètres", icon: <Settings size={18} /> },
   ];
 
   return (
     <>
       {/* ================= DESKTOP SIDEBAR ================= */}
-      <aside className="hidden md:fixed md:flex left-6 top-24 flex-col justify-between bg-white/70 backdrop-blur-xl border border-gray-200 p-3 rounded-3xl shadow-xl z-40 h-[78vh]">
+      {/* Fixed, full height, w-20 — matches the `md:ml-20` offset on <main> */}
+      <aside
+        className="hidden md:flex md:flex-col fixed left-0 top-0 h-screen w-20 z-40
+          bg-[#0d0d10]/95 backdrop-blur-xl border-r border-white/10"
+      >
+        {/* LOGO */}
+        <div className="flex items-center justify-center h-20 shrink-0 border-b border-white/10">
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-500/15 ring-1 ring-violet-500/30">
+            <Sparkles size={18} className="text-violet-400" />
+          </div>
+        </div>
 
-        {/* TOP */}
-        <div className="flex flex-col gap-4">
+        {/* TOP NAV — scrolls internally if the list grows, never breaks layout */}
+        <nav className="flex-1 min-h-0 overflow-y-auto no-scrollbar flex flex-col items-center gap-3 py-6">
           {navItems.map((item) => (
             <NavIcon
               key={item.id}
               icon={item.icon}
+              label={item.label}
+              badge={item.badge}
               active={active === item.id}
               onClick={() => setActive(item.id)}
             />
           ))}
-        </div>
+        </nav>
 
-        {/* BOTTOM */}
-        <div className="flex flex-col gap-4 pt-4 border-t border-gray-200">
+        {/* BOTTOM NAV */}
+        <div className="flex flex-col items-center gap-3 py-6 border-t border-white/10 shrink-0">
           {bottomItems.map((item) => (
             <NavIcon
               key={item.id}
               icon={item.icon}
+              label={item.label}
               active={active === item.id}
               onClick={() => setActive(item.id)}
             />
           ))}
         </div>
-
       </aside>
 
-      {/* ================= MOBILE SIDEBAR ================= */}
-      <aside className="md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 w-[94vw] max-w-md flex items-center gap-2 bg-white/80 backdrop-blur-xl border border-gray-200 px-3 py-2.5 rounded-3xl shadow-2xl z-50 overflow-x-auto no-scrollbar">
-
+      {/* ================= MOBILE SIDEBAR (bottom dock) ================= */}
+      <nav
+        className="md:hidden fixed bottom-3 left-1/2 -translate-x-1/2 z-50
+          w-[94vw] max-w-md flex items-center gap-1.5
+          bg-[#0d0d10]/95 backdrop-blur-xl border border-white/10
+          px-2 py-2 rounded-3xl shadow-2xl shadow-black/50
+          overflow-x-auto no-scrollbar"
+      >
         {[...navItems, ...bottomItems].map((item) => (
-          <div key={item.id} className="shrink-0">
-            <NavIcon
-              icon={item.icon}
-              active={active === item.id}
-              onClick={() => setActive(item.id)}
+          <button
+            key={item.id}
+            onClick={() => setActive(item.id)}
+            aria-label={item.label}
+            aria-current={active === item.id ? "page" : undefined}
+            className="relative shrink-0 flex flex-col items-center justify-center gap-1 w-14 h-14 rounded-2xl transition-colors duration-200"
+          >
+            <span
+              className={`relative flex h-9 w-9 items-center justify-center rounded-xl transition-all duration-200 ${
+                active === item.id
+                  ? "bg-violet-500/15 text-violet-400 ring-1 ring-violet-500/30"
+                  : "text-zinc-500"
+              }`}
+            >
+              {item.icon}
+              {item.badge ? (
+                <span className="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-semibold text-white ring-2 ring-[#0d0d10]">
+                  {item.badge}
+                </span>
+              ) : null}
+            </span>
+            <span
+              className={`h-1 w-1 rounded-full transition-opacity duration-200 ${
+                active === item.id ? "bg-violet-400 opacity-100" : "opacity-0"
+              }`}
             />
-          </div>
+          </button>
         ))}
-
-      </aside>
+      </nav>
     </>
   );
 }
