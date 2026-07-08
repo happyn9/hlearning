@@ -869,7 +869,7 @@ export default function CoursesSection() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              className="grid place-content-center lg:grid-cols-2 grid-cols-1 lg:gap-3 :gap-2"
+              className="grid place-content-center lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-3 :gap-2"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
