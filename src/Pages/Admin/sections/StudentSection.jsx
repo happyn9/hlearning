@@ -59,7 +59,7 @@ export default function StudentSection({ students, centers, loading, onChangeCen
             </thead>
             <tbody>
               {filtered.map((student) => (
-                <tr key={student.id} className="border-b border-white/5 last:border-0 hover:bg-white/[0.02] transition-colors">
+                <tr key={student.id} className="border-b border-white/5 last:border-0 hover:bg-white/2 transition-colors">
                   <td className="px-5 py-3.5 text-[#e8eaf0] font-medium">{student.name}</td>
                   <td className="px-5 py-3.5 text-[#9aa0ab]">{student.email}</td>
                   <td className="px-5 py-3.5">
