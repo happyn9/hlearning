@@ -707,7 +707,7 @@ function CourseModal({ course, onClose }) {
 function CourseCard({ course, index, ctaLabel, t, onClick }) {
   return (
     <motion.div
-      className="bg-white rounded-2xl overflow-hidden border border-black/[0.06] flex flex-col cursor-pointer group transition-shadow"
+      className="bg-white rounded-2xl overflow-hidden border border-black/0.06 flex flex-col cursor-pointer group transition-shadow"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05, duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
@@ -718,7 +718,7 @@ function CourseCard({ course, index, ctaLabel, t, onClick }) {
       whileHover={{ y: -5, boxShadow: "0 20px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)" }}
       whileTap={{ scale: 0.98 }}
     >
-      <div className="relative aspect-[4/3] sm:aspect-[16/10] overflow-hidden shrink-0 bg-[#EDECE8]">
+      <div className="relative aspect-4/4 sm:aspect-16/10 overflow-hidden shrink-0 bg-[#EDECE8]">
         <img
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.07]"
           src={`${course.image}?auto=format&w=600&q=80`}
