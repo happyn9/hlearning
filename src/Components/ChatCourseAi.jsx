@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router";
 import { Mic, Volume2, MoreVertical, X, Send, Sparkles, BookOpen, Code2, Lightbulb } from "lucide-react";
+import api from "../services/api";
 
 // ─── Design Tokens ───────────────────────────────────────────────
 const tokens = {
@@ -13,6 +15,9 @@ const tokens = {
   text: "#F0EDFF",
   textMuted: "#8B82B8",
   green: "#34D399",
+  red: "#F87171",
+  redBorder: "rgba(248,113,113,0.3)",
+  redBg: "rgba(248,113,113,0.08)",
 };
 
 // ─── Inline Styles ───────────────────────────────────────────────
@@ -159,6 +164,19 @@ const styles = {
     boxShadow: `0 2px 12px rgba(0,0,0,0.25)`,
     animation: "slideUp 0.28s cubic-bezier(.22,.68,0,1.2) both",
   },
+  aiBubbleError: {
+    maxWidth: "76%",
+    alignSelf: "flex-start",
+    background: tokens.redBg,
+    border: `1px solid ${tokens.redBorder}`,
+    borderRadius: "18px 18px 18px 4px",
+    padding: "14px 18px",
+    fontSize: 14.5,
+    lineHeight: 1.65,
+    color: tokens.red,
+    boxShadow: `0 2px 12px rgba(0,0,0,0.25)`,
+    animation: "slideUp 0.28s cubic-bezier(.22,.68,0,1.2) both",
+  },
   userBubble: {
     maxWidth: "76%",
     alignSelf: "flex-end",
@@ -170,6 +188,19 @@ const styles = {
     color: "#fff",
     boxShadow: `0 4px 20px ${tokens.accentGlow}`,
     animation: "slideUp 0.22s cubic-bezier(.22,.68,0,1.2) both",
+  },
+  subscribeCta: {
+    alignSelf: "flex-start",
+    marginTop: -6,
+    fontSize: 12.5,
+    fontWeight: 600,
+    color: "#fff",
+    background: `linear-gradient(135deg, ${tokens.accent}, #8B5CF6)`,
+    border: "none",
+    borderRadius: 10,
+    padding: "9px 16px",
+    cursor: "pointer",
+    boxShadow: `0 4px 16px ${tokens.accentGlow}`,
   },
   topicsWrap: {
     display: "flex",
@@ -314,8 +345,10 @@ const injectCSS = () => {
     }
     .avila-icon-btn:hover { background: rgba(108,99,255,0.14) !important; color: #A78BFA !important; }
     .avila-topic:hover    { background: rgba(108,99,255,0.2) !important; border-color: #6C63FF !important; transform:translateY(-1px); }
+    .avila-topic:disabled { opacity:0.4; cursor:not-allowed; transform:none !important; }
     .avila-send:disabled  { opacity:0.4; cursor:not-allowed; transform:none !important; box-shadow:none !important; }
     .avila-send:hover:not(:disabled) { transform:scale(1.06); }
+    .avila-cta:hover { opacity:0.9; }
     ::-webkit-scrollbar { width:5px; }
     ::-webkit-scrollbar-track { background:transparent; }
     ::-webkit-scrollbar-thumb { background:rgba(108,99,255,0.3); border-radius:99px; }
@@ -346,9 +379,9 @@ function SkillBar({ label, value, color = tokens.accent }) {
 }
 
 // ─── Topic Button ─────────────────────────────────────────────────
-function TopicButton({ icon: Icon, label, onClick }) {
+function TopicButton({ icon: Icon, label, onClick, disabled }) {
   return (
-    <button type="button" style={styles.topicBtn} className="avila-topic" onClick={() => onClick(label)}>
+    <button type="button" style={styles.topicBtn} className="avila-topic" disabled={disabled} onClick={() => onClick(label)}>
       <Icon size={13} />
       {label}
     </button>
@@ -358,6 +391,7 @@ function TopicButton({ icon: Icon, label, onClick }) {
 // ─── Main Component ───────────────────────────────────────────────
 export default function ChatCourseAi({ onClick, topic = "Python" }) {
   injectCSS();
+  const navigate = useNavigate();
 
   const [messages, setMessages] = useState([
     { role: "ai", text: `Salut ! Je suis **Avila**, ton professeur IA. Pose-moi n'importe quelle question sur **${topic}**, ou clique sur un sujet ci-dessous pour commencer.` },
@@ -370,19 +404,35 @@ export default function ChatCourseAi({ onClick, topic = "Python" }) {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
-  const send = (text) => {
-    const txt = text ?? input;
-    if (!txt.trim()) return;
+  const send = async (text) => {
+    const txt = (text ?? input).trim();
+    if (!txt || typing) return;
+
     setMessages(prev => [...prev, { role: "user", text: txt }]);
     setInput("");
     setTyping(true);
-    setTimeout(() => {
+
+    try {
+      const data = await api("/ai/chat", {
+        method: "POST",
+        data: { message: txt, topic },
+      });
+      setMessages(prev => [...prev, { role: "ai", text: data.reply }]);
+    } catch (err) {
+      const detail = err?.message || "Un souci est survenu. Réessaie dans un instant.";
+      const needsSubscription = err?.status === 402;
+      setMessages(prev => [
+        ...prev,
+        { role: "ai", text: detail, isError: true, needsSubscription },
+      ]);
+    } finally {
       setTyping(false);
-      setMessages(prev => [...prev, {
-        role: "ai",
-        text: `Super question sur "${txt}" ! Avila travaille encore sur sa connexion API — mais bientôt elle vous répondra en temps réel. 🚀`,
-      }]);
-    }, 1400);
+    }
+  };
+
+  const goToSubscription = () => {
+    onClick?.();
+    navigate("/premium");
   };
 
   const topics = [
@@ -430,8 +480,23 @@ export default function ChatCourseAi({ onClick, topic = "Python" }) {
         <div style={styles.chatPanel}>
           <div style={styles.messages}>
             {messages.map((m, i) => (
-              <div key={i} style={m.role === "ai" ? styles.aiBubble : styles.userBubble}>
-                {m.text}
+              <div key={i}>
+                <div style={m.role === "ai" ? (m.isError ? styles.aiBubbleError : styles.aiBubble) : styles.userBubble}>
+                  {m.text}
+                </div>
+
+                {m.needsSubscription && (
+                  <div style={{ marginTop: 8 }}>
+                    <button
+                      type="button"
+                      className="avila-cta"
+                      style={styles.subscribeCta}
+                      onClick={goToSubscription}
+                    >
+                      Voir les abonnements
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
 
@@ -439,7 +504,7 @@ export default function ChatCourseAi({ onClick, topic = "Python" }) {
             {messages.length === 1 && (
               <div style={styles.topicsWrap}>
                 {topics.map(t => (
-                  <TopicButton key={t.label} icon={t.icon} label={t.label} onClick={send} />
+                  <TopicButton key={t.label} icon={t.icon} label={t.label} onClick={send} disabled={typing} />
                 ))}
               </div>
             )}
@@ -472,12 +537,13 @@ export default function ChatCourseAi({ onClick, topic = "Python" }) {
               autoComplete="off"
               spellCheck={false}
               autoFocus
+              disabled={typing}
             />
             <button
               style={styles.sendBtn}
               className="avila-send"
               onClick={() => send()}
-              disabled={!input.trim()}
+              disabled={!input.trim() || typing}
               type="button"
               aria-label="Envoyer"
             >
