@@ -718,9 +718,9 @@ function CourseCard({ course, index, ctaLabel, t, onClick }) {
       whileHover={{ y: -5, boxShadow: "0 20px 48px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)" }}
       whileTap={{ scale: 0.98 }}
     >
-      <div className="relative overflow-hidden shrink-0 bg-[#EDECE8]">
+      <div className="relative overflow-hidden shrink-0 bg-[#EDECE8] aspect-[4/3] w-full">
         <img
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.07]"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.07]"
           src={`${course.image}?auto=format&w=600&q=80`}
           alt={course.title}
           loading="lazy"
@@ -865,11 +865,11 @@ export default function CoursesSection() {
             ))}
           </div>
 
-          {/* Grid — 2 columns from mobile up (no cramped 1-col phones), auto-fill from sm */}
+          {/* Grid — responsive column counts with consistent gaps at every breakpoint */}
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              className="grid place-content-center lg:grid-cols-4 md:grid-cols-2 grid-cols-1 lg:gap-3 :gap-2"
+              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5"
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0 }}
