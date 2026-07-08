@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Bell, Send, Users, Building2, User } from "lucide-react";
+import { useState } from "react";
+import { Bell, Send, Users, Building2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { adminService } from "../services/adminService";
 
@@ -14,7 +14,7 @@ const TYPES = [
   { id: "info", label: "Information" },
 ];
 
-export default function NotificationSection({ centers, setCenters }) {
+export default function NotificationSection({ centers }) {
   const [mode, setMode] = useState("all");
   const [centerId, setCenterId] = useState("");
   const [type, setType] = useState("reminder");
@@ -22,19 +22,6 @@ export default function NotificationSection({ centers, setCenters }) {
   const [body, setBody] = useState("");
   const [sendPush, setSendPush] = useState(true);
   const [sending, setSending] = useState(false);
-
-  useEffect(() => {
-    if (centers.length === 0) loadCenters();
-  }, []);
-
-  async function loadCenters() {
-    try {
-      const res = await adminService.getCenters();
-      setCenters(Array.isArray(res) ? res : []);
-    } catch (e) {
-      console.log(e);
-    }
-  }
 
   async function handleSend() {
     if (!title.trim() || !body.trim()) {
@@ -58,7 +45,6 @@ export default function NotificationSection({ centers, setCenters }) {
       setTitle("");
       setBody("");
     } catch (e) {
-      console.log(e);
       toast.error(e?.message || "Échec de l'envoi de la notification");
     } finally {
       setSending(false);
@@ -69,7 +55,6 @@ export default function NotificationSection({ centers, setCenters }) {
     <div className="flex flex-col gap-6 max-w-2xl">
       <div className="rounded-3xl border border-white/8 bg-[#111214]/80 p-6 flex flex-col gap-5">
 
-        {/* Header */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-[#a3e635]/10 flex items-center justify-center">
             <Bell size={18} className="text-[#a3e635]" />
@@ -80,7 +65,6 @@ export default function NotificationSection({ centers, setCenters }) {
           </div>
         </div>
 
-        {/* Target mode */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-medium text-[#9aa0ab]">Destinataires</label>
           <div className="flex gap-2">
@@ -122,7 +106,6 @@ export default function NotificationSection({ centers, setCenters }) {
           </div>
         )}
 
-        {/* Type */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-medium text-[#9aa0ab]">Type</label>
           <div className="flex gap-2 flex-wrap">
@@ -143,7 +126,6 @@ export default function NotificationSection({ centers, setCenters }) {
           </div>
         </div>
 
-        {/* Title */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-medium text-[#9aa0ab]">Titre</label>
           <input
@@ -154,7 +136,6 @@ export default function NotificationSection({ centers, setCenters }) {
           />
         </div>
 
-        {/* Body */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-medium text-[#9aa0ab]">Message</label>
           <textarea
@@ -166,7 +147,6 @@ export default function NotificationSection({ centers, setCenters }) {
           />
         </div>
 
-        {/* Push toggle */}
         <label className="flex items-center gap-2.5 text-xs text-[#9aa0ab] cursor-pointer select-none">
           <input
             type="checkbox"
@@ -177,7 +157,6 @@ export default function NotificationSection({ centers, setCenters }) {
           Envoyer aussi une notification push
         </label>
 
-        {/* Send button */}
         <button
           onClick={handleSend}
           disabled={sending}

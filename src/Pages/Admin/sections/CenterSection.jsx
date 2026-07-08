@@ -1,46 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Building2, MapPin, Users, Pencil, Trash2, X, Check } from "lucide-react";
 import SectionCard from "../components/SectionCard";
-import { adminService } from "../services/adminService";
 import toast from "react-hot-toast";
 
-export default function CenterSection({ setCenters }) {
+export default function CenterSection({ centers, loading, onCreate, onUpdate, onDelete }) {
   const [data, setData] = useState({ name: "", address: "", city: "", capacity: "" });
-  const [centers, setLocalCenters] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({ name: "", address: "", city: "", capacity: "" });
   const [deletingId, setDeletingId] = useState(null);
-
-  useEffect(() => {
-    loadCenters();
-  }, []);
-
-  async function loadCenters() {
-    setLoading(true);
-    try {
-      const res = await adminService.getCenters();
-      const list = Array.isArray(res) ? res : [];
-      setLocalCenters(list);
-      setCenters(list);
-    } catch (e) {
-      toast.error(e?.message || "Erreur de chargement des centres");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const updateField = (key, value) => setData(prev => ({ ...prev, [key]: value }));
 
   const handleCreate = async () => {
     if (!data.name.trim()) return toast.error("Le nom du centre est requis");
     try {
-      const res = await adminService.createCenter({
+      await onCreate({
         ...data,
         capacity: data.capacity ? Number(data.capacity) : null
       });
-      setLocalCenters(prev => [...prev, res]);
-      setCenters(prev => [...prev, res]);
       toast.success("Centre créé avec succès");
       setData({ name: "", address: "", city: "", capacity: "" });
     } catch (e) {
@@ -70,9 +47,7 @@ export default function CenterSection({ setCenters }) {
         ...editData,
         capacity: editData.capacity !== "" ? Number(editData.capacity) : null,
       };
-      const res = await adminService.updateCenter(centerId, payload);
-      setLocalCenters(prev => prev.map(c => (c.id === centerId ? { ...c, ...res } : c)));
-      setCenters(prev => prev.map(c => (c.id === centerId ? { ...c, ...res } : c)));
+      await onUpdate(centerId, payload);
       toast.success("Centre mis à jour");
       cancelEdit();
     } catch (e) {
@@ -83,9 +58,7 @@ export default function CenterSection({ setCenters }) {
   async function handleDelete(centerId) {
     setDeletingId(centerId);
     try {
-      await adminService.deleteCenter(centerId);
-      setLocalCenters(prev => prev.filter(c => c.id !== centerId));
-      setCenters(prev => prev.filter(c => c.id !== centerId));
+      await onDelete(centerId);
       toast.success("Centre supprimé");
     } catch (e) {
       toast.error(e?.message || "Échec de la suppression");

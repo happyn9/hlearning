@@ -1,45 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { GraduationCap, Search, Building2 } from "lucide-react";
 import toast from "react-hot-toast";
-import { adminService } from "../services/adminService";
 
-export default function StudentSection({ students, setStudents, centers, setCenters }) {
-  const [loading, setLoading] = useState(true);
+export default function StudentSection({ students, centers, loading, onChangeCenter }) {
   const [search, setSearch] = useState("");
   const [updatingId, setUpdatingId] = useState(null);
-
-  useEffect(() => {
-    load();
-  }, []);
-
-  async function load() {
-    setLoading(true);
-    try {
-      const [studentsRes, centersRes] = await Promise.all([
-        adminService.getStudents(),
-        adminService.getCenters(),
-      ]);
-      setStudents(Array.isArray(studentsRes) ? studentsRes : []);
-      setCenters(Array.isArray(centersRes) ? centersRes : []);
-    } catch (e) {
-      console.log(e);
-      toast.error(e?.message || "Erreur de chargement des étudiants");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function handleCenterChange(studentId, centerId) {
     if (!centerId) return;
     setUpdatingId(studentId);
     try {
-      const updated = await adminService.changeStudentCenter(studentId, Number(centerId));
-      setStudents((prev) =>
-        prev.map((s) => (s.id === studentId ? { ...s, ...updated } : s))
-      );
+      await onChangeCenter(studentId, Number(centerId));
       toast.success("Centre mis à jour");
     } catch (e) {
-      console.log(e);
       toast.error(e?.message || "Échec de la mise à jour du centre");
     } finally {
       setUpdatingId(null);
@@ -54,7 +27,6 @@ export default function StudentSection({ students, setStudents, centers, setCent
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Search bar */}
       <div className="relative max-w-sm">
         <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6b7280]" />
         <input

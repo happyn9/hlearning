@@ -1,34 +1,13 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { User, Mail, Lock, Pencil, Trash2, X, Check } from "lucide-react";
 import SectionCard from "../components/SectionCard";
-import { adminService } from "../services/adminService";
 import toast from "react-hot-toast";
 
-export default function TeacherSection({ setTeachers }) {
+export default function TeacherSection({ teachers, loading, onCreate, onUpdate, onDelete }) {
   const [data, setData] = useState({ name: "", email: "", password: "" });
-  const [teachers, setLocalTeachers] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [editingId, setEditingId] = useState(null);
   const [editData, setEditData] = useState({ name: "", email: "" });
   const [deletingId, setDeletingId] = useState(null);
-
-  useEffect(() => {
-    loadTeachers();
-  }, []);
-
-  async function loadTeachers() {
-    setLoading(true);
-    try {
-      const res = await adminService.getTeachers();
-      const list = Array.isArray(res) ? res : [];
-      setLocalTeachers(list);
-      setTeachers(list);
-    } catch (e) {
-      toast.error(e?.message || "Erreur de chargement des profs");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   const updateField = (key, value) => setData(prev => ({ ...prev, [key]: value }));
 
@@ -37,9 +16,7 @@ export default function TeacherSection({ setTeachers }) {
       return toast.error("Tous les champs sont requis");
     }
     try {
-      const res = await adminService.createTeacher(data);
-      setLocalTeachers(prev => [...prev, res]);
-      setTeachers(prev => [...prev, res]);
+      await onCreate(data);
       toast.success("Prof créé avec succès");
       setData({ name: "", email: "", password: "" });
     } catch (e) {
@@ -62,9 +39,7 @@ export default function TeacherSection({ setTeachers }) {
       return toast.error("Nom et email requis");
     }
     try {
-      const res = await adminService.updateTeacher(teacherId, editData);
-      setLocalTeachers(prev => prev.map(t => (t.id === teacherId ? { ...t, ...res } : t)));
-      setTeachers(prev => prev.map(t => (t.id === teacherId ? { ...t, ...res } : t)));
+      await onUpdate(teacherId, editData);
       toast.success("Prof mis à jour");
       cancelEdit();
     } catch (e) {
@@ -75,9 +50,7 @@ export default function TeacherSection({ setTeachers }) {
   async function handleDelete(teacherId) {
     setDeletingId(teacherId);
     try {
-      await adminService.deleteTeacher(teacherId);
-      setLocalTeachers(prev => prev.filter(t => t.id !== teacherId));
-      setTeachers(prev => prev.filter(t => t.id !== teacherId));
+      await onDelete(teacherId);
       toast.success("Prof supprimé");
     } catch (e) {
       toast.error(e?.message || "Échec de la suppression");
